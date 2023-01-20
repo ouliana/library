@@ -1,0 +1,43 @@
+sequenceDiagram
+    actor user
+    participant browser
+    participant server
+
+    Note right of user: The user enters the note text<br> and presses Save button
+    user->>browser: the note text
+    activate browser
+
+    browser->>server: POST the note text to<br> https://studies.cs.helsinki.fi/exampleapp/new_note
+    activate server
+    Note right of server: The server creates a new note object, <br>and adds it to an array called notes
+    server-->>browser: HTTP status code 302<br> location: /exampleapp/notes
+    deactivate server
+
+    Note right of browser: The browser reloads page
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    activate server
+    server-->>browser: HTML document
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate server
+    server-->>browser: CSS file
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    activate server
+    server-->>browser: JavaScript file
+    deactivate server
+
+Note right of browser: The browser starts executing the JavaScript code that fetches the JSON from the server
+
+ browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server-->>browser: [{"content":"Hello","date":"2023-01-19T20:25:09.227Z"}...
+    deactivate server
+
+     Note right of browser: The browser executes the callback function that renders the notes 
+    
+
+    deactivate browser
