@@ -1,0 +1,18 @@
+sequenceDiagram
+    actor user
+    participant browser
+    participant server
+
+    Note right of user: The user enters the note text "new note"<br> and presses the Save button
+    user->>browser: the note text
+    activate browser
+
+     Note right of browser: The browser executes the JavaScript code it fetched from the server, <br>which renders the note list updated with the new note <br> and sends the data to server
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa, <br>{content: "new note", date: "2023-01-22T08:35:55.570Z"}
+    activate server
+    Note right of server: The server creates a new note object, <br>and adds it to an array called notes
+    server-->>browser: 201 Created
+    deactivate server
+
+    deactivate browser
+
