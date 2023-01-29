@@ -35,19 +35,34 @@ const App = () => {
     setVotes(copy);
   };
 
+  const getMostRatedInd = () => {
+    let max = votes.reduce((max, current) => (max > current ? max : current));
+    return votes.indexOf(max);
+  };
+
   return (
-    <div>
-      <div>{anecdotes[selected]}</div>
-      <div>has {votes[selected]}</div>
-      <Button
-        handleClick={handleVote}
-        text='vote'
-      />
-      <Button
-        handleClick={handleNext}
-        text='next anecdote'
-      />
-    </div>
+    <>
+      <section>
+        <h2>Anecdote of the day</h2>
+        <p>{anecdotes[selected]}</p>
+        <p>has {votes[selected]} votes</p>
+        <div>
+          <Button
+            handleClick={handleVote}
+            text='vote'
+          />
+          <Button
+            handleClick={handleNext}
+            text='next anecdote'
+          />
+        </div>
+      </section>
+      <section>
+        <h2>Anecdotes with most votes</h2>
+        <p>{anecdotes[getMostRatedInd()]}</p>
+        <p>has {votes[getMostRatedInd()]} votes</p>
+      </section>
+    </>
   );
 };
 
