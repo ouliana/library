@@ -20,12 +20,13 @@ const App = () => {
       true
     );
 
-    console.log(isUnique);
     if (isUnique) {
       const newPerson = {
         name: newName,
       };
       setPersons([...persons, newPerson]);
+    } else {
+      alert(`${newName} is already added to phonebook`);
     }
     setNewName('');
   };
