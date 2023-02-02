@@ -33,9 +33,7 @@ const App = () => {
       };
       phoneBookService.create(newPerson).then(returnedPerson => {
         setPersons([...persons, returnedPerson]);
-
-        setMessage(`Added ${returnedPerson.name}`);
-        setStatus('success');
+        showMessage(`Added ${returnedPerson.name}`, 'success');
         setTimeout(() => setMessage(''), 5000);
       });
     };
@@ -62,19 +60,23 @@ const App = () => {
                 p.id === returnedPerson.id ? returnedPerson : p
               )
             );
-            setMessage(`Updated ${returnedPerson.name}`);
-            setStatus('success');
+            showMessage(`Updated ${returnedPerson.name}`, 'success');
             setTimeout(() => setMessage(''), 5000);
           })
           .catch(() => {
-            setMessage(
-              `Information of ${personToUpdate.name} has already been removed from server`
+            showMessage(
+              `Information of ${personToUpdate.name} has already been removed from server`,
+              'error'
             );
-            setStatus('error');
-            setTimeout(() => setMessage(''), 5000);
             setPersons(persons.filter(p => p.id !== personToUpdate.id));
           });
       }
+    };
+
+    const showMessage = (content, status) => {
+      setMessage(content);
+      setStatus(status);
+      setTimeout(() => setMessage(''), 5000);
     };
 
     if (newPerson) {
