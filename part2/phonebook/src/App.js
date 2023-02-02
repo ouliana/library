@@ -11,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [query, setQuery] = useState('');
   const [message, setMessage] = useState('');
+  const [status, setStatus] = useState('');
 
   const handleNameChange = event => {
     setNewName(event.target.value);
@@ -34,6 +35,7 @@ const App = () => {
         setPersons([...persons, returnedPerson]);
 
         setMessage(`Added ${returnedPerson.name}`);
+        setStatus('success');
         setTimeout(() => setMessage(''), 5000);
       });
     };
@@ -61,7 +63,16 @@ const App = () => {
               )
             );
             setMessage(`Updated ${returnedPerson.name}`);
+            setStatus('success');
             setTimeout(() => setMessage(''), 5000);
+          })
+          .catch(() => {
+            setMessage(
+              `Information of ${personToUpdate.name} has already been removed from server`
+            );
+            setStatus('error');
+            setTimeout(() => setMessage(''), 5000);
+            setPersons(persons.filter(p => p.id !== personToUpdate.id));
           });
       }
     };
@@ -106,7 +117,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification
+        message={message}
+        status={status}
+      />
       <Filter
         query={query}
         handleQueryChange={handleQueryChange}
