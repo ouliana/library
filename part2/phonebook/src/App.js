@@ -45,6 +45,16 @@ const App = () => {
     setQuery(event.target.value);
   };
 
+  const removePerson = id => {
+    const personToDelete = persons.find(p => p.id === id);
+    const confirmDelete = window.confirm(`Delete ${personToDelete.name} ?`);
+
+    if (confirmDelete) {
+      phoneBookService.remove(personToDelete.id);
+      setPersons(persons.filter(p => p.id !== id));
+    }
+  };
+
   const filtered =
     query === ''
       ? persons
@@ -74,7 +84,10 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Persons persons={filtered} />
+      <Persons
+        persons={filtered}
+        handleDelete={removePerson}
+      />
     </div>
   );
 };
