@@ -3,12 +3,14 @@ import phoneBookService from './service/persons';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+import Notification from './components/Notification';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [query, setQuery] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleNameChange = event => {
     setNewName(event.target.value);
@@ -30,6 +32,9 @@ const App = () => {
       };
       phoneBookService.create(newPerson).then(returnedPerson => {
         setPersons([...persons, returnedPerson]);
+
+        setMessage(`Added ${returnedPerson.name}`);
+        setTimeout(() => setMessage(''), 5000);
       });
     };
 
@@ -55,6 +60,8 @@ const App = () => {
                 p.id === returnedPerson.id ? returnedPerson : p
               )
             );
+            setMessage(`Updated ${returnedPerson.name}`);
+            setTimeout(() => setMessage(''), 5000);
           });
       }
     };
@@ -64,6 +71,7 @@ const App = () => {
     } else {
       createNewPerson();
     }
+
     setNewName('');
     setNewNumber('');
   };
@@ -98,6 +106,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter
         query={query}
         handleQueryChange={handleQueryChange}

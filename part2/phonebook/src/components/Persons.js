@@ -5,7 +5,6 @@ const Persons = props => {
   return (
     <div>
       {persons.map(person => {
-        console.log(person);
         return (
           <div key={person.id.toString()}>
             <Person person={person} />
