@@ -9,6 +9,9 @@ const create = newObject =>
 
 const remove = id => axios.delete(`${baseUrl}/${id}`);
 
-const phoneBookService = { getAll, create, remove };
+const update = (id, newObject) =>
+  axios.put(`${baseUrl}/${id}`, newObject).then(response => response.data);
+
+const phoneBookService = { getAll, create, remove, update };
 
 export default phoneBookService;

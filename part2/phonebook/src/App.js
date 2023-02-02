@@ -21,12 +21,9 @@ const App = () => {
   const handleSubmit = event => {
     event.preventDefault();
 
-    const isUnique = persons.reduce(
-      (res, curr) => res && curr.name !== newName,
-      true
-    );
+    const newPerson = persons.find(p => p.name === newName);
 
-    if (isUnique) {
+    const createNewPerson = () => {
       const newPerson = {
         name: newName,
         number: newNumber,
@@ -34,8 +31,38 @@ const App = () => {
       phoneBookService.create(newPerson).then(returnedPerson => {
         setPersons([...persons, returnedPerson]);
       });
+    };
+
+    const getPersonToUpdate = () => {
+      if (!newPerson) return null;
+
+      return window.confirm(
+        `${newPerson.name} is already added to phonebook, replace the number ${newPerson.number} with a new one?`
+      )
+        ? { ...newPerson, number: newNumber }
+        : null;
+    };
+
+    const updatePerson = () => {
+      const personToUpdate = getPersonToUpdate();
+
+      if (personToUpdate) {
+        phoneBookService
+          .update(personToUpdate.id, personToUpdate)
+          .then(returnedPerson => {
+            setPersons(
+              persons.map(p =>
+                p.id === returnedPerson.id ? returnedPerson : p
+              )
+            );
+          });
+      }
+    };
+
+    if (newPerson) {
+      updatePerson();
     } else {
-      alert(`${newName} is already added to phonebook`);
+      createNewPerson();
     }
     setNewName('');
     setNewNumber('');

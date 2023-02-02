@@ -4,15 +4,15 @@ const Persons = props => {
   const { persons, handleDelete } = props;
   return (
     <div>
-      {persons.map(person => (
-        <div>
-          <Person
-            key={person.name}
-            person={person}
-          />
-          <button onClick={() => handleDelete(person.id)}>delete</button>
-        </div>
-      ))}
+      {persons.map(person => {
+        console.log(person);
+        return (
+          <div key={person.id.toString()}>
+            <Person person={person} />
+            <button onClick={() => handleDelete(person.id)}>delete</button>
+          </div>
+        );
+      })}
     </div>
   );
 };
