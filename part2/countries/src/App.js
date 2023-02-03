@@ -10,9 +10,12 @@ function App() {
     setSearch(event.target.value);
   };
 
+  const showDetails = name => {
+    setSearch(name);
+  };
+
   useEffect(() => {
     if (!search) return;
-    console.log('search', search);
 
     countriesService.getCountries(search).then(returnedCountries => {
       SetCountries(returnedCountries);
@@ -27,7 +30,10 @@ function App() {
         value={search}
         onChange={handleChange}
       />
-      <SearchResult countries={countries} />
+      <SearchResult
+        countries={countries}
+        handleShow={showDetails}
+      />
     </div>
   );
 }
