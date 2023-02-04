@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import countriesService from './service/countries';
-import SearchResult from './components/SearchResult';
+import View from './components/View';
 
 function App() {
   const [search, setSearch] = useState('');
@@ -30,7 +30,7 @@ function App() {
         value={search}
         onChange={handleChange}
       />
-      <SearchResult
+      <View
         countries={countries}
         handleShow={showDetails}
       />
