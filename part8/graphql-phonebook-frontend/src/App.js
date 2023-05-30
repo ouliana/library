@@ -1,29 +1,7 @@
 import { useState } from 'react';
-import { gql, useQuery } from '@apollo/client';
-
-const ALL_PERSONS = gql`
-  query {
-    allPersons {
-      name
-      phone
-      id
-    }
-  }
-`;
-
-const FIND_PERSON = gql`
-  query findPersonByName($nameToSearch: String!) {
-    findPerson(name: $nameToSearch) {
-      name
-      phone
-      id
-      address {
-        street
-        city
-      }
-    }
-  }
-`;
+import { useQuery } from '@apollo/client';
+import PersonForm from './components/PersonForm';
+import { ALL_PERSONS, FIND_PERSON } from './queries';
 
 function Person({ person, onClose }) {
   return (
@@ -67,6 +45,10 @@ function Persons({ persons }) {
 }
 
 function App() {
+  // const result = useQuery(ALL_PERSONS, {
+  //   pollInterval: 2000,
+  // });
+
   const result = useQuery(ALL_PERSONS);
 
   if (result.loading) {
@@ -75,6 +57,7 @@ function App() {
   return (
     <div>
       <Persons persons={result.data.allPersons} />
+      <PersonForm />
     </div>
   );
 }
