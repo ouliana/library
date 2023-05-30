@@ -49,17 +49,33 @@ function App() {
   //   pollInterval: 2000,
   // });
 
+  const [errorMessage, setErrorMessage] = useState(null);
+
   const result = useQuery(ALL_PERSONS);
 
   if (result.loading) {
     return <div>loading...</div>;
   }
+
+  function notity(message) {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 10000);
+  }
   return (
     <div>
+      <Notify errorMessage={errorMessage} />
       <Persons persons={result.data.allPersons} />
-      <PersonForm />
+      <PersonForm setError={notity} />
     </div>
   );
+}
+
+function Notify({ errorMessage }) {
+  if (!errorMessage) return null;
+
+  return <div style={{ color: 'red' }}>{errorMessage}</div>;
 }
 
 export default App;
