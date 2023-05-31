@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { ALL_AUTORS, SET_BIRTH_YEAR } from '../queries';
 
+import Select from 'react-select';
+
 function Authors(props) {
   const result = useQuery(ALL_AUTORS);
   if (result.loading) {
@@ -30,14 +32,16 @@ function Authors(props) {
         </tbody>
       </table>
       <h3>Set birth year</h3>
-      <BirthYearForm />
+      <BirthYearForm authors={authors} />
     </div>
   );
 }
 
-function BirthYearForm() {
-  const [name, setName] = useState('');
+function BirthYearForm({ authors }) {
   const [born, setBorn] = useState('');
+
+  const options = authors.map(a => ({ value: a.name, label: a.name }));
+  const [selectedOption, setSelectedOption] = useState(null);
 
   const [setBirthYear] = useMutation(SET_BIRTH_YEAR, {
     refetchQueries: [{ query: ALL_AUTORS }],
@@ -47,10 +51,10 @@ function BirthYearForm() {
     <div>
       <form onSubmit={submit}>
         <div>
-          name{' '}
-          <input
-            value={name}
-            onChange={({ target }) => setName(target.value)}
+          <Select
+            value={selectedOption}
+            onChange={setSelectedOption}
+            options={options}
           />
         </div>
         <div>
@@ -68,9 +72,11 @@ function BirthYearForm() {
   function submit(event) {
     event.preventDefault();
 
-    setBirthYear({ variables: { name, born: +born } });
+    console.log({ selectedOption });
 
-    setName('');
+    setBirthYear({ variables: { name: selectedOption.value, born: +born } });
+
+    setSelectedOption(null);
     setBorn('');
   }
 }
