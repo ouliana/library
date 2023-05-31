@@ -1,4 +1,4 @@
-let persons = [
+const persons = [
   {
     name: 'Arto Hellas',
     phone: '040-123543',
@@ -21,4 +21,15 @@ let persons = [
   },
 ];
 
-module.exports = persons;
+const users = [
+  {
+    username: 'ouliana',
+    friends: [],
+  },
+  {
+    username: 'someoneelse',
+    friends: [],
+  },
+];
+
+module.exports = { persons, users };
