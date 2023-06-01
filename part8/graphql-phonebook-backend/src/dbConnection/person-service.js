@@ -5,7 +5,6 @@ const personService = {
   findByName,
   findById,
   findIdByName,
-  findDocById,
   save,
 };
 
@@ -30,12 +29,6 @@ async function findById(id) {
   if (!response.rows.length) return null;
 
   return response.rows[0].value;
-}
-
-async function findDocById(id) {
-  const doc = await (await dbPersons).get(id);
-
-  return doc;
 }
 
 async function findIdByName(name) {

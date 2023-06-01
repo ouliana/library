@@ -1,5 +1,4 @@
 const dbUsers = require('./users');
-const dbPersons = require('./users');
 
 const userService = {
   findAll,
@@ -7,6 +6,8 @@ const userService = {
   findByUsername,
   save,
   populate,
+  findDocById,
+  updateFriends,
 };
 
 async function findAll() {
@@ -14,6 +15,11 @@ async function findAll() {
   if (!response.rows.length) return null;
 
   return response.rows.map(r => r.value);
+}
+
+async function findDocById(id) {
+  const response = await (await dbUsers).get(id);
+  return response;
 }
 
 async function findById(id) {
@@ -39,6 +45,8 @@ async function save(user) {
 }
 
 async function populate(id) {
+  const dbPersons = require('./persons');
+
   const user = await findById(id);
   const response = await (await dbUsers).view('user', 'friends', { key: id });
   const friendsIds = response.rows[0].value;
@@ -51,6 +59,17 @@ async function populate(id) {
   const friends = await Promise.all(promises);
 
   return { ...user, friends };
+}
+
+async function updateFriends(id, friendId) {
+  const doc = await (await dbUsers).get(id);
+
+  const docToUpdate = {
+    ...doc,
+    friends: doc.friends.concat(friendId),
+  };
+
+  const response = await (await dbUsers).insert(docToUpdate);
 }
 
 module.exports = userService;
