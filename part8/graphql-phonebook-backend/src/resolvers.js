@@ -39,8 +39,10 @@ const resolvers = {
     },
   },
   Mutation: {
-    addPerson: async (root, args) => {
-      if (findPersonByname(args.name)) {
+    addPerson: async (root, args, context) => {
+      const personToCheck = await personService.findByName(args.name);
+
+      if (personToCheck) {
         throw new GraphQLError('Name must be unique', {
           extensions: {
             code: 'BAD_USER_INPUT',
@@ -49,8 +51,21 @@ const resolvers = {
         });
       }
       const person = { ...args };
+      const currentUser = context.currentUser;
+
+      if (!currentUser) {
+        throw new GraphQLError('not authenticated', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+          },
+        });
+      }
+
       try {
         var response = await personService.save(person);
+
+        await userService.updateFriends(currentUser.id, response.id);
+        currentUser.friends = currentUser.friends.concat(person);
       } catch (error) {
         throw new GraphQLError('Saving person failed', {
           extensions: {
@@ -65,6 +80,25 @@ const resolvers = {
 
       return savedPerson;
     },
+    addAsFriend: async (root, args, { currentUser }) => {
+      const isFriend = person =>
+        currentUser.friends.map(f => f.id).includes(person.id);
+
+      if (!currentUser) {
+        throw new GraphQLError('wrong credentials', {
+          extensions: { code: 'BAD_USER_INPUT' },
+        });
+      }
+
+      const person = await personService.findByName(args.name);
+      if (!isFriend(person)) {
+        await personService.updateFriends(currentUser.id, person.id);
+        currentUser.friends = currentUser.friends.concat(person);
+      }
+
+      return currentUser;
+    },
+
     editNumber: async (root, args) => {
       const id = await personService.findIdByName(args.name);
 
@@ -91,6 +125,7 @@ const resolvers = {
 
       return updatedPerson;
     },
+
     createUser: async (root, args) => {
       var response = await userService.findByUsername(args.username);
 
@@ -115,6 +150,7 @@ const resolvers = {
         });
       }
     },
+
     login: async (root, args) => {
       const user = await userService.findByUsername(args.username);
 
