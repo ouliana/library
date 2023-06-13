@@ -1,7 +1,8 @@
 const booksService = require('../dbConnection/books-service');
 const authorsService = require('../dbConnection/authors-service');
+const usersService = require('../dbConnection/users-service');
 const { GraphQLError } = require('graphql');
-const { v1: uuid } = require('uuid');
+const jwt = require('jsonwebtoken');
 
 const resolvers = {
   Author: {
@@ -45,10 +46,20 @@ const resolvers = {
       const authors = await authorsService.findAll();
       return authors;
     },
+    me: async (root, args, context) => context.currentUser,
   },
 
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: async (root, args, context) => {
+      const currentUser = context.currentUser;
+      if (!currentUser) {
+        throw new GraphQLError('not authenticated', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+          },
+        });
+      }
+
       if (args.title.length < 3 || args.author.length < 3) {
         const invalid = [args.title, args.author].filter(arg => arg.length < 3);
 
@@ -71,12 +82,55 @@ const resolvers = {
     },
 
     editAuthor: async (root, args) => {
+      if (!currentUser) {
+        throw new GraphQLError('not authenticated', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+          },
+        });
+      }
+
       const doc = await authorsService.findDocByName(args.name);
 
       const updatedDoc = { ...doc, born: args.setBornTo };
 
       const updatedAuthor = await authorsService.save(updatedDoc);
       return updatedAuthor;
+    },
+
+    createUser: async (root, args) => {
+      const person = await usersService.findByUsername(args.username);
+
+      if (person) {
+        throw new GraphQLError(`The user ${args.username} is already exist`, {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.username,
+          },
+        });
+      }
+
+      const newUser = await usersService.save({ ...args });
+      return newUser;
+    },
+
+    login: async (root, args) => {
+      const user = await usersService.findByUsername(args.username);
+
+      if (!user || args.password !== 'secret') {
+        throw GraphQLError('wrong credentials', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+          },
+        });
+      }
+
+      const userForToken = {
+        username: args.username,
+        id: user.id,
+      };
+
+      return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
     },
   },
 };

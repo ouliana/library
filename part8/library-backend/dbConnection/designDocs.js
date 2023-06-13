@@ -29,7 +29,10 @@ const usersDesignDoc = {
   _id: '_design/user',
   views: {
     by_id: {
-      map: 'function(doc){ emit(doc._id, { username: doc.username, id: doc._id})}',
+      map: 'function(doc){ emit(doc._id, { username: doc.username, favoriteGenre: doc.favoriteGenre, id: doc._id})}',
+    },
+    by_username: {
+      map: 'function(doc){ emit(doc.username, { username: doc.username, favoriteGenre: doc.favoriteGenre, id: doc._id})}',
     },
     details_by_id: {
       map: 'function(doc){ emit(doc._id, {id: doc._id, username: doc.username, passwordHash: doc.passwordHash})}',
