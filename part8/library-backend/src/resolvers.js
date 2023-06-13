@@ -49,6 +49,17 @@ const resolvers = {
 
   Mutation: {
     addBook: async (root, args) => {
+      if (args.title.length < 3 || args.author.length < 3) {
+        const invalid = [args.title, args.author].filter(arg => arg.length < 3);
+
+        throw new GraphQLError('The book title or author name are too short', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: invalid,
+          },
+        });
+      }
+
       const book = await booksService.save({ ...args });
 
       const authors = await authorsService.findAll();

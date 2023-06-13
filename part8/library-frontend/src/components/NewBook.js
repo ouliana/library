@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { CREATE_BOOK, ALL_AUTORS, ALL_BOOKS } from '../queries';
+const { GraphQLError } = require('graphql');
 
 function NewBook() {
+  const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [published, setPublished] = useState('');
@@ -58,7 +61,19 @@ function NewBook() {
 
   async function submit(event) {
     event.preventDefault();
+
     const intPublished = +published;
+
+    if (title.length < 3 || author.length < 3) {
+      const invalid = [title, author].filter(arg => arg.length < 3);
+
+      throw new GraphQLError('The book title or author name are too short', {
+        extensions: {
+          code: 'BAD_USER_INPUT',
+          invalidArgs: invalid,
+        },
+      });
+    }
 
     createBook({
       variables: { title, author, published: intPublished, genres },
@@ -69,6 +84,7 @@ function NewBook() {
     setAuthor('');
     setGenres([]);
     setGenre('');
+    navigate('/books');
   }
 
   function addGenre() {
