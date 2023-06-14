@@ -1,5 +1,8 @@
 const dbPersons = require('./persons');
+const Joi = require('joi');
+const { ValidationError, UniquenessError } = require('../utils/errors');
 
+// public API
 const personService = {
   findAll,
   findByName,
@@ -7,6 +10,25 @@ const personService = {
   findIdByName,
   save,
 };
+
+module.exports = personService;
+
+// implementarion
+const schema = Joi.object({
+  name: Joi.string().min(3).required(),
+  phone: Joi.string().allow('').optional(),
+  street: Joi.string().min(3).required(),
+  city: Joi.string().min(3).required(),
+});
+
+function validate(person) {
+  var result = schema.validate(person, { abortEarly: false });
+  if (result.error) {
+    var message = result.error.details.map(d => d.message).join(', ');
+    throw new ValidationError(message);
+  }
+  return result;
+}
 
 async function findAll() {
   const response = await (await dbPersons).view('person', 'by_id');
@@ -42,8 +64,9 @@ async function findIdByName(name) {
 }
 
 async function save(person) {
+  var validation = validate(person);
+  if (validation.error) throw new Error(validation.error);
+
   const response = await (await dbPersons).insert(person);
   return response;
 }
-
-module.exports = personService;

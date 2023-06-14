@@ -1,8 +1,62 @@
 import { useState } from 'react';
-import { useQuery } from '@apollo/client';
+import { useApolloClient, useQuery } from '@apollo/client';
 import PersonForm from './components/PersonForm';
 import PhoneForm from './components/PhoneForm';
 import { ALL_PERSONS, FIND_PERSON } from './queries';
+import LoginForm from './components/LoginForm';
+
+function App() {
+  const [token, setToken] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const result = useQuery(ALL_PERSONS);
+  const client = useApolloClient();
+
+  if (result.loading) {
+    return <div>loading...</div>;
+  }
+
+  const logout = () => {
+    setToken(null);
+    localStorage.clear();
+    client.reserStore();
+  };
+
+  const notity = message => {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 10000);
+  };
+
+  if (!token) {
+    return (
+      <div>
+        <Notify errorMessage={errorMessage} />
+        <h2>Login</h2>
+        <LoginForm
+          setToken={setToken}
+          setError={notity}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <Notify errorMessage={errorMessage} />
+      <button onClick={logout}>logout</button>
+      <Persons persons={result.data.allPersons} />
+      <PersonForm setError={notity} />
+      <PhoneForm setError={notity} />
+    </div>
+  );
+}
+
+function Notify({ errorMessage }) {
+  if (!errorMessage) return null;
+
+  return <div style={{ color: 'red' }}>{errorMessage}</div>;
+}
 
 function Person({ person, onClose }) {
   return (
@@ -43,41 +97,6 @@ function Persons({ persons }) {
       ))}
     </div>
   );
-}
-
-function App() {
-  // const result = useQuery(ALL_PERSONS, {
-  //   pollInterval: 2000,
-  // });
-
-  const [errorMessage, setErrorMessage] = useState(null);
-
-  const result = useQuery(ALL_PERSONS);
-
-  if (result.loading) {
-    return <div>loading...</div>;
-  }
-
-  function notity(message) {
-    setErrorMessage(message);
-    setTimeout(() => {
-      setErrorMessage(null);
-    }, 10000);
-  }
-  return (
-    <div>
-      <Notify errorMessage={errorMessage} />
-      <Persons persons={result.data.allPersons} />
-      <PersonForm setError={notity} />
-      <PhoneForm setError={notity} />
-    </div>
-  );
-}
-
-function Notify({ errorMessage }) {
-  if (!errorMessage) return null;
-
-  return <div style={{ color: 'red' }}>{errorMessage}</div>;
 }
 
 export default App;

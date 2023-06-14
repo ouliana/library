@@ -1,4 +1,8 @@
 const dbUsers = require('./users');
+const Joi = require('joi');
+const { ValidationError, UniquenessError } = require('../utils/errors');
+
+// public API
 
 const userService = {
   findAll,
@@ -9,6 +13,24 @@ const userService = {
   findDocById,
   updateFriends,
 };
+
+module.exports = userService;
+
+// implementarion
+const schema = Joi.object({
+  username: Joi.string().min(3).required(),
+  password: Joi.string().min(6).required(),
+  frends: Joi.array(),
+});
+
+function validate(user) {
+  var result = schema.validate(user, { abortEarly: false });
+  if (result.error) {
+    var message = result.error.details.map(d => d.message).join(', ');
+    throw new ValidationError(message);
+  }
+  return result;
+}
 
 async function findAll() {
   const response = await (await dbUsers).view('user', 'by_id');
@@ -40,6 +62,9 @@ async function findByUsername(userame) {
 }
 
 async function save(user) {
+  var validation = validate(user);
+  if (validation.error) throw new Error(validation.error);
+
   const response = await (await dbUsers).insert(user);
   return response;
 }
@@ -71,5 +96,3 @@ async function updateFriends(id, friendId) {
 
   const response = await (await dbUsers).insert(docToUpdate);
 }
-
-module.exports = userService;
