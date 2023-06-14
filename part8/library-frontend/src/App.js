@@ -1,24 +1,31 @@
+import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { useApolloClient } from '@apollo/client';
 
+import Main from './components/Main';
 import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
-import Main from './components/Main';
+import LoginForm from './components/LoginForm';
 
 const App = () => {
   const padding = {
     padding: 5,
   };
 
+  const [token, setToken] = useState(null);
+  const [error, setError] = useState(null);
+  const client = useApolloClient();
+
+  const logout = () => {
+    setToken(null);
+    localStorage.clear();
+    client.resetStore();
+  };
+
   return (
     <Router>
       <div>
-        <Link
-          style={padding}
-          to='/'
-        >
-          Home
-        </Link>
         <Link
           style={padding}
           to='/authors'
@@ -31,12 +38,25 @@ const App = () => {
         >
           books
         </Link>
-        <Link
-          style={padding}
-          to='/add'
-        >
-          add book
-        </Link>
+        {token ? (
+          <>
+            {' '}
+            <Link
+              style={padding}
+              to='/add'
+            >
+              add book
+            </Link>
+            <button onClick={logout}>logout</button>
+          </>
+        ) : (
+          <Link
+            style={padding}
+            to='/login'
+          >
+            login
+          </Link>
+        )}
       </div>
       <Routes>
         <Route
@@ -44,8 +64,17 @@ const App = () => {
           element={<Main />}
         />
         <Route
+          path='/login'
+          element={
+            <LoginForm
+              setToken={setToken}
+              setError={setError}
+            />
+          }
+        />
+        <Route
           path='/authors'
-          element={<Authors />}
+          element={<Authors token={token} />}
         />
         <Route
           path='/books'
