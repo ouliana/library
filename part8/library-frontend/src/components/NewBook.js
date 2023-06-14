@@ -64,16 +64,6 @@ function NewBook() {
 
     const intPublished = +published;
 
-    if (title.length < 3 || author.length < 3) {
-      const invalid = [title, author].filter(arg => arg.length < 3);
-
-      throw new GraphQLError('The book title or author name are too short', {
-        extensions: {
-          code: 'BAD_USER_INPUT',
-          invalidArgs: invalid,
-        },
-      });
-    }
 
     createBook({
       variables: { title, author, published: intPublished, genres },

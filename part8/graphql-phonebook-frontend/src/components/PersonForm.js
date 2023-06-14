@@ -9,16 +9,19 @@ function PersonForm({ setError }) {
   const [city, setCity] = useState('');
 
   const [createPerson] = useMutation(CREATE_PERSON, {
-    refetchQueries: [{ query: ALL_PERSONS }],
     onError: error => {
       const messages = error.graphQLErrors[0].message;
       setError(messages);
+    },
+    update: (cache, response) => {
+      cache.updateQuery({ query: ALL_PERSONS }, ({ allPersons }) => ({
+        allPersons: allPersons.concat(response.data.addPerson),
+      }));
     },
   });
 
   function submit(event) {
     event.preventDefault();
-
     createPerson({ variables: { name, phone, street, city } });
 
     setName('');
