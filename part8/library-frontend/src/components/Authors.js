@@ -4,7 +4,7 @@ import { ALL_AUTORS, SET_BIRTH_YEAR } from '../queries';
 
 import Select from 'react-select';
 
-function Authors(props) {
+function Authors({ token }) {
   const result = useQuery(ALL_AUTORS);
   if (result.loading) {
     return <div>loading...</div>;
@@ -31,8 +31,12 @@ function Authors(props) {
           ))}
         </tbody>
       </table>
-      <h3>Set birth year</h3>
-      <BirthYearForm authors={authors} />
+      {token ? (
+        <>
+          <h3>Set birth year</h3>
+          <BirthYearForm authors={authors} />
+        </>
+      ) : null}
     </div>
   );
 }
