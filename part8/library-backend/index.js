@@ -22,7 +22,6 @@ startStandaloneServer(server, {
       );
       // const currentUser = await userService.populate(decodedToken.id);
       const currentUser = await usersService.findUserById(decodedToken.id);
-      console.log({ currentUser });
       return { currentUser };
     }
   },
