@@ -1,20 +1,30 @@
-import { useState } from 'react';
-import { useQuery } from '@apollo/client';
+import { useEffect } from 'react';
+import { useQuery, useLazyQuery } from '@apollo/client';
 import { ALL_BOOKS } from '../queries';
 
 function Books() {
-  const result = useQuery(ALL_BOOKS);
-  const [genre, setGenre] = useState('');
+  const books = useQuery(ALL_BOOKS);
+  const [getBooks, { loading, error, data }] = useLazyQuery(ALL_BOOKS);
 
-  if (result.loading) return <div>loading...</div>;
-  const books = result.data.allBooks;
+  // if (loading || books.loading) {
+  //   return <p>loading...</p>;
+  // }
 
-  const genres = new Set();
-  books.forEach(b => b.genres.forEach(g => genres.add(g)));
+  if (books.data) {
+    var genres = (function getGenres() {
+      const result = new Set();
+      books.data.allBooks.forEach(b => b.genres.forEach(g => result.add(g)));
+      return Array.from(result);
+    })();
+  }
+
+  useEffect(() => {
+    getBooks();
+  }, []); // eslint-disable-line
 
   return (
     <div>
-      <h2>books</h2>
+      <h2>Books</h2>
 
       <table>
         <tbody>
@@ -23,9 +33,8 @@ function Books() {
             <th>author</th>
             <th>published</th>
           </tr>
-          {books
-            .filter(b => !genre || b.genres.includes(genre))
-            .map(a => (
+          {data?.allBooks &&
+            data?.allBooks.map(a => (
               <tr key={a.title}>
                 <td>{a.title}</td>
                 <td>{a.author}</td>
@@ -34,10 +43,21 @@ function Books() {
             ))}
         </tbody>
       </table>
-      {Array.from(genres).map(genre => (
-        <button onClick={() => setGenre(genre)}>{genre}</button>
-      ))}
-      <button onClick={() => setGenre('')}>all genres</button>
+      {genres &&
+        genres.map(genre => (
+          <button
+            key={genre}
+            onClick={() => getBooks({ variables: { genre } })}
+          >
+            {genre}
+          </button>
+        ))}
+      <button
+        key='all'
+        onClick={() => getBooks({ variables: { genre: 'all' } })}
+      >
+        all genres
+      </button>
     </div>
   );
 }

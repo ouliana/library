@@ -13,7 +13,6 @@ const App = () => {
   const padding = {
     padding: 5,
   };
-
   const [token, setToken] = useState(null);
   const [error, setError] = useState(null);
   const client = useApolloClient();
