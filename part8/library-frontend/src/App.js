@@ -7,6 +7,7 @@ import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
 import LoginForm from './components/LoginForm';
+import Recommendations from './components/Recommendations';
 
 const App = () => {
   const padding = {
@@ -38,9 +39,15 @@ const App = () => {
         >
           books
         </Link>
+
         {token ? (
           <>
-            {' '}
+            <Link
+              style={padding}
+              to='/recommendations'
+            >
+              recommendations
+            </Link>{' '}
             <Link
               style={padding}
               to='/add'
@@ -83,6 +90,10 @@ const App = () => {
         <Route
           path='/add'
           element={<NewBook />}
+        />
+        <Route
+          path='/recommendations'
+          element={<Recommendations />}
         />
       </Routes>
     </Router>

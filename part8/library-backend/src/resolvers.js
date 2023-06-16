@@ -22,6 +22,7 @@ const resolvers = {
       return authors.length;
     },
     allBooks: async (root, args) => {
+      console.log('allBooks');
       if (!(args.author || args.genre)) {
         const books = await booksService.findAll();
         return books;
@@ -38,6 +39,7 @@ const resolvers = {
       }
 
       if (args.genre) {
+        console.log(args.genre);
         const books = await booksService.findAll();
         return books.filter(b => b.genres.includes(args.genre));
       }
