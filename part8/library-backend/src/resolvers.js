@@ -39,9 +39,10 @@ const resolvers = {
       }
 
       if (args.genre) {
-        console.log(args.genre);
         const books = await booksService.findAll();
-        return books.filter(b => b.genres.includes(args.genre));
+        return args.genre === 'all'
+          ? books
+          : books.filter(b => b.genres.includes(args.genre));
       }
     },
     allAuthors: async () => {
