@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
+import TokenContext from '../TokenContext';
+
 import { useMutation } from '@apollo/client';
 import { LOGIN } from '../queries';
 import { useNavigate } from 'react-router-dom';
 
-function LoginForm({ setError, setToken }) {
+function LoginForm({ setError }) {
+  const [token, dispatch] = useContext(TokenContext);
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -21,9 +25,9 @@ function LoginForm({ setError, setToken }) {
 
   useEffect(() => {
     if (result.data) {
-      const token = result.data.login.value;
-      setToken(token);
-      localStorage.setItem('library-user-token', token);
+      const tokenValue = result.data.login.value;
+      dispatch({ type: 'LOGIN', payload: tokenValue });
+      localStorage.setItem('library-user-token', tokenValue);
       navigate('/');
     }
   }, [result.data]); // eslint-disable-line

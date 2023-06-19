@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { CREATE_BOOK, ALL_AUTORS, ALL_BOOKS } from '../queries';
+import { CREATE_BOOK, ALL_AUTHORS, ALL_BOOKS } from '../queries';
 const { GraphQLError } = require('graphql');
 
 function NewBook() {
@@ -13,7 +13,7 @@ function NewBook() {
   const [genres, setGenres] = useState([]);
 
   const [createBook] = useMutation(CREATE_BOOK, {
-    refetchQueries: [{ query: ALL_AUTORS }, { query: ALL_BOOKS }],
+    refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }],
   });
 
   return (
@@ -63,7 +63,6 @@ function NewBook() {
     event.preventDefault();
 
     const intPublished = +published;
-
 
     createBook({
       variables: { title, author, published: intPublished, genres },

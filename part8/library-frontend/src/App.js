@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import TokenContext from './TokenContext';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { useApolloClient } from '@apollo/client';
 
@@ -13,89 +14,94 @@ const App = () => {
   const padding = {
     padding: 5,
   };
-  const [token, setToken] = useState(null);
+
+  const [token, dispatch] = useContext(TokenContext);
+
   const [error, setError] = useState(null);
   const client = useApolloClient();
 
   const logout = () => {
-    setToken(null);
     localStorage.clear();
+    dispatch({ type: 'CLEAR' });
     client.resetStore();
   };
 
-  return (
-    <Router>
-      <div>
-        <Link
-          style={padding}
-          to='/authors'
-        >
-          authors
-        </Link>
-        <Link
-          style={padding}
-          to='/books'
-        >
-          books
-        </Link>
+  useEffect(() => {
+    const storedToken = localStorage.getItem('library-user-token');
+    if (storedToken) {
+      dispatch({ type: 'LOGIN', payload: storedToken });
+    }
+  }, []);
 
-        {token ? (
-          <>
-            <Link
-              style={padding}
-              to='/recommendations'
-            >
-              recommendations
-            </Link>{' '}
-            <Link
-              style={padding}
-              to='/add'
-            >
-              add book
-            </Link>
-            <button onClick={logout}>logout</button>
-          </>
-        ) : (
+  return (
+    <TokenContext.Provider value={[token, dispatch]}>
+      <Router>
+        <div>
           <Link
             style={padding}
-            to='/login'
+            to='/authors'
           >
-            login
+            authors
           </Link>
-        )}
-      </div>
-      <Routes>
-        <Route
-          path='/'
-          element={<Main />}
-        />
-        <Route
-          path='/login'
-          element={
-            <LoginForm
-              setToken={setToken}
-              setError={setError}
-            />
-          }
-        />
-        <Route
-          path='/authors'
-          element={<Authors token={token} />}
-        />
-        <Route
-          path='/books'
-          element={<Books />}
-        />
-        <Route
-          path='/add'
-          element={<NewBook />}
-        />
-        <Route
-          path='/recommendations'
-          element={<Recommendations />}
-        />
-      </Routes>
-    </Router>
+          <Link
+            style={padding}
+            to='/books'
+          >
+            books
+          </Link>
+          {token ? (
+            <>
+              <Link
+                style={padding}
+                to='/recommendations'
+              >
+                recommendations
+              </Link>{' '}
+              <Link
+                style={padding}
+                to='/add'
+              >
+                add book
+              </Link>
+              <button onClick={logout}>logout</button>
+            </>
+          ) : (
+            <Link
+              style={padding}
+              to='/login'
+            >
+              login
+            </Link>
+          )}
+        </div>
+        <Routes>
+          <Route
+            path='/'
+            element={<Main />}
+          />
+          <Route
+            path='/login'
+            element={<LoginForm setError={setError} />}
+          />
+          <Route
+            path='/authors'
+            element={<Authors token={token} />}
+          />
+          <Route
+            path='/books'
+            element={<Books />}
+          />
+          <Route
+            path='/add'
+            element={<NewBook />}
+          />
+          <Route
+            path='/recommendations'
+            element={<Recommendations />}
+          />
+        </Routes>
+      </Router>
+    </TokenContext.Provider>
   );
 };
 
