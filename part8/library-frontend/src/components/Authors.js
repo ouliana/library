@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import { ALL_AUTORS, SET_BIRTH_YEAR } from '../queries';
+import { ALL_AUTHORS, SET_BIRTH_YEAR } from '../queries';
 
 import Select from 'react-select';
 
 function Authors({ token }) {
-  const result = useQuery(ALL_AUTORS);
+  const result = useQuery(ALL_AUTHORS);
   if (result.loading) {
     return <div>loading...</div>;
   }
@@ -48,7 +48,7 @@ function BirthYearForm({ authors }) {
   const [selectedOption, setSelectedOption] = useState(null);
 
   const [setBirthYear] = useMutation(SET_BIRTH_YEAR, {
-    refetchQueries: [{ query: ALL_AUTORS }],
+    refetchQueries: [{ query: ALL_AUTHORS }],
   });
 
   return (
