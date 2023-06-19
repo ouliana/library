@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import TokenContext from './TokenContext';
+import { Navigate } from 'react-router-dom';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { useApolloClient } from '@apollo/client';
 
@@ -93,11 +94,29 @@ const App = () => {
           />
           <Route
             path='/add'
-            element={<NewBook />}
+            element={
+              token ? (
+                <NewBook />
+              ) : (
+                <Navigate
+                  replace
+                  to='/books'
+                />
+              )
+            }
           />
           <Route
             path='/recommendations'
-            element={<Recommendations />}
+            element={
+              token ? (
+                <Recommendations />
+              ) : (
+                <Navigate
+                  replace
+                  to='/books'
+                />
+              )
+            }
           />
         </Routes>
       </Router>
