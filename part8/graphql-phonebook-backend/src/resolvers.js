@@ -81,7 +81,7 @@ const resolvers = {
 
       const savedPerson = await personService.findById(response.id);
 
-      pubsub.publish('PERSON_ADDED', { personAdded: person });
+      pubsub.publish('PERSON_ADDED', { personAdded: savedPerson });
 
       return savedPerson;
     },
@@ -158,7 +158,6 @@ const resolvers = {
 
     login: async (root, args) => {
       const user = await userService.findByUsername(args.username);
-
       if (!user || args.password !== 'secret') {
         throw new GraphQLError('wrong credentials', {
           extensions: {
