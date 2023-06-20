@@ -1,8 +1,11 @@
 const jwt = require('jsonwebtoken');
+const { PubSub } = require('graphql-subscriptions');
 
 const personService = require('./dbConnection/person-service');
 const userService = require('./dbConnection/user-service');
 const { GraphQLError } = require('graphql');
+
+const pubsub = new PubSub();
 
 let persons;
 
@@ -77,6 +80,8 @@ const resolvers = {
       }
 
       const savedPerson = await personService.findById(response.id);
+
+      pubsub.publish('PERSON_ADDED', { personAdded: person });
 
       return savedPerson;
     },
@@ -168,6 +173,12 @@ const resolvers = {
       };
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
+    },
+  },
+
+  Subscription: {
+    personAdded: {
+      subscribe: () => pubsub.asyncIterator('PERSON_ADDED'),
     },
   },
 };
