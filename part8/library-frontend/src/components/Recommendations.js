@@ -30,13 +30,14 @@ function Recommendations() {
             <th>author</th>
             <th>published</th>
           </tr>
-          {books.data.allBooks.map(a => (
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author}</td>
-              <td>{a.published}</td>
-            </tr>
-          ))}
+          {books &&
+            books.data.allBooks.map(a => (
+              <tr key={a.title}>
+                <td>{a.title}</td>
+                <td>{a.author}</td>
+                <td>{a.published}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </>
