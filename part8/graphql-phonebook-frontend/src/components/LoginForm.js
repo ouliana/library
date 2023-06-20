@@ -7,7 +7,10 @@ function LoginForm({ setError, setToken }) {
   const [password, setPassword] = useState('');
 
   const [login, result] = useMutation(LOGIN, {
-    onError: error => setError(error.graphQLErrors[0].message),
+    onError: error => {
+      console.log({ error });
+      setError(error.graphQLErrors[0].message);
+    },
   });
 
   const submit = async event => {
