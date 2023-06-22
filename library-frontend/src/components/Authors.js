@@ -9,8 +9,9 @@ function Authors({ token }) {
   if (result.loading) {
     return <div>loading...</div>;
   }
+  console.log({ result });
 
-  const authors = result.data.allAuthors;
+  const authors = result.data?.allAuthors;
 
   return (
     <div>
@@ -22,13 +23,14 @@ function Authors({ token }) {
             <th>born</th>
             <th>books</th>
           </tr>
-          {authors.map(a => (
-            <tr key={a.name}>
-              <td>{a.name}</td>
-              <td>{a.born}</td>
-              <td>{a.bookCount}</td>
-            </tr>
-          ))}
+          {authors &&
+            authors.map(a => (
+              <tr key={a.name}>
+                <td>{a.name}</td>
+                <td>{a.born}</td>
+                <td>{a.bookCount}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
       {token ? (
@@ -44,7 +46,9 @@ function Authors({ token }) {
 function BirthYearForm({ authors }) {
   const [born, setBorn] = useState('');
 
-  const options = authors.map(a => ({ value: a.name, label: a.name }));
+  const options = authors
+    ? authors.map(a => ({ value: a.name, label: a.name }))
+    : [];
   const [selectedOption, setSelectedOption] = useState(null);
 
   const [setBirthYear] = useMutation(SET_BIRTH_YEAR, {

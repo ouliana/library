@@ -1,14 +1,35 @@
 import { useEffect } from 'react';
-import { useQuery, useLazyQuery } from '@apollo/client';
-import { ALL_BOOKS } from '../queries';
+import {
+  useQuery,
+  useLazyQuery,
+  useSubscription,
+  useApolloClient,
+} from '@apollo/client';
+import { ALL_BOOKS, BOOK_ADDED } from '../queries';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Books() {
   const books = useQuery(ALL_BOOKS);
   const [getBooks, { loading, error, data }] = useLazyQuery(ALL_BOOKS);
 
-  // if (loading || books.loading) {
-  //   return <p>loading...</p>;
-  // }
+  const client = useApolloClient();
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      const addedBook = data.data.bookAdded;
+      toast.success(`"${addedBook.title}" by ${addedBook.author} is added`, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+
+      client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+        return {
+          allBooks: allBooks.concat(addedBook),
+        };
+      });
+    },
+  });
 
   if (books.data) {
     var genres = (function getGenres() {
@@ -25,7 +46,7 @@ function Books() {
   return (
     <div>
       <h2>Books</h2>
-
+      <ToastContainer />
       <table>
         <tbody>
           <tr>
