@@ -67,6 +67,7 @@ async function start() {
             process.env.JWT_SECRET
           );
           const currentUser = await userService.populate(decodedToken.id);
+          console.log('decodedToken.id: ', decodedToken.id);
           return { currentUser };
         }
       },

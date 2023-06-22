@@ -1,8 +1,12 @@
 const booksService = require('../dbConnection/books-service');
+const { PubSub } = require('graphql-subscription');
+
 const authorsService = require('../dbConnection/authors-service');
 const usersService = require('../dbConnection/users-service');
 const { GraphQLError } = require('graphql');
 const jwt = require('jsonwebtoken');
+
+const pubsub = new PubSub();
 
 const resolvers = {
   Author: {
@@ -81,6 +85,8 @@ const resolvers = {
       if (!authors.find(a => a.name === args.author)) {
         await authorsService.save({ name: args.author });
       }
+
+      pubsub.publish('BOOK_ADDED', { bookAdded: book });
       return book;
     },
 
@@ -134,6 +140,12 @@ const resolvers = {
       };
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
+    },
+  },
+
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator('BOOK_ADDED'),
     },
   },
 };

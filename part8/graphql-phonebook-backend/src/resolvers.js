@@ -40,19 +40,14 @@ const resolvers = {
         city,
       };
     },
+    friendOf: async root => {
+      // return the list of users
+      const friends = await userService.findFriends(root.id);
+      return friends;
+    },
   },
   Mutation: {
     addPerson: async (root, args, context) => {
-      const personToCheck = await personService.findByName(args.name);
-
-      if (personToCheck) {
-        throw new GraphQLError('Name must be unique', {
-          extensions: {
-            code: 'BAD_USER_INPUT',
-            invalidArgs: args.name,
-          },
-        });
-      }
       const person = { ...args };
       const currentUser = context.currentUser;
 
@@ -66,7 +61,6 @@ const resolvers = {
 
       try {
         var response = await personService.save(person);
-
         await userService.updateFriends(currentUser.id, response.id);
         currentUser.friends = currentUser.friends.concat(person);
       } catch (error) {
@@ -86,18 +80,18 @@ const resolvers = {
       return savedPerson;
     },
     addAsFriend: async (root, args, { currentUser }) => {
-      const isFriend = person =>
-        currentUser.friends.map(f => f.id).includes(person.id);
-
       if (!currentUser) {
         throw new GraphQLError('wrong credentials', {
           extensions: { code: 'BAD_USER_INPUT' },
         });
       }
 
+      const isFriend = person =>
+        currentUser.friends.map(f => f.id).includes(person.id);
+
       const person = await personService.findByName(args.name);
       if (!isFriend(person)) {
-        await personService.updateFriends(currentUser.id, person.id);
+        await userService.updateFriends(currentUser.id, person.id);
         currentUser.friends = currentUser.friends.concat(person);
       }
 
@@ -145,6 +139,7 @@ const resolvers = {
       const user = { ...args, friends: [] };
       try {
         response = await userService.save(user);
+        console.log({ response });
       } catch (error) {
         throw new GraphQLError('Saving user failed', {
           extensions: {
@@ -154,6 +149,7 @@ const resolvers = {
           },
         });
       }
+      return response;
     },
 
     login: async (root, args) => {
