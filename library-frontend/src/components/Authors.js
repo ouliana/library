@@ -9,7 +9,6 @@ function Authors({ token }) {
   if (result.loading) {
     return <div>loading...</div>;
   }
-  console.log({ result });
 
   const authors = result.data?.allAuthors;
 
