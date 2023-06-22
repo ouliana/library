@@ -11,6 +11,7 @@ const userService = {
   save,
   populate,
   findDocById,
+  findFriends,
   updateFriends,
 };
 
@@ -19,8 +20,8 @@ module.exports = userService;
 // implementarion
 const schema = Joi.object({
   username: Joi.string().min(3).required(),
-  password: Joi.string().min(6).required(),
-  frends: Joi.array(),
+  // password: Joi.string().min(6).required(),
+  friends: Joi.array(),
 });
 
 function validate(user) {
@@ -62,11 +63,23 @@ async function findByUsername(userame) {
 }
 
 async function save(user) {
-  var validation = validate(user);
+  const validation = validate(user);
   if (validation.error) throw new Error(validation.error);
 
-  const response = await (await dbUsers).insert(user);
-  return response;
+  const db = await dbUsers;
+  const response = await db.insert(user);
+  const newUser = await db.view('user', 'by_id', { key: response.id });
+  return newUser.rows[0].value;
+}
+
+async function findFriends(id) {
+  const response = await (await dbUsers).view('user', 'by_id');
+
+  if (!response.rows.length) return null;
+
+  const friends = response.rows.filter(r => r.value.friends.includes(id));
+
+  return friends;
 }
 
 async function populate(id) {
