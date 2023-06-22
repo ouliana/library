@@ -5,6 +5,7 @@ const authorsService = {
   findByName,
   findDocByName,
   save,
+  populate,
 };
 
 module.exports = authorsService;
@@ -40,4 +41,16 @@ async function save(author) {
 
   const savedAuthor = await db.view('author', 'by_id', { key: response.id });
   return savedAuthor.rows[0].value;
+}
+
+async function populate(author) {
+  const dbBooks = require('./dbBooks');
+
+  // const count = response.rows.map(r => r.value);
+
+  const response = await (
+    await dbBooks
+  ).view('book', 'book_count_by_author', { key: author.name });
+
+  return { ...author, bookCount: response.rows.length };
 }

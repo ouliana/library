@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import TokenContext from './TokenContext';
 import { Navigate } from 'react-router-dom';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+
 import { useApolloClient } from '@apollo/client';
 
 import Main from './components/Main';
@@ -20,12 +21,6 @@ const App = () => {
 
   const [error, setError] = useState(null);
   const client = useApolloClient();
-
-  const logout = () => {
-    localStorage.clear();
-    dispatch({ type: 'CLEAR' });
-    client.resetStore();
-  };
 
   useEffect(() => {
     const storedToken = localStorage.getItem('library-user-token');
@@ -122,6 +117,12 @@ const App = () => {
       </Router>
     </TokenContext.Provider>
   );
+
+  function logout() {
+    localStorage.clear();
+    dispatch({ type: 'CLEAR' });
+    client.resetStore();
+  }
 };
 
 export default App;

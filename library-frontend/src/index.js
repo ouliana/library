@@ -13,7 +13,7 @@ import {
 import { setContext } from '@apollo/client/link/context';
 
 import { getMainDefinition } from '@apollo/client/utilities';
-import { GraphQlWsLink } from '@apollo/client/link/subscriptions';
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 
 const authLink = setContext((_, { headers }) => {
@@ -30,7 +30,7 @@ const httpLink = createHttpLink({
   uri: 'http://localhost:4000',
 });
 
-const wsLink = new GraphQlWsLink(createClient({ url: 'ws://localhost:4000' }));
+const wsLink = new GraphQLWsLink(createClient({ url: 'ws://localhost:4000' }));
 
 const splitLink = split(
   ({ query }) => {

@@ -10,6 +10,7 @@ type Book {
   published: Int!
   author: String!
   genres: [String!]!
+  id: ID!
 }
 
 type User {

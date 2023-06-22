@@ -9,18 +9,7 @@ const jwt = require('jsonwebtoken');
 const pubsub = new PubSub();
 
 const resolvers = {
-  Author: {
-    bookCount: async (root, args) => {
-      const books = await booksService.findByAuthor(root.name);
-      return books.length;
-    },
-  },
-
   Query: {
-    bookCount: async () => {
-      const books = await booksService.findAll();
-      return books.length;
-    },
     authorCount: async () => {
       const authors = await authorsService.findAll();
       return authors.length;
@@ -49,9 +38,11 @@ const resolvers = {
           : books.filter(b => b.genres.includes(args.genre));
       }
     },
-    allAuthors: async () => {
+    allAuthors: async (root, args) => {
       const authors = await authorsService.findAll();
-      return authors;
+      const promises = authors.map(async a => await authorsService.populate(a));
+      const result = await Promise.all(promises);
+      return result;
     },
     me: async (root, args, context) => context.currentUser,
   },
