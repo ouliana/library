@@ -1,5 +1,5 @@
 const booksService = require('../dbConnection/books-service');
-const { PubSub } = require('graphql-subscription');
+const { PubSub } = require('graphql-subscriptions');
 
 const authorsService = require('../dbConnection/authors-service');
 const usersService = require('../dbConnection/users-service');
