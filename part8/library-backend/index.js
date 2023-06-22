@@ -1,10 +1,10 @@
 const { ApolloServer } = require('@apollo/server');
 
 const { expressMiddleware } = require('@apollo/server/express4');
-const { ApolloServerPluginDrainHttpServer } = requre(
-  '@apollo/server/plugin/drainHttpServer'
-);
-const { makeExecutableSchema } = require('@graphql-tool/schema');
+const {
+  ApolloServerPluginDrainHttpServer,
+} = require('@apollo/server/plugin/drainHttpServer');
+const { makeExecutableSchema } = require('@graphql-tools/schema');
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
