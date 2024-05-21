@@ -1,56 +1,71 @@
-const dbAuthors = require('./dbAuthors');
+const prisma = require('./prisma');
 
 const authorsService = {
   findAll,
   findByName,
-  findDocByName,
-  save,
-  populate,
+  save
 };
 
 module.exports = authorsService;
 
 async function findAll() {
-  const response = await (await dbAuthors).view('author', 'by_id');
-  return response.rows.map(r => r.value);
+  try {
+    const authors = await prisma.author.findMany();
+    return authors;
+  } catch (e) {
+    let message = 'Ошибка в базе данных. Невозможно получить список авторов';
+    if (e instanceof Error) {
+      message += 'Error: ' + e.message;
+    }
+    throw new Error(message);
+  }
+}
+
+async function getCount() {
+  try {
+    const count = await prisma.author.count();
+    return count;
+  } catch (e) {
+    let message = 'Ошибка в базе данных. Невозможно получить список авторов';
+    if (e instanceof Error) {
+      message += 'Error: ' + e.message;
+    }
+    throw new Error(message);
+  }
 }
 
 async function findByName(name) {
-  const response = await (
-    await dbAuthors
-  ).view('author', 'by_name', { key: name });
-
-  if (!response.rows.length) return null;
-
-  return response.rows[0].value;
-}
-
-async function findDocByName(name) {
-  const response = await (
-    await dbAuthors
-  ).view('author', 'doc_by_name', { key: name });
-
-  if (!response.rows.length) return null;
-
-  return response.rows[0].value;
+  try {
+    const author = await prisma.author.findFirst({
+      where: {
+        name
+      }
+    });
+    return author;
+  } catch (e) {
+    let message = 'Ошибка в базе данных. Невозможно получить автора';
+    if (e instanceof Error) {
+      message += 'Error: ' + e.message;
+    }
+    throw new Error(message);
+  }
 }
 
 async function save(author) {
-  const db = await dbAuthors;
-  const response = await db.insert(author);
-
-  const savedAuthor = await db.view('author', 'by_id', { key: response.id });
-  return savedAuthor.rows[0].value;
+  // const db = await dbAuthors;
+  // const response = await db.insert(author);
+  // const savedAuthor = await db.view('author', 'by_id', { key: response.id });
+  // return savedAuthor.rows[0].value;
 }
 
-async function populate(author) {
-  const dbBooks = require('./dbBooks');
+// async function populate(author) {
+//   const dbBooks = require('./dbBooks');
 
-  // const count = response.rows.map(r => r.value);
+//   // const count = response.rows.map(r => r.value);
 
-  const response = await (
-    await dbBooks
-  ).view('book', 'book_count_by_author', { key: author.name });
+//   const response = await (
+//     await dbBooks
+//   ).view('book', 'book_count_by_author', { key: author.name });
 
-  return { ...author, bookCount: response.rows.length };
-}
+//   return { ...author, bookCount: response.rows.length };
+// }

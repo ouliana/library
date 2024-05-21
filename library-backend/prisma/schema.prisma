@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       =  env("DATABASE_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model User {
+  id   Int   @id @default(autoincrement())
+  username     String @db.VarChar(255) @unique
+  password String
+
+   @@map("users")
+}
+
+model Book {
+  id   Int   @id @default(autoincrement())
+  title     String? @db.VarChar(255)
+  published Int
+  author Author  @relation(fields: [authorcId], references: [id])
+  authorcId     Int  
+  genres Genre[]
+  
+
+  @@map("books")
+}
+
+model Author {
+id   Int   @id @default(autoincrement())
+name String? @db.VarChar(255)
+born Int?
+books Book[]
+
+ @@map("authors")
+}
+
+model Genre {
+  id   Int   @id @default(autoincrement())
+  name String @db.VarChar(255) @unique
+  books Book[]
+
+  @@map("genres")
+}
