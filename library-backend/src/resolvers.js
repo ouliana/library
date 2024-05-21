@@ -11,11 +11,10 @@ const pubsub = new PubSub();
 const resolvers = {
   Query: {
     authorCount: async () => {
-      const authors = await authorsService.findAll();
-      return authors.length;
+      const count = await authorsService.getCount();
+      return count;
     },
-    allBooks: async (root, args) => {
-      console.log('allBooks');
+    allBooks: async (_root, args) => {
       if (!(args.author || args.genre)) {
         const books = await booksService.findAll();
         return books;
@@ -38,13 +37,16 @@ const resolvers = {
           : books.filter(b => b.genres.includes(args.genre));
       }
     },
-    allAuthors: async (root, args) => {
+    allAuthors: async (_root, _args) => {
+      console.log('in allAuthors');
       const authors = await authorsService.findAll();
-      const promises = authors.map(async a => await authorsService.populate(a));
-      const result = await Promise.all(promises);
-      return result;
+      console.log('authors: ', authors);
+      // const promises = authors.map(async a => await authorsService.populate(a));
+      // const result = await Promise.all(promises);
+      // return result;
+      return authors;
     },
-    me: async (root, args, context) => context.currentUser,
+    me: async (_root, _args, context) => context.currentUser
   },
 
   Mutation: {
@@ -53,8 +55,8 @@ const resolvers = {
       if (!currentUser) {
         throw new GraphQLError('not authenticated', {
           extensions: {
-            code: 'BAD_USER_INPUT',
-          },
+            code: 'BAD_USER_INPUT'
+          }
         });
       }
 
@@ -64,8 +66,8 @@ const resolvers = {
         throw new GraphQLError('The book title or author name are too short', {
           extensions: {
             code: 'BAD_USER_INPUT',
-            invalidArgs: invalid,
-          },
+            invalidArgs: invalid
+          }
         });
       }
 
@@ -85,8 +87,8 @@ const resolvers = {
       if (!currentUser) {
         throw new GraphQLError('not authenticated', {
           extensions: {
-            code: 'BAD_USER_INPUT',
-          },
+            code: 'BAD_USER_INPUT'
+          }
         });
       }
 
@@ -105,8 +107,8 @@ const resolvers = {
         throw new GraphQLError(`The user ${args.username} is already exist`, {
           extensions: {
             code: 'BAD_USER_INPUT',
-            invalidArgs: args.username,
-          },
+            invalidArgs: args.username
+          }
         });
       }
 
@@ -120,25 +122,25 @@ const resolvers = {
       if (!user || args.password !== 'secret') {
         throw GraphQLError('wrong credentials', {
           extensions: {
-            code: 'BAD_USER_INPUT',
-          },
+            code: 'BAD_USER_INPUT'
+          }
         });
       }
 
       const userForToken = {
         username: args.username,
-        id: user.id,
+        id: user.id
       };
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
-    },
+    }
   },
 
   Subscription: {
     bookAdded: {
-      subscribe: () => pubsub.asyncIterator('BOOK_ADDED'),
-    },
-  },
+      subscribe: () => pubsub.asyncIterator('BOOK_ADDED')
+    }
+  }
 };
 
 module.exports = resolvers;

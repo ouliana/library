@@ -9,6 +9,7 @@ function Authors({ token }) {
   if (result.loading) {
     return <div>loading...</div>;
   }
+  console.log('result: ', result);
 
   const authors = result.data?.allAuthors;
 
@@ -51,7 +52,7 @@ function BirthYearForm({ authors }) {
   const [selectedOption, setSelectedOption] = useState(null);
 
   const [setBirthYear] = useMutation(SET_BIRTH_YEAR, {
-    refetchQueries: [{ query: ALL_AUTHORS }],
+    refetchQueries: [{ query: ALL_AUTHORS }]
   });
 
   return (

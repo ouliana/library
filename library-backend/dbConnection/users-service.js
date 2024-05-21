@@ -1,10 +1,8 @@
-const dbUsers = require('./dbUsers');
-
 const usersService = {
   findUserById,
   findByUsername,
   findDocByUsername,
-  save,
+  save
 };
 
 module.exports = usersService;
