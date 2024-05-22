@@ -23,7 +23,7 @@ function Authors({ token }) {
             <th>born</th>
             <th>books</th>
           </tr>
-          {authors &&
+          {!!authors &&
             authors.map(a => (
               <tr key={a.name}>
                 <td>{a.name}</td>
