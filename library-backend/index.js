@@ -2,7 +2,7 @@ const { ApolloServer } = require('@apollo/server');
 
 const { expressMiddleware } = require('@apollo/server/express4');
 const {
-  ApolloServerPluginDrainHttpServer,
+  ApolloServerPluginDrainHttpServer
 } = require('@apollo/server/plugin/drainHttpServer');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const express = require('express');
@@ -13,7 +13,7 @@ const { WebSocketServer } = require('ws');
 const { useServer } = require('graphql-ws/lib/use/ws');
 
 const jwt = require('jsonwebtoken');
-const usersService = require('./dbConnection/users-service');
+// const usersService = require('./dbConnection/users-service');
 
 const typeDefs = require('./src/typeDefs');
 const resolvers = require('./src/resolvers');
@@ -26,7 +26,7 @@ async function start() {
 
   const wsServer = new WebSocketServer({
     server: httpServer,
-    path: '/',
+    path: '/'
   });
 
   const schema = makeExecutableSchema({ typeDefs, resolvers });
@@ -41,11 +41,11 @@ async function start() {
           return {
             async drainServer() {
               await serverCleanup.dispose();
-            },
+            }
           };
-        },
-      },
-    ],
+        }
+      }
+    ]
   });
 
   await server.start();
@@ -66,7 +66,7 @@ async function start() {
           const currentUser = await usersService.findUserById(decodedToken.id);
           return { currentUser };
         }
-      },
+      }
     })
   );
 
