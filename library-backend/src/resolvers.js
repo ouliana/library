@@ -15,13 +15,22 @@ const resolvers = {
       return count;
     },
     allBooks: async (_root, args) => {
-      if (!(args.author || args.genre)) {
+      if (!Object.keys(args).length) {
         const books = await booksService.findAll();
-        return books;
+        console.log(books);
+        const tmp = books.map(book => ({
+          ...book,
+          author: book.author.name,
+          genres: book.genres.map(genre => genre.name)
+        }));
+        console.log(tmp);
+        return tmp;
+        // return books.map(book => [{ ...book, author: book.author.name }]);
       }
 
       if (args.author && args.genre) {
         const books = await booksService.findByAuthor(args.author);
+        console.log(books);
         return books.filter(b => b.genres.includes(args.genre));
       }
 

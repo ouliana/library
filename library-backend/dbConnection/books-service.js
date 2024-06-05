@@ -9,7 +9,16 @@ module.exports = booksService;
 
 async function findAll() {
   try {
-    const books = await prisma.book.findMany();
+    const books = await prisma.book.findMany({
+      include: {
+        author: {
+          select: {
+            name: true
+          }
+        },
+        genres: true
+      }
+    });
     return books;
   } catch (e) {
     let message = 'Ошибка в базе данных. Невозможно получить список книг';
