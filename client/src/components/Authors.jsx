@@ -4,6 +4,17 @@ import { ALL_AUTHORS, SET_BIRTH_YEAR } from '../queries';
 
 import Select from 'react-select';
 
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+
 function Authors({ token }) {
   const result = useQuery(ALL_AUTHORS);
   if (result.loading) {
@@ -13,33 +24,49 @@ function Authors({ token }) {
 
   const authors = result.data?.allAuthors;
 
+  let key = 0;
   return (
-    <div>
-      <h2>authors</h2>
-      <table>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>born</th>
-            <th>books</th>
-          </tr>
-          {!!authors &&
-            authors.map(a => (
-              <tr key={a.name}>
-                <td>{a.name}</td>
-                <td>{a.born}</td>
-                <td>{a.bookCount}</td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+    <Box>
+      <Typography
+        variant='h2'
+        gutterBottom
+      >
+        Список авторов
+      </Typography>
+      <TableContainer component={Paper}>
+        <Table
+          sx={{ minWidth: 650 }}
+          aria-label='athors table'
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell align='left'>Имя</TableCell>
+              <TableCell align='center'>Год рождения</TableCell>
+              <TableCell align='center'>Произведения</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {!!authors &&
+              authors.map(author => (
+                <TableRow
+                  key={key++}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell align='left'>{author.name}</TableCell>
+                  <TableCell align='center'>{author.born}</TableCell>
+                  <TableCell align='center'>{author.bookCount}</TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       {token ? (
         <>
           <h3>Set birth year</h3>
           <BirthYearForm authors={authors} />
         </>
       ) : null}
-    </div>
+    </Box>
   );
 }
 

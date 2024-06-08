@@ -1,48 +1,60 @@
+const prisma = require('./prisma');
+
 const usersService = {
   findUserById,
   findByUsername,
-  findDocByUsername,
   save
 };
 
 module.exports = usersService;
 
 async function findUserById(id) {
-  const response = await (await dbUsers).view('user', 'by_id', { key: id });
-
-  if (!response.rows.length) return null;
-
-  return response.rows[0].value;
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id
+      }
+    });
+    return user;
+  } catch (e) {
+    let message = 'Ошибка в базе данных. Невозможно получить пользователя';
+    if (e instanceof Error) {
+      message += 'Error: ' + e.message;
+    }
+    throw new Error(message);
+  }
 }
 
 async function findByUsername(username) {
-  const response = await (
-    await dbUsers
-  ).view('user', 'by_username', { key: username });
-
-  if (!response.rows.length) return null;
-
-  return response.rows[0].value;
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        username
+      }
+    });
+    return user;
+  } catch (e) {
+    let message = 'Ошибка в базе данных. Невозможно получить пользователя';
+    if (e instanceof Error) {
+      message += 'Error: ' + e.message;
+    }
+    throw new Error(message);
+  }
 }
 
-async function findDocByUsername(username) {
-  const response = await (
-    await dbUsers
-  ).view('user', 'doc_by_username', { key: username });
-
-  if (!response.rows.length) return null;
-
-  return response.rows[0].value;
+async function save({ username }) {
+  try {
+    const user = await prisma.user.create({
+      data: {
+        username
+      }
+    });
+    return user;
+  } catch (e) {
+    let message = 'Ошибка в базе данных. Невозможно содзать пользователя';
+    if (e instanceof Error) {
+      message += 'Error: ' + e.message;
+    }
+    throw new Error(message);
+  }
 }
-
-async function save(user) {
-  const db = await dbUsers;
-  const response = await db.insert(user);
-
-  const savedUser = await db.view('user', 'by_id', { key: response.id });
-  return savedUser.rows[0].value;
-}
-
-// async function populate(id) {
-
-// }
