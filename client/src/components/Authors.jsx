@@ -15,23 +15,22 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import Skeleton from '@mui/material/Skeleton';
+
 function Authors({ token }) {
+  const skeletonItems = Array.from({ length: 5 }).map((_, i) => i);
   const result = useQuery(ALL_AUTHORS);
-  if (result.loading) {
-    return <div>loading...</div>;
-  }
-  console.log('result: ', result);
 
   const authors = result.data?.allAuthors;
 
   let key = 0;
   return (
-    <Box>
+    <Box sx={{ textAlign: 'center' }}>
       <Typography
         variant='h2'
         gutterBottom
       >
-        Список авторов
+        {result.loading ? <Skeleton /> : 'Список авторов'}
       </Typography>
       <TableContainer component={Paper}>
         <Table
@@ -46,6 +45,29 @@ function Authors({ token }) {
             </TableRow>
           </TableHead>
           <TableBody>
+            {result.loading &&
+              skeletonItems.map(item => (
+                <TableRow
+                  key={item}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell align='left'>
+                    <Typography variant='body2'>
+                      <Skeleton width='20rem' />
+                    </Typography>
+                  </TableCell>
+                  <TableCell align='center'>
+                    <Typography variant='body2'>
+                      <Skeleton width='4rem' />
+                    </Typography>
+                  </TableCell>
+                  <TableCell align='center'>
+                    <Typography variant='body2'>
+                      <Skeleton width='2rem' />
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              ))}
             {!!authors &&
               authors.map(author => (
                 <TableRow
