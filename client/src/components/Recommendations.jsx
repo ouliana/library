@@ -1,4 +1,4 @@
-import { ME, ALL_BOOKS } from '../queries';
+import { ME, ALL_BOOKS } from '../graphql/queries';
 import { useQuery } from '@apollo/client';
 
 function Recommendations() {

@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import TokenContext from '../contexts/TokenContext';
 
 import { useMutation } from '@apollo/client';
-import { LOGIN } from '../queries';
+import { LOGIN } from '../graphql/queries';
 import { useNavigate } from 'react-router-dom';
 
 function LoginForm({ setError }) {
