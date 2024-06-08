@@ -29,6 +29,7 @@ function Books() {
   if (loading) return <p>Loading ...</p>;
   if (error) return `Error! ${error.message}`;
 
+  let key = 0;
   return (
     <div>
       <h2>Books</h2>
@@ -43,7 +44,7 @@ function Books() {
           {!!data &&
             data.allBooks &&
             data.allBooks.map(a => (
-              <tr key={a.title}>
+              <tr key={key++}>
                 <td>{a.title}</td>
                 <td>{a.author}</td>
                 <td>{a.published}</td>

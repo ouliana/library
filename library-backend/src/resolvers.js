@@ -17,15 +17,12 @@ const resolvers = {
     allBooks: async (_root, args) => {
       if (!Object.keys(args).length) {
         const books = await booksService.findAll();
-        console.log(books);
-        const tmp = books.map(book => ({
+        const result = books.map(book => ({
           ...book,
           author: book.author.name,
           genres: book.genres.map(genre => genre.name)
         }));
-        console.log(tmp);
-        return tmp;
-        // return books.map(book => [{ ...book, author: book.author.name }]);
+        return result;
       }
 
       if (args.author && args.genre) {
@@ -47,7 +44,6 @@ const resolvers = {
       }
     },
     allAuthors: async (_root, _args) => {
-      console.log('in allAuthors');
       const authors = await authorsService.findAll();
       console.log('authors: ', authors);
       // const promises = authors.map(async a => await authorsService.populate(a));
@@ -125,11 +121,11 @@ const resolvers = {
       return newUser;
     },
 
-    login: async (root, args) => {
+    login: async (_root, args) => {
       const user = await usersService.findByUsername(args.username);
-
+      console.log('args: ', args);
       if (!user || args.password !== 'secret') {
-        throw GraphQLError('wrong credentials', {
+        throw new GraphQLError('wrong credentials', {
           extensions: {
             code: 'BAD_USER_INPUT'
           }

@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
-import TokenContext from '../TokenContext';
+import TokenContext from '../contexts/TokenContext';
 
 import { useMutation } from '@apollo/client';
 import { LOGIN } from '../queries';
