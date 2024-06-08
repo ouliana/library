@@ -9,8 +9,6 @@ const authorsService = {
 module.exports = authorsService;
 
 async function findAll() {
-  await new Promise(resolve => setTimeout(resolve, 3000));
-
   try {
     const authorsWithCount = await prisma.author.findMany({
       include: {

@@ -8,6 +8,8 @@ const booksService = {
 module.exports = booksService;
 
 async function findAll() {
+  await new Promise(resolve => setTimeout(resolve, 3000));
+
   try {
     const books = await prisma.book.findMany({
       include: {

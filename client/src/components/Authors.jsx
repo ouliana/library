@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import { ALL_AUTHORS, SET_BIRTH_YEAR } from '../queries';
+import { ALL_AUTHORS, SET_BIRTH_YEAR } from '../graphql/queries';
 
 import Select from 'react-select';
 
@@ -16,9 +16,9 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import Skeleton from '@mui/material/Skeleton';
+import { skeletonItems } from '../utils';
 
 function Authors({ token }) {
-  const skeletonItems = Array.from({ length: 5 }).map((_, i) => i);
   const result = useQuery(ALL_AUTHORS);
 
   const authors = result.data?.allAuthors;

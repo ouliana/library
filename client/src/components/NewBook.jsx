@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { CREATE_BOOK, ALL_AUTHORS, ALL_BOOKS } from '../queries';
+import { CREATE_BOOK, ALL_AUTHORS, ALL_BOOKS } from '../graphql/queries';
 // import { GraphQLError } from 'graphql';
 
 function NewBook() {
