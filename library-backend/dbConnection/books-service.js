@@ -1,6 +1,8 @@
 const booksService = {
   findAll,
-  findByAuthor,
+  findById,
+  findByAuthorName,
+  findByAuthorId,
   findByTitle,
   save
 };
@@ -8,14 +10,13 @@ const booksService = {
 module.exports = booksService;
 
 async function findAll() {
-  await new Promise(resolve => setTimeout(resolve, 3000));
-
   try {
     const books = await prisma.book.findMany({
       include: {
         author: {
           select: {
-            name: true
+            firstName: true,
+            lastName: true
           }
         },
         genres: true
@@ -31,11 +32,61 @@ async function findAll() {
   }
 }
 
-async function findByAuthor(author) {
+async function findById(id) {
+  await new Promise(resolve => setTimeout(resolve, 3000));
+  try {
+    const book = await prisma.book.findUnique({
+      where: {
+        id
+      },
+      include: {
+        author: {
+          select: {
+            firstName: true,
+            lastName: true
+          }
+        },
+        genres: true
+      }
+    });
+    return book;
+  } catch (e) {
+    let message = 'Ошибка в базе данных. Невозможно получить книгу';
+    if (e instanceof Error) {
+      message += 'Error: ' + e.message;
+    }
+    throw new Error(message);
+  }
+}
+
+async function findByAuthorName(author) {
   try {
     const books = await prisma.book.findMany({
       where: {
         author
+      },
+      include: {
+        genres: true
+      }
+    });
+    return books;
+  } catch (e) {
+    let message = 'Ошибка в базе данных. Невозможно получить книгу';
+    if (e instanceof Error) {
+      message += 'Error: ' + e.message;
+    }
+    throw new Error(message);
+  }
+}
+async function findByAuthorId(authorId) {
+  try {
+    const books = await prisma.book.findMany({
+      where: {
+        authorId
+      },
+      select: {
+        id: true,
+        title: true
       }
     });
     return books;

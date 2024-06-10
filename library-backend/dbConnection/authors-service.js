@@ -3,6 +3,7 @@ const prisma = require('./prisma');
 const authorsService = {
   findAll,
   findByName,
+  findById,
   save
 };
 
@@ -11,7 +12,11 @@ module.exports = authorsService;
 async function findAll() {
   try {
     const authorsWithCount = await prisma.author.findMany({
-      include: {
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        born: true,
         _count: {
           select: { books: true }
         }
@@ -35,6 +40,24 @@ async function findAll() {
   }
 }
 
+async function findById(id) {
+  try {
+    await new Promise(resolve => setTimeout(resolve, 3000));
+
+    const author = await prisma.author.findUnique({
+      where: {
+        id
+      }
+    });
+    return author;
+  } catch (e) {
+    let message = 'Ошибка в базе данных. Невозможно получить автора';
+    if (e instanceof Error) {
+      message += 'Error: ' + e.message;
+    }
+    throw new Error(message);
+  }
+}
 async function findByName(name) {
   try {
     const author = await prisma.author.findFirst({

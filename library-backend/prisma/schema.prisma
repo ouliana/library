@@ -9,10 +9,16 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
+enum Role {
+  ADMIN
+  GUEST
+}
+
 model User {
   id   Int   @id @default(autoincrement())
   username     String @db.VarChar(255) @unique
   password String
+  role  Role    @default(GUEST)
 
    @@map("users")
 }
@@ -21,9 +27,10 @@ model Book {
   id   Int   @id @default(autoincrement())
   title     String? @db.VarChar(255)
   published Int
-  author Author  @relation(fields: [authorcId], references: [id])
-  authorcId     Int  
+  author Author  @relation(fields: [authorId], references: [id])
+  authorId     Int  
   genres Genre[]
+  annotation String? 
   
 
   @@map("books")
@@ -31,9 +38,15 @@ model Book {
 
 model Author {
 id   Int   @id @default(autoincrement())
-name String? @db.VarChar(255)
+firstName String? @db.VarChar(255)
+lastName String @db.VarChar(255)
 born Int?
+profile String? @db.VarChar(255)
+creditText String? @db.VarChar(255)
+creditLink String? @db.VarChar(255)
 books Book[]
+annotation String? 
+
 
  @@map("authors")
 }

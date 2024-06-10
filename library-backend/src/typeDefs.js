@@ -1,7 +1,13 @@
 const typeDefs = `
 type Author {
-  name: String!
+  id: ID!
+  firstName: String!
+  lastName: String!
   born: Int
+  profile: String
+  creditText: String
+  creditLink: String
+  annotation: String
   bookCount: Int!
 }
 
@@ -9,7 +15,9 @@ type Book {
   title: String!
   published: Int!
   author: String!
+  authorId: Int!
   genres: [String!]!
+  annotation: String
   id: ID!
 }
 
@@ -27,7 +35,11 @@ type Token {
     bookCount: Int
     authorCount: Int
     allBooks(author: String, genre: String): [Book]
+    bookById(id: Int): Book
+    booksByAuthorId(authorId: Int): [Book]
+    booksByAuthorName(name: String): [Book]
     allAuthors: [Author]
+    authorById(id: Int): Author
     me: User
   }
 

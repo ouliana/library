@@ -1,4 +1,5 @@
 const prisma = require('./prisma');
+const { hash } = require('bcrypt');
 
 const usersService = {
   findUserById,
@@ -42,11 +43,14 @@ async function findByUsername(username) {
   }
 }
 
-async function save({ username }) {
+async function save({ username, password, role }) {
+  const passwordHash = await hash(password, 10);
   try {
     const user = await prisma.user.create({
       data: {
-        username
+        username,
+        password: passwordHash,
+        role
       }
     });
     return user;

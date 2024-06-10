@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { useQuery, useMutation } from '@apollo/client';
 import { ALL_AUTHORS, SET_BIRTH_YEAR } from '../graphql/queries';
 
@@ -19,18 +21,24 @@ import Skeleton from '@mui/material/Skeleton';
 import { skeletonItems } from '../utils';
 
 function Authors({ token }) {
-  const result = useQuery(ALL_AUTHORS);
+  const { loading, error, data } = useQuery(ALL_AUTHORS);
+  const navigate = useNavigate();
 
-  const authors = result.data?.allAuthors;
+  const authors = data?.allAuthors;
 
-  let key = 0;
+  if (error) return `Error! ${error.message}`;
+
+  const handleRowClick = author => {
+    navigate(`/authors/${author.id}`);
+  };
+
   return (
     <Box sx={{ textAlign: 'center' }}>
       <Typography
         variant='h2'
         gutterBottom
       >
-        {result.loading ? <Skeleton /> : 'Список авторов'}
+        {loading ? <Skeleton /> : 'Список авторов'}
       </Typography>
       <TableContainer component={Paper}>
         <Table
@@ -45,7 +53,7 @@ function Authors({ token }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {result.loading &&
+            {loading &&
               skeletonItems.map(item => (
                 <TableRow
                   key={item}
@@ -71,11 +79,18 @@ function Authors({ token }) {
             {!!authors &&
               authors.map(author => (
                 <TableRow
-                  key={key++}
+                  key={author.id}
+                  hover
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  onClick={() => handleRowClick(author)}
+                  style={{ cursor: 'pointer' }}
                 >
-                  <TableCell align='left'>{author.name}</TableCell>
-                  <TableCell align='center'>{author.born}</TableCell>
+                  <TableCell align='left'>
+                    {author.firstName} {author.lastName}
+                  </TableCell>
+                  <TableCell align='center'>
+                    {author.born ? author.born : ''}
+                  </TableCell>
                   <TableCell align='center'>{author.bookCount}</TableCell>
                 </TableRow>
               ))}

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { useQuery, useSubscription, useApolloClient } from '@apollo/client';
 import { ALL_BOOKS, BOOK_ADDED } from '../graphql/queries';
 
@@ -17,9 +18,8 @@ import Skeleton from '@mui/material/Skeleton';
 import { skeletonItems } from '../utils';
 
 function Books() {
-  // const books = useQuery(ALL_BOOKS);
-  // eslint-disable-next-line no-unused-vars
   const client = useApolloClient();
+  const navigate = useNavigate();
 
   useSubscription(BOOK_ADDED, {
     onData: ({ data }) => {
@@ -40,7 +40,10 @@ function Books() {
 
   if (error) return `Error! ${error.message}`;
 
-  let key = 0;
+  const handleRowClick = book => {
+    navigate(`/books/${book.id}`);
+  };
+
   return (
     <Box sx={{ textAlign: 'center' }}>
       <Typography
@@ -90,8 +93,11 @@ function Books() {
             {!!data &&
               data.allBooks.map(book => (
                 <TableRow
-                  key={key++}
+                  key={book.id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  hover
+                  onClick={() => handleRowClick(book)}
+                  style={{ cursor: 'pointer' }}
                 >
                   <TableCell align='left'>{book.title}</TableCell>
                   <TableCell align='center'>{book.author}</TableCell>
