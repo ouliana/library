@@ -56,9 +56,14 @@ export default function Hader() {
               <button onClick={logout}>logout</button>
             </>
           ) : (
-            <Link to='/login'>login</Link>
+            <Button
+              to='/login'
+              color='inherit'
+            >
+              Войти
+            </Button>
           )}
-          <Button color='inherit'>Login</Button>
+
           <ThemeToggleButton />
         </Toolbar>
       </AppBar>

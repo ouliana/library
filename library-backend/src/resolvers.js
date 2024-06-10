@@ -19,7 +19,7 @@ const resolvers = {
         const books = await booksService.findAll();
         const result = books.map(book => ({
           ...book,
-          author: book.author.name,
+          author: `${book.author.firstName} ${book.author.lastName}`,
           genres: book.genres.map(genre => genre.name)
         }));
         return result;
@@ -27,7 +27,6 @@ const resolvers = {
 
       if (args.author && args.genre) {
         const books = await booksService.findByAuthor(args.author);
-        console.log(books);
         return books.filter(b => b.genres.includes(args.genre));
       }
 
@@ -43,14 +42,45 @@ const resolvers = {
           : books.filter(b => b.genres.includes(args.genre));
       }
     },
+    bookById: async (_root, args) => {
+      try {
+        const book = await booksService.findById(args.id);
+        const res = {
+          ...book,
+          author: `${book.author.firstName} ${book.author.lastName}`,
+          genres: book.genres.map(genre => genre.name)
+        };
+        console.log(res);
+        return res;
+      } catch (error) {
+        throw new Error('Не удалось получить книгу по id');
+      }
+    },
+    booksByAuthorId: async (_root, args) => {
+      const books = await booksService.findByAuthorId(args.authorId);
+      return books;
+    },
+    booksByAuthorName: async (_root, args) => {
+      const books = await booksService.findByAuthorId(args.id);
+      if (!books) return [];
+      return books.map(book => ({
+        ...book,
+        genres: book.genres.map(genre => genre.name)
+      }));
+    },
+
     allAuthors: async (_root, _args) => {
+      console.log('in resolver');
       const authors = await authorsService.findAll();
-      console.log('authors: ', authors);
-      // const promises = authors.map(async a => await authorsService.populate(a));
-      // const result = await Promise.all(promises);
-      // return result;
+      console.log(authors);
       return authors;
     },
+
+    authorById: async (_root, args) => {
+      const author = await authorsService.findById(args.id);
+      return author;
+    },
+
     me: async (_root, _args, context) => context.currentUser
   },
 

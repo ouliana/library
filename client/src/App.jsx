@@ -6,12 +6,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Main from './components/Main';
 import Authors from './components/Authors';
+import AuthorDetails from './components/AuthorDetails';
 import Books from './components/Books';
+import BookDetails from './components/BookDetails';
 import NewBook from './components/NewBook';
 import LoginForm from './components/LoginForm';
 import Recommendations from './components/Recommendations';
 
-// import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Container } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -62,8 +63,16 @@ const App = () => {
                   element={<Authors token={token} />}
                 />
                 <Route
+                  path='/authors/:id'
+                  element={<AuthorDetails />}
+                />
+                <Route
                   path='/books'
                   element={<Books />}
+                />
+                <Route
+                  path='/books/:id'
+                  element={<BookDetails />}
                 />
                 <Route
                   path='/add'
