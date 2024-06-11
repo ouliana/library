@@ -42,8 +42,6 @@ async function findAll() {
 
 async function findById(id) {
   try {
-    await new Promise(resolve => setTimeout(resolve, 3000));
-
     const author = await prisma.author.findUnique({
       where: {
         id

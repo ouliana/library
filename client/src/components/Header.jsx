@@ -8,7 +8,6 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import MenuIcon from '@mui/icons-material/Menu';
-import Link from '@mui/material/Link';
 
 import { Link as RouterLink } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
@@ -51,13 +50,31 @@ export default function Hader() {
           </Box>
           {token ? (
             <>
-              <Link to='/recommendations'>recommendations</Link>{' '}
-              <Link to='/add'>add book</Link>
-              <button onClick={logout}>logout</button>
+              <Button
+                to='/recommendations'
+                component={RouterLink}
+                color='inherit'
+              >
+                Рекомендации
+              </Button>
+              <Button
+                to='/add'
+                component={RouterLink}
+                color='inherit'
+              >
+                Добавить книгу
+              </Button>
+              <Button
+                color='inherit'
+                onClick={logout}
+              >
+                Выйти
+              </Button>
             </>
           ) : (
             <Button
               to='/login'
+              component={RouterLink}
               color='inherit'
             >
               Войти

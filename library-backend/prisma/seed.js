@@ -71,7 +71,7 @@ async function main() {
       lastName: 'Хеллер',
       born: 1923,
       profile:
-        'https://storage.yandexcloud.net/portfolio-kotik/strugatskie.jpg',
+        'https://storage.yandexcloud.net/portfolio-kotik/joseph_heller.jpg',
       creditText:
         'derivative work: Anrie (talk)Joseph_Heller1986.jpg: MDCArchives. Joseph_Heller1986.jpg, CC BY-SA 3.0',
       creditLink: 'https://commons.wikimedia.org/w/index.php?curid=5403764',
