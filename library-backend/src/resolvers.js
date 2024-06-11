@@ -5,6 +5,7 @@ const authorsService = require('../dbConnection/authors-service');
 const usersService = require('../dbConnection/users-service');
 const { GraphQLError } = require('graphql');
 const jwt = require('jsonwebtoken');
+const { compare } = require('bcrypt');
 
 const pubsub = new PubSub();
 
@@ -50,7 +51,6 @@ const resolvers = {
           author: `${book.author.firstName} ${book.author.lastName}`,
           genres: book.genres.map(genre => genre.name)
         };
-        console.log(res);
         return res;
       } catch (error) {
         throw new Error('Не удалось получить книгу по id');
@@ -70,9 +70,7 @@ const resolvers = {
     },
 
     allAuthors: async (_root, _args) => {
-      console.log('in resolver');
       const authors = await authorsService.findAll();
-      console.log(authors);
       return authors;
     },
 
@@ -152,9 +150,20 @@ const resolvers = {
     },
 
     login: async (_root, args) => {
+      console.log('in login');
       const user = await usersService.findByUsername(args.username);
-      console.log('args: ', args);
-      if (!user || args.password !== 'secret') {
+      if (user) {
+        console.log(user);
+        const passwordsMatch = await compare(args.password, user.password);
+        console.log('passwordsMatch: ', passwordsMatch);
+        if (!passwordsMatch) {
+          throw new GraphQLError('wrong credentials', {
+            extensions: {
+              code: 'BAD_USER_INPUT'
+            }
+          });
+        }
+      } else {
         throw new GraphQLError('wrong credentials', {
           extensions: {
             code: 'BAD_USER_INPUT'
