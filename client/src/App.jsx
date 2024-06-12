@@ -9,6 +9,7 @@ import Authors from './components/Authors';
 import AuthorDetails from './components/AuthorDetails';
 import Books from './components/Books';
 import BookDetails from './components/BookDetails';
+import BooksByGenre from './components/BooksByGenre';
 import NewBook from './components/NewBook';
 import LoginForm from './components/LoginForm';
 import Recommendations from './components/Recommendations';
@@ -46,6 +47,7 @@ const App = () => {
                 justifyContent: 'flex-start',
                 alignItems: 'center',
                 height: '100vh',
+                marginTop: '64px',
                 padding: '2rem'
               }}
             >
@@ -73,6 +75,10 @@ const App = () => {
                 <Route
                   path='/books/:id'
                   element={<BookDetails />}
+                />
+                <Route
+                  path='/genres/:id'
+                  element={<BooksByGenre />}
                 />
                 <Route
                   path='/add'

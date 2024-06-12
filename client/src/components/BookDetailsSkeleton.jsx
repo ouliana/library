@@ -2,7 +2,7 @@ import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
 import TextSkeleton from './TextSkeleton';
 
-function AuthorDetailsSkeleton() {
+function BookDetailsSkeleton() {
   return (
     <Stack
       direction='row'
@@ -21,15 +21,10 @@ function AuthorDetailsSkeleton() {
           sx={{ fontSize: '2rem' }}
           width='10rem'
         />
-        <Skeleton
-          variant='text'
-          sx={{ fontSize: '1rem' }}
-          width='4rem'
-        />
         <TextSkeleton />
       </Stack>
     </Stack>
   );
 }
 
-export default AuthorDetailsSkeleton;
+export default BookDetailsSkeleton;

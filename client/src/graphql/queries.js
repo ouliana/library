@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { AUTHOR_DETAILS, BOOK_DETAILS } from './fragments';
+import { AUTHOR_DETAILS, BOOK_DETAILS, BOOK_DATA_FOR_TABLE } from './fragments';
 
 export const ALL_AUTHORS = gql`
   query AllAuthors {
@@ -47,14 +47,38 @@ export const BOOKS_BY_AUTHOR_ID = gql`
     }
   }
 `;
-export const BOOK_BY_AUTHOR_ID = gql`
-  query GetBookByAuthorId($id: Int) {
-    booksByAuthorId(id: $id) {
+
+export const BOOKS_BY_GENRE = gql`
+  query GetBooksByGenre($genreId: Int) {
+    booksByGenre(genreId: $genreId) {
       id
       title
+      author
+      authorId
     }
   }
 `;
+
+export const GENRE = gql`
+  ${BOOK_DATA_FOR_TABLE}
+  query GetGenreWithBooks($id: Int) {
+    genreWithBooks(id: $id) {
+      name
+      books {
+        ...BookDataForTable
+      }
+    }
+  }
+`;
+
+// export const BOOK_BY_AUTHOR_ID = gql`
+//   query GetBookByAuthorId($id: Int) {
+//     booksByAuthorId(id: $id) {
+//       id
+//       title
+//     }
+//   }
+// `;
 
 export const ME = gql`
   query CurrentUser {

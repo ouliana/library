@@ -33,7 +33,6 @@ async function findAll() {
 }
 
 async function findById(id) {
-  await new Promise(resolve => setTimeout(resolve, 3000));
   try {
     const book = await prisma.book.findUnique({
       where: {

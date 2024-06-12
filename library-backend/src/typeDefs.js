@@ -16,9 +16,15 @@ type Book {
   published: Int!
   author: String!
   authorId: Int!
-  genres: [String!]!
+  genres: [Genre!]!
   annotation: String
   id: ID!
+}
+
+type Genre {
+name: String!
+id: ID!
+books: [Book]
 }
 
 type User {
@@ -38,6 +44,8 @@ type Token {
     bookById(id: Int): Book
     booksByAuthorId(authorId: Int): [Book]
     booksByAuthorName(name: String): [Book]
+    booksByGenre(genreId: Int): [Book]
+    genreWithBooks(id: Int): Genre
     allAuthors: [Author]
     authorById(id: Int): Author
     me: User

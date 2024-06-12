@@ -6,9 +6,21 @@ export const BOOK_DETAILS = gql`
     author
     authorId
     published
-    genres
+    genres {
+      id
+      name
+    }
     annotation
     id
+  }
+`;
+export const BOOK_DATA_FOR_TABLE = gql`
+  fragment BookDataForTable on Book {
+    id
+    title
+    author
+    authorId
+    published
   }
 `;
 
