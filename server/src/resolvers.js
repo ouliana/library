@@ -84,7 +84,6 @@ const resolvers = {
     genreWithBooks: async (_root, args) => {
       try {
         const genre = await genresService.findAllBooks(args.id);
-        console.log(genre);
         const books = genre.books.map(book => ({
           ...book,
           author: `${book.author.firstName} ${book.author.lastName}`
@@ -176,12 +175,9 @@ const resolvers = {
     },
 
     login: async (_root, args) => {
-      console.log('in login');
       const user = await usersService.findByUsername(args.username);
       if (user) {
-        console.log(user);
         const passwordsMatch = await compare(args.password, user.password);
-        console.log('passwordsMatch: ', passwordsMatch);
         if (!passwordsMatch) {
           throw new GraphQLError('wrong credentials', {
             extensions: {
