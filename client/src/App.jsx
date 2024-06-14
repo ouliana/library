@@ -11,6 +11,7 @@ import Books from './components/Books';
 import BookDetails from './components/BookDetails';
 import BooksByGenre from './components/BooksByGenre';
 import NewBook from './components/NewBook';
+import Genres from './components/Genres';
 import LoginForm from './components/LoginForm';
 import Recommendations from './components/Recommendations';
 
@@ -75,6 +76,10 @@ const App = () => {
                 <Route
                   path='/books/:id'
                   element={<BookDetails />}
+                />
+                <Route
+                  path='/genres'
+                  element={<Genres />}
                 />
                 <Route
                   path='/genres/:id'

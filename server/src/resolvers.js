@@ -1,9 +1,9 @@
 const { PubSub } = require('graphql-subscriptions');
-const booksService = require('../dbConnection/books-service');
-const genresService = require('../dbConnection/genres-service');
+const booksService = require('../db/books-service');
+const genresService = require('../db/genres-service');
 
-const authorsService = require('../dbConnection/authors-service');
-const usersService = require('../dbConnection/users-service');
+const authorsService = require('../db/authors-service');
+const usersService = require('../db/users-service');
 const { GraphQLError } = require('graphql');
 const jwt = require('jsonwebtoken');
 const { compare } = require('bcrypt');
@@ -102,6 +102,11 @@ const resolvers = {
     authorById: async (_root, args) => {
       const author = await authorsService.findById(args.id);
       return author;
+    },
+
+    allGenres: async (_root, args) => {
+      const genres = await genresService.findAll();
+      return genres;
     },
 
     me: async (_root, _args, context) => context.currentUser

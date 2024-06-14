@@ -7,18 +7,13 @@ module.exports = genresService;
 
 async function findAll() {
   try {
-    const books = await prisma.book.findMany({
-      include: {
-        author: {
-          select: {
-            firstName: true,
-            lastName: true
-          }
-        },
-        genres: true
+    const genres = await prisma.genre.findMany({
+      select: {
+        id: true,
+        name: true
       }
     });
-    return books;
+    return genres;
   } catch (e) {
     let message = 'Ошибка в базе данных. Невозможно получить список книг';
     if (e instanceof Error) {

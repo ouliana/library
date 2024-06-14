@@ -48,6 +48,7 @@ type Token {
     genreWithBooks(id: Int): Genre
     allAuthors: [Author]
     authorById(id: Int): Author
+    allGenres: [Genre]
     me: User
   }
 

@@ -47,6 +47,13 @@ export default function Hader() {
             >
               Произведения
             </Button>
+            <Button
+              to='/genres'
+              component={RouterLink}
+              color='inherit'
+            >
+              Жанры
+            </Button>
           </Box>
           {token ? (
             <>

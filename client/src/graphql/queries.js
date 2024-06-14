@@ -71,6 +71,15 @@ export const GENRE = gql`
   }
 `;
 
+export const ALL_GENRES = gql`
+  query GetAllGenres {
+    allGenres {
+      id
+      name
+    }
+  }
+`;
+
 // export const BOOK_BY_AUTHOR_ID = gql`
 //   query GetBookByAuthorId($id: Int) {
 //     booksByAuthorId(id: $id) {
