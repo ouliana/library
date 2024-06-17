@@ -19,7 +19,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { Container } from '@mui/material';
 import Box from '@mui/material/Box';
 
-import { ThemeToggleProvider } from './contexts/ThemeContext';
+import { ThemeProvider } from './contexts/ThemeContext';
+import { ThemeToggleProvider } from './contexts/ThemeToggleContext';
 
 const App = () => {
   const [token, dispatch] = useContext(TokenContext);
@@ -37,84 +38,88 @@ const App = () => {
   return (
     <TokenContext.Provider value={[token, dispatch]}>
       <Router>
-        <ThemeToggleProvider>
-          <CssBaseline />
-          <Header token={token} />
-          <Container maxWidth='false'>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-                height: '100vh',
-                marginTop: '64px',
-                padding: '2rem'
-              }}
+        <ThemeProvider>
+          <ThemeToggleProvider>
+            <CssBaseline />
+            <Header token={token} />
+            <Container
+              maxWidth='false'
+              disableGutters
             >
-              <Routes>
-                <Route
-                  path='/'
-                  element={<Main />}
-                />
-                <Route
-                  path='/login'
-                  element={<LoginForm setError={setError} />}
-                />
-                <Route
-                  path='/authors'
-                  element={<Authors token={token} />}
-                />
-                <Route
-                  path='/authors/:id'
-                  element={<AuthorDetails />}
-                />
-                <Route
-                  path='/books'
-                  element={<Books />}
-                />
-                <Route
-                  path='/books/:id'
-                  element={<BookDetails />}
-                />
-                <Route
-                  path='/genres'
-                  element={<Genres />}
-                />
-                <Route
-                  path='/genres/:id'
-                  element={<BooksByGenre />}
-                />
-                <Route
-                  path='/add'
-                  element={
-                    token ? (
-                      <NewBook />
-                    ) : (
-                      <Navigate
-                        replace
-                        to='/books'
-                      />
-                    )
-                  }
-                />
-                <Route
-                  path='/recommendations'
-                  element={
-                    token ? (
-                      <Recommendations />
-                    ) : (
-                      <Navigate
-                        replace
-                        to='/books'
-                      />
-                    )
-                  }
-                />
-              </Routes>
-            </Box>
-          </Container>
-        </ThemeToggleProvider>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center',
+                  height: '100vh',
+                  marginTop: '64px'
+                }}
+              >
+                <Routes>
+                  <Route
+                    path='/'
+                    element={<Main />}
+                  />
+                  <Route
+                    path='/login'
+                    element={<LoginForm setError={setError} />}
+                  />
+                  <Route
+                    path='/authors'
+                    element={<Authors token={token} />}
+                  />
+                  <Route
+                    path='/authors/:id'
+                    element={<AuthorDetails />}
+                  />
+                  <Route
+                    path='/books'
+                    element={<Books />}
+                  />
+                  <Route
+                    path='/books/:id'
+                    element={<BookDetails />}
+                  />
+                  <Route
+                    path='/genres'
+                    element={<Genres />}
+                  />
+                  <Route
+                    path='/genres/:id'
+                    element={<BooksByGenre />}
+                  />
+                  <Route
+                    path='/add'
+                    element={
+                      token ? (
+                        <NewBook />
+                      ) : (
+                        <Navigate
+                          replace
+                          to='/books'
+                        />
+                      )
+                    }
+                  />
+                  <Route
+                    path='/recommendations'
+                    element={
+                      token ? (
+                        <Recommendations />
+                      ) : (
+                        <Navigate
+                          replace
+                          to='/books'
+                        />
+                      )
+                    }
+                  />
+                </Routes>
+              </Box>
+            </Container>
+          </ThemeToggleProvider>
+        </ThemeProvider>
       </Router>
     </TokenContext.Provider>
   );

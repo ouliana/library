@@ -5,12 +5,24 @@ import { useMutation } from '@apollo/client';
 import { LOGIN } from '../graphql/queries';
 import { useNavigate } from 'react-router-dom';
 
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import { BackgroundContainer, Overlay, LoginPage, Panel } from '../styles';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+
 function LoginForm({ setError }) {
   // eslint-disable-next-line no-unused-vars
   const [token, dispatch] = useContext(TokenContext);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [login, result] = useMutation(LOGIN, {
     extentions: {
@@ -19,7 +31,10 @@ function LoginForm({ setError }) {
   });
   const navigate = useNavigate();
 
-  const submit = event => {
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = event => event.preventDefault();
+
+  const handleSubmit = event => {
     event.preventDefault();
     login({ variables: { username, password } });
   };
@@ -34,27 +49,57 @@ function LoginForm({ setError }) {
   }, [result.data]); // eslint-disable-line
 
   return (
-    <>
-      <h2>Login</h2>
-      <form onSubmit={submit}>
-        <div>
-          username{' '}
-          <input
-            value={username}
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-          <input
-            type='password'
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type='submit'>login</button>
-      </form>
-    </>
+    <BackgroundContainer>
+      <Overlay />
+      <LoginPage>
+        <Panel elevation={1}>
+          <Typography
+            variant='h5'
+            gutterBottom
+          >
+            Авторизация
+          </Typography>
+          <Box
+            component='form'
+            sx={{
+              '& > :not(style)': { m: 1, width: '38ch' }
+            }}
+            noValidate
+            autoComplete='off'
+            onSubmit={handleSubmit}
+          >
+            <TextField
+              label='Логин'
+              autoComplete='current-username'
+              value={username}
+              onChange={({ target }) => setUsername(target.value)}
+            />
+            <TextField
+              label='Пароль'
+              type={showPassword ? 'text' : 'password'}
+              autoComplete='current-password'
+              value={password}
+              onChange={({ target }) => setPassword(target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton
+                      aria-label='toggle password visibility'
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge='end'
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+            />
+            <Button type='submit'>Войти</Button>
+          </Box>
+        </Panel>
+      </LoginPage>
+    </BackgroundContainer>
   );
 }
 

@@ -1,16 +1,28 @@
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+// import Typography from '@mui/material/Typography';
+import {
+  BackgroundContainer,
+  Overlay,
+  Content,
+  GradientTypography
+} from '../styles';
 
 function Main() {
   return (
-    <Box sx={{ textAlign: 'center' }}>
-      <Typography
-        variant='h3'
-        gutterBottom
-      >
-        Добро пожаловать в мини-библиотеку!
-      </Typography>
-    </Box>
+    <BackgroundContainer>
+      <Overlay />
+      <Content>
+        <Box sx={{ textAlign: 'center' }}>
+          <GradientTypography
+            variant='h3'
+            sx={{ fontWeight: 300 }}
+            gutterBottom
+          >
+            Добро пожаловать в Мини-библиотеку!
+          </GradientTypography>
+        </Box>
+      </Content>
+    </BackgroundContainer>
   );
 }
 

@@ -1,27 +1,26 @@
 import { createTheme } from '@mui/material/styles';
-// import { purple } from '@mui/material/colors';
+import { lime, orange } from '@mui/material/colors';
 
 export const lightTheme = createTheme({
   palette: {
-    mode: 'light'
-    // primary: {
-    //   main: purple[500]
-    //   // main: '#1976d2'
-    // },
-    // secondary: {
-    //   main: '#dc004e'
-    // }
+    mode: 'light',
+    primary: {
+      main: lime[500]
+    },
+    secondary: {
+      main: orange[500]
+    }
   }
 });
 
 export const darkTheme = createTheme({
   palette: {
-    mode: 'dark'
-    // primary: {
-    //   main: '#90caf9'
-    // },
-    // secondary: {
-    //   main: '#f48fb1'
-    // }
+    mode: 'dark',
+    primary: {
+      main: '#90caf9'
+    },
+    secondary: {
+      main: '#f48fb1'
+    }
   }
 });
