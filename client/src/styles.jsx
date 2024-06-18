@@ -26,6 +26,15 @@ export const Overlay = styled(Box)(() => ({
   backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adjust the transparency here
   zIndex: 1
 }));
+export const OverlaySecondary = styled(Box)(() => ({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: 'rgba(255, 255, 255, 0.8)', // Adjust the transparency here
+  zIndex: 1
+}));
 
 // export const Content = styled(Box)(({ theme }) => ({
 export const Content = styled(Box)(() => ({
@@ -34,6 +43,14 @@ export const Content = styled(Box)(() => ({
   color: 'white',
   textAlign: 'center',
   paddingTop: '20vh'
+}));
+export const ContentSecondary = styled(Box)(() => ({
+  position: 'relative',
+  zIndex: 2,
+  color: 'inherit',
+  textAlign: 'center',
+  // paddingTop: '20vh'
+  padding: '2rem'
 }));
 
 export const LoginPage = styled(Box)(() => ({

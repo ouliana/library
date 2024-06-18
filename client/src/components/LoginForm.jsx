@@ -48,6 +48,12 @@ function LoginForm({ setError }) {
     }
   }, [result.data]); // eslint-disable-line
 
+  useEffect(() => {
+    if (token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+
   return (
     <BackgroundContainer>
       <Overlay />

@@ -18,6 +18,8 @@ const jwt = require('jsonwebtoken');
 const typeDefs = require('./src/typeDefs');
 const resolvers = require('./src/resolvers');
 
+const usersService = require('./db/users-service');
+
 start();
 
 async function start() {

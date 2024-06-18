@@ -4,6 +4,9 @@ import { Navigate } from 'react-router-dom';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Header from './components/Header';
+import Footer from './components/Footer';
+import MainLayout from './components/MainLayout';
+import SecondaryLayout from './components/SecondaryLayout';
 import Main from './components/Main';
 import Authors from './components/Authors';
 import AuthorDetails from './components/AuthorDetails';
@@ -59,15 +62,27 @@ const App = () => {
                 <Routes>
                   <Route
                     path='/'
-                    element={<Main />}
+                    element={
+                      <MainLayout>
+                        <Main />
+                      </MainLayout>
+                    }
                   />
                   <Route
                     path='/login'
-                    element={<LoginForm setError={setError} />}
+                    element={
+                      <MainLayout>
+                        <LoginForm setError={setError} />
+                      </MainLayout>
+                    }
                   />
                   <Route
                     path='/authors'
-                    element={<Authors token={token} />}
+                    element={
+                      <SecondaryLayout>
+                        <Authors token={token} />
+                      </SecondaryLayout>
+                    }
                   />
                   <Route
                     path='/authors/:id'
@@ -118,6 +133,7 @@ const App = () => {
                 </Routes>
               </Box>
             </Container>
+            <Footer />
           </ThemeToggleProvider>
         </ThemeProvider>
       </Router>

@@ -9,12 +9,15 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import MenuIcon from '@mui/icons-material/Menu';
 import Avatar from '@mui/material/Avatar';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions
-} from '@mui/material';
+import Menu from '@mui/material/Menu';
+import Divider from '@mui/material/Divider';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import AccountCircleOutlined from '@mui/icons-material/AccountCircleOutlined';
+import ContactPageOutlined from '@mui/icons-material/ContactPageOutlined';
+import LogoutOutlined from '@mui/icons-material/LogoutOutlined';
+import { Stack } from '@mui/material';
 
 import { Link as RouterLink } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
@@ -24,15 +27,24 @@ import ThemeToggleButton from './ThemeToggleButton';
 export default function Hader() {
   const [token, dispatch] = useContext(TokenContext);
 
-  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleDialogOpen = () => {
-    setOpen(true);
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setAnchorEl(null);
   };
+
+  const logout = () => {
+    localStorage.clear();
+    dispatch({ type: 'CLEAR' });
+    client.resetStore();
+    handleClose();
+  };
+
+  const open = Boolean(anchorEl);
 
   const client = useApolloClient();
   return (
@@ -72,69 +84,73 @@ export default function Hader() {
               Жанры
             </Button>
           </Box>
-          {token ? (
-            <>
-              <Button
-                to='/recommendations'
-                component={RouterLink}
-                color='inherit'
-              >
-                Рекомендации
-              </Button>
-              <Button
-                to='/add'
-                component={RouterLink}
-                color='inherit'
-              >
-                Добавить книгу
-              </Button>
-              {/* <Avatar
-                alt='Гость'
+          <Stack
+            direction='row'
+            spacing={2}
+            sx={{ visibility: token ? 'visible' : 'hidden' }}
+          >
+            <Button
+              to='/recommendations'
+              component={RouterLink}
+              color='inherit'
+            >
+              Рекомендации
+            </Button>
+            <Button
+              to='/add'
+              component={RouterLink}
+              color='inherit'
+            >
+              Добавить книгу
+            </Button>
+            <IconButton
+              aria-controls={open ? 'menu' : undefined}
+              aria-haspopup='true'
+              aria-expanded={open ? 'true' : undefined}
+              onClick={handleClick}
+              sx={{
+                padding: 0,
+                borderRadius: '50%'
+              }}
+            >
+              <Avatar
+                alt='Аватар пользователя'
                 src='/cat3.jpg'
-                // sx={{ width: 24, height: 24 }}
-              /> */}
-              <IconButton
-                onClick={handleDialogOpen}
-                sx={{
-                  padding: 0,
-                  borderRadius: '50%'
-                }}
-              >
-                <Avatar
-                  alt='User Avatar'
-                  src='/cat3.jpg'
-                  sx={{ width: 48, height: 48 }}
-                />
-              </IconButton>
-              <Dialog
-                open={open}
-                onClose={handleClose}
-                sx={{
-                  '& .MuiDialog-paper': {
-                    margin: 0,
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    position: 'absolute'
-                  }
-                }}
-              >
-                <DialogTitle>Custom Positioned Dialog</DialogTitle>
-                <DialogContent>
-                  This dialog is centered both vertically and horizontally.
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleClose}>Close</Button>
-                </DialogActions>
-              </Dialog>
-              <Button
-                color='inherit'
-                onClick={logout}
-              >
-                Выйти
-              </Button>
-            </>
-          ) : (
+                sx={{ width: 48, height: 48 }}
+              />
+            </IconButton>
+            <Menu
+              id='menu'
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button'
+              }}
+            >
+              <MenuItem>
+                <ListItemIcon>
+                  <AccountCircleOutlined fontSize='small' />
+                </ListItemIcon>
+                <ListItemText>Профиль</ListItemText>
+              </MenuItem>
+              <MenuItem>
+                <ListItemIcon>
+                  <ContactPageOutlined fontSize='small' />
+                </ListItemIcon>
+                <ListItemText>Мой аккаунт</ListItemText>
+              </MenuItem>
+
+              <Divider />
+              <MenuItem onClick={logout}>
+                <ListItemIcon>
+                  <LogoutOutlined fontSize='small' />
+                </ListItemIcon>
+                <ListItemText>Выйти</ListItemText>
+              </MenuItem>
+            </Menu>
+          </Stack>
+          {!token && (
             <Button
               to='/login'
               component={RouterLink}
@@ -150,9 +166,9 @@ export default function Hader() {
     </Box>
   );
 
-  function logout() {
-    localStorage.clear();
-    dispatch({ type: 'CLEAR' });
-    client.resetStore();
-  }
+  // function logout() {
+  //   localStorage.clear();
+  //   dispatch({ type: 'CLEAR' });
+  //   client.resetStore();
+  // }
 }
