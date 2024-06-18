@@ -8,7 +8,7 @@ export const BackgroundContainer = styled(Box)(() => ({
   // const Background = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
-  minHeight: '100vh',
+  // minHeight: '100vh',
   overflow: 'visible',
   backgroundImage: `url(/background.jpg)`,
   backgroundSize: 'cover',
@@ -50,7 +50,12 @@ export const ContentSecondary = styled(Box)(() => ({
   color: 'inherit',
   textAlign: 'center',
   // paddingTop: '20vh'
-  padding: '2rem'
+  padding: '2rem',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  minHeight: 'calc(100vh - 120px)' //64px + 56px
 }));
 
 export const LoginPage = styled(Box)(() => ({

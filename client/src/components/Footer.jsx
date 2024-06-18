@@ -1,5 +1,6 @@
 import { useTheme } from '@mui/material/styles';
 import { Box } from '@mui/material';
+import Typography from '@mui/material/Typography';
 
 function Footer() {
   const theme = useTheme();
@@ -11,7 +12,7 @@ function Footer() {
         padding: '1rem'
       }}
     >
-      © 2024 Ульяна Котик
+      <Typography variant='caption'>© 2024 Ульяна Котик</Typography>
     </Box>
   );
 }

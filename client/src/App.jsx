@@ -55,7 +55,6 @@ const App = () => {
                   flexDirection: 'column',
                   justifyContent: 'flex-start',
                   alignItems: 'center',
-                  height: '100vh',
                   marginTop: '64px'
                 }}
               >
@@ -86,23 +85,43 @@ const App = () => {
                   />
                   <Route
                     path='/authors/:id'
-                    element={<AuthorDetails />}
+                    element={
+                      <SecondaryLayout>
+                        <AuthorDetails />
+                      </SecondaryLayout>
+                    }
                   />
                   <Route
                     path='/books'
-                    element={<Books />}
+                    element={
+                      <SecondaryLayout>
+                        <Books />
+                      </SecondaryLayout>
+                    }
                   />
                   <Route
                     path='/books/:id'
-                    element={<BookDetails />}
+                    element={
+                      <SecondaryLayout>
+                        <BookDetails />
+                      </SecondaryLayout>
+                    }
                   />
                   <Route
                     path='/genres'
-                    element={<Genres />}
+                    element={
+                      <SecondaryLayout>
+                        <Genres />
+                      </SecondaryLayout>
+                    }
                   />
                   <Route
                     path='/genres/:id'
-                    element={<BooksByGenre />}
+                    element={
+                      <SecondaryLayout>
+                        <BooksByGenre />
+                      </SecondaryLayout>
+                    }
                   />
                   <Route
                     path='/add'

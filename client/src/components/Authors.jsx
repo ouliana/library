@@ -33,12 +33,12 @@ function Authors({ token }) {
   };
 
   return (
-    <Box sx={{ textAlign: 'center' }}>
+    <Box sx={{ textAlign: 'center', width: '80%' }}>
       <Typography
         variant='h2'
         gutterBottom
       >
-        {loading ? <Skeleton /> : 'Список авторов'}
+        {loading ? <Skeleton /> : 'Авторы'}
       </Typography>
       <TableContainer component={Paper}>
         <Table
