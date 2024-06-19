@@ -11,6 +11,7 @@ datasource db {
 
 enum Role {
   ADMIN
+  USER
   GUEST
 }
 
@@ -18,7 +19,12 @@ model User {
   id   Int   @id @default(autoincrement())
   username     String @db.VarChar(255) @unique
   password String
+  name String?
+  avatar String?
   role  Role    @default(GUEST)
+  favoriteBooks Book[] 
+  favoriteGenres Genre[] 
+  
 
    @@map("users")
 }
@@ -31,6 +37,7 @@ model Book {
   authorId     Int  
   genres Genre[]
   annotation String? 
+  users User[]
   
 
   @@map("books")
@@ -38,12 +45,12 @@ model Book {
 
 model Author {
 id   Int   @id @default(autoincrement())
-firstName String? @db.VarChar(255)
-lastName String @db.VarChar(255)
+firstName String? @db.VarChar(255) @map("first_name")
+lastName String @db.VarChar(255) @map("last_name")
 born Int?
 profile String? @db.VarChar(255)
-creditText String? @db.VarChar(255)
-creditLink String? @db.VarChar(255)
+creditText String? @db.VarChar(255) @map("credit_text")
+creditLink String? @db.VarChar(255) @map("credit_link")
 books Book[]
 annotation String? 
 
@@ -55,6 +62,7 @@ model Genre {
   id   Int   @id @default(autoincrement())
   name String @db.VarChar(255) @unique
   books Book[]
+  users User[]
 
   @@map("genres")
 }

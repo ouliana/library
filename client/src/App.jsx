@@ -7,7 +7,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import MainLayout from './components/MainLayout';
 import SecondaryLayout from './components/SecondaryLayout';
-import Main from './components/Main';
+import Welcome from './components/Welcome';
 import Authors from './components/Authors';
 import AuthorDetails from './components/AuthorDetails';
 import Books from './components/Books';
@@ -63,7 +63,7 @@ const App = () => {
                     path='/'
                     element={
                       <MainLayout>
-                        <Main />
+                        <Welcome />
                       </MainLayout>
                     }
                   />

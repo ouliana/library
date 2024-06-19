@@ -109,7 +109,17 @@ const resolvers = {
       return genres;
     },
 
-    me: async (_root, _args, context) => context.currentUser
+    me: async (_root, _args, context) => {
+      const tmp = {
+        ...context.currentUser,
+        favoriteBooks: context.currentUser.favoriteBooks.map(book => ({
+          ...book,
+          author: `${book.author.firstName} ${book.author.lastName}`
+        }))
+      };
+      console.log(tmp);
+      return tmp;
+    }
   },
 
   Mutation: {
@@ -181,9 +191,7 @@ const resolvers = {
 
     login: async (_root, args) => {
       const user = await usersService.findByUsername(args.username);
-      console.log('from db: ', user);
       if (user) {
-        console.log(user);
         const passwordsMatch = await compare(args.password, user.password);
         if (!passwordsMatch) {
           throw new GraphQLError('wrong credentials', {
@@ -193,7 +201,6 @@ const resolvers = {
           });
         }
       } else {
-        console.log('error');
         throw new GraphQLError('wrong credentials', {
           extensions: {
             code: 'BAD_USER_INPUT'

@@ -13,7 +13,6 @@ const { WebSocketServer } = require('ws');
 const { useServer } = require('graphql-ws/lib/use/ws');
 
 const jwt = require('jsonwebtoken');
-// const usersService = require('./dbConnection/users-service');
 
 const typeDefs = require('./src/typeDefs');
 const resolvers = require('./src/resolvers');
@@ -64,7 +63,6 @@ async function start() {
             auth.substring(7),
             process.env.JWT_SECRET
           );
-          // const currentUser = await userService.populate(decodedToken.id);
           const currentUser = await usersService.findUserById(decodedToken.id);
           return { currentUser };
         }

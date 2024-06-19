@@ -6,23 +6,8 @@ const prisma = new PrismaClient();
 
 async function main() {
   const passwordHashGuest = await hash(process.env.PASSWORD_GUEST, 10);
+  const passwordHashUser = await hash(process.env.PASSWORD_USER, 10);
   const passwordHashAdmin = await hash(process.env.PASSWORD_ADMIN, 10);
-
-  await prisma.user.create({
-    data: {
-      username: 'guest',
-      password: passwordHashGuest,
-      role: Role.GUEST
-    }
-  });
-
-  await prisma.user.create({
-    data: {
-      username: 'admin',
-      password: passwordHashAdmin,
-      role: Role.ADMIN
-    }
-  });
 
   await prisma.author.create({
     data: {
@@ -252,6 +237,55 @@ async function main() {
       },
       annotation:
         '1944 год. На островке Пианоза в Тирренском море расквартирован бомбардировочный полк ВВС США (летающий на бомбардировщиках North American B-25 Mitchell), в котором служат капитан Йоссариан, главный герой романа, и его сослуживцы. Командование авиаполка раз за разом увеличивает норму боевых вылетов, тем самым продлевая службу пилотов, отлетавших свою норму, после которой они имеют право вернуться домой. Таким образом, отлетать норму становится практически невозможным. Роман известен возникшим в нём логическим парадоксом между взаимоисключающими правилами,установленными поправкой 22.'
+    }
+  });
+
+  await prisma.user.create({
+    data: {
+      username: 'guest',
+      password: passwordHashGuest,
+      name: 'Гость',
+      role: Role.GUEST,
+      avatar:
+        'https://storage.yandexcloud.net/portfolio-kotik/guest-avatar.jpg',
+      favoriteBooks: {
+        connect: [{ id: 3 }, { id: 4 }]
+      },
+      favoriteGenres: {
+        connect: [{ id: 1 }, { id: 3 }, { id: 4 }]
+      }
+    }
+  });
+
+  await prisma.user.create({
+    data: {
+      username: 'user',
+      password: passwordHashUser,
+      name: 'Ульяна',
+      avatar: 'https://storage.yandexcloud.net/portfolio-kotik/user-avatar.png',
+      role: Role.USER,
+      favoriteBooks: {
+        connect: [{ id: 3 }, { id: 4 }]
+      },
+      favoriteGenres: {
+        connect: [{ id: 1 }, { id: 3 }, { id: 4 }]
+      }
+    }
+  });
+
+  await prisma.user.create({
+    data: {
+      username: 'admin',
+      password: passwordHashAdmin,
+      name: 'Администратор',
+      avatar: '',
+      role: Role.ADMIN,
+      favoriteBooks: {
+        connect: [{ id: 1 }, { id: 3 }, { id: 7 }]
+      },
+      favoriteGenres: {
+        connect: [{ id: 1 }, { id: 3 }, { id: 8 }]
+      }
     }
   });
 }

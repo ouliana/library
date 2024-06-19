@@ -7,24 +7,31 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
-import MenuIcon from '@mui/icons-material/Menu';
-import Avatar from '@mui/material/Avatar';
+import HomeIcon from '@mui/icons-material/Home';
 import Menu from '@mui/material/Menu';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import Typography from '@mui/material/Typography';
 import AccountCircleOutlined from '@mui/icons-material/AccountCircleOutlined';
 import ContactPageOutlined from '@mui/icons-material/ContactPageOutlined';
 import LogoutOutlined from '@mui/icons-material/LogoutOutlined';
 import { Stack } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import { deepOrange } from '@mui/material/colors';
 
 import { Link as RouterLink } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
+import Skeleton from '@mui/material/Skeleton';
 
 import ThemeToggleButton from './ThemeToggleButton';
 
+import { ME } from '../graphql/queries';
+import { useQuery } from '@apollo/client';
+
 export default function Hader() {
+  const client = useApolloClient();
   const [token, dispatch] = useContext(TokenContext);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -46,7 +53,19 @@ export default function Hader() {
 
   const open = Boolean(anchorEl);
 
-  const client = useApolloClient();
+  console.log(token);
+
+  const { data, loading, error } = useQuery(ME, {
+    skip: !token // Skip the query if userId is null
+  });
+
+  if (error) return `Error! ${error.message}`;
+  if (data) {
+    console.log(data);
+  }
+  const user = data?.me;
+  console.log(data);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position='fixed'>
@@ -55,10 +74,13 @@ export default function Hader() {
             size='large'
             edge='start'
             color='inherit'
-            aria-label='menu'
+            aria-label='home'
             sx={{ mr: 2 }}
+            component={RouterLink}
+            to='/'
           >
-            <MenuIcon />
+            <HomeIcon />
+            {/* <MenuIcon /> */}
           </IconButton>
 
           <Box sx={{ flexGrow: 1 }}>
@@ -113,11 +135,15 @@ export default function Hader() {
                 borderRadius: '50%'
               }}
             >
-              <Avatar
-                alt='Аватар пользователя'
-                src='/cat3.jpg'
-                sx={{ width: 48, height: 48 }}
-              />
+              {user ? (
+                <Avatar
+                  alt='Аватар пользователя'
+                  src={user ? user.avatar : ''}
+                  sx={{ width: 48, height: 48 }}
+                />
+              ) : (
+                <Avatar sx={{ bgcolor: deepOrange[500] }}>Г</Avatar>
+              )}
             </IconButton>
             <Menu
               id='menu'
@@ -128,6 +154,24 @@ export default function Hader() {
                 'aria-labelledby': 'basic-button'
               }}
             >
+              <Box
+                sx={{
+                  padding: '0.5rem',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                {' '}
+                <Typography
+                  variant='overline'
+                  display='block'
+                  gutterBottom
+                >
+                  {loading ? <Skeleton /> : user?.name}
+                </Typography>
+              </Box>
+              <Divider />
               <MenuItem>
                 <ListItemIcon>
                   <AccountCircleOutlined fontSize='small' />
@@ -140,7 +184,6 @@ export default function Hader() {
                 </ListItemIcon>
                 <ListItemText>Мой аккаунт</ListItemText>
               </MenuItem>
-
               <Divider />
               <MenuItem onClick={logout}>
                 <ListItemIcon>

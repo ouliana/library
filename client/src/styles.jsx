@@ -23,7 +23,7 @@ export const Overlay = styled(Box)(() => ({
   left: 0,
   right: 0,
   bottom: 0,
-  backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adjust the transparency here
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
   zIndex: 1
 }));
 export const OverlaySecondary = styled(Box)(() => ({
@@ -32,7 +32,8 @@ export const OverlaySecondary = styled(Box)(() => ({
   left: 0,
   right: 0,
   bottom: 0,
-  backgroundColor: 'rgba(255, 255, 255, 0.8)', // Adjust the transparency here
+  backgroundColor: 'rgba(255, 255, 255, 0.4)',
+  backdropFilter: 'blur(10px)',
   zIndex: 1
 }));
 
@@ -42,7 +43,11 @@ export const Content = styled(Box)(() => ({
   zIndex: 2,
   color: 'white',
   textAlign: 'center',
-  paddingTop: '20vh'
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  minHeight: 'calc(100vh - 120px)'
 }));
 export const ContentSecondary = styled(Box)(() => ({
   position: 'relative',

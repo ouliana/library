@@ -29,7 +29,12 @@ books: [Book]
 
 type User {
   username: String!
-  favoriteGenre: String!
+  password: String!
+  name: String
+  role: String!
+  avatar: String
+  favoriteBooks: [Book]
+  favoriteGenres: [Genre]
   id: ID!
 }
 

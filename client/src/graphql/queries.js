@@ -80,19 +80,21 @@ export const ALL_GENRES = gql`
   }
 `;
 
-// export const BOOK_BY_AUTHOR_ID = gql`
-//   query GetBookByAuthorId($id: Int) {
-//     booksByAuthorId(id: $id) {
-//       id
-//       title
-//     }
-//   }
-// `;
-
 export const ME = gql`
   query CurrentUser {
     me {
-      favoriteGenre
+      username
+      name
+      avatar
+      favoriteBooks {
+        id
+        title
+        author
+      }
+      favoriteGenres {
+        id
+        name
+      }
     }
   }
 `;
