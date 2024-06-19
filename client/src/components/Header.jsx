@@ -1,4 +1,4 @@
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient, useQuery } from '@apollo/client';
 import TokenContext from '../contexts/TokenContext';
 
 import { useState, useContext } from 'react';
@@ -28,7 +28,6 @@ import Skeleton from '@mui/material/Skeleton';
 import ThemeToggleButton from './ThemeToggleButton';
 
 import { ME } from '../graphql/queries';
-import { useQuery } from '@apollo/client';
 
 export default function Hader() {
   const client = useApolloClient();
@@ -53,8 +52,6 @@ export default function Hader() {
 
   const open = Boolean(anchorEl);
 
-  console.log(token);
-
   const { data, loading, error } = useQuery(ME, {
     skip: !token // Skip the query if userId is null
   });
@@ -64,7 +61,6 @@ export default function Hader() {
     console.log(data);
   }
   const user = data?.me;
-  console.log(data);
 
   return (
     <Box sx={{ flexGrow: 1 }}>

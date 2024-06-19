@@ -1,4 +1,5 @@
 import Paper from '@mui/material/Paper';
+import { experimentalStyled } from '@mui/material/styles';
 
 import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
@@ -41,7 +42,7 @@ export const OverlaySecondary = styled(Box)(() => ({
 export const Content = styled(Box)(() => ({
   position: 'relative',
   zIndex: 2,
-  color: 'white',
+  color: '#212121',
   textAlign: 'center',
   display: 'flex',
   flexDirection: 'column',
@@ -96,4 +97,18 @@ export const Panel = styled(Paper)(({ theme }) => ({
   padding: '2rem',
   backgroundColor: 'rgba(255, 255, 255, 0.4)',
   backdropFilter: 'blur(10px)'
+}));
+
+export const GridItem = experimentalStyled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(2),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+  transition: 'box-shadow 0.3s, background-color 0.3s',
+  '&:hover': {
+    boxShadow: theme.shadows[3],
+    backgroundColor: theme.palette.mode === 'dark' ? '#2C3E50' : '#efefef'
+    // backgroundColor: theme.palette.mode === 'dark' ? '#2C3E50' : '#f5f5f5'
+  }
 }));

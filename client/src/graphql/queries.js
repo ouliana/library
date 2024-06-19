@@ -90,6 +90,7 @@ export const ME = gql`
         id
         title
         author
+        published
       }
       favoriteGenres {
         id

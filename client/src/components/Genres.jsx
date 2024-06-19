@@ -1,26 +1,12 @@
 import { useQuery } from '@apollo/client';
 import { ALL_GENRES } from '../graphql/queries';
 
-import Paper from '@mui/material/Paper';
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import ButtonBase from '@mui/material/ButtonBase';
 
-import { experimentalStyled as styled } from '@mui/material/styles';
 import Skeleton from '@mui/material/Skeleton';
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(2),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  transition: 'box-shadow 0.3s, background-color 0.3s',
-  '&:hover': {
-    boxShadow: theme.shadows[3],
-    backgroundColor: theme.palette.mode === 'dark' ? '#2C3E50' : '#f5f5f5'
-  }
-}));
+import { GridItem } from '../styles';
 
 function Genres() {
   const { error, data } = useQuery(ALL_GENRES);
@@ -46,7 +32,7 @@ function Genres() {
                 to={`/genres/${genre.id}`}
                 style={{ display: 'block', textDecoration: 'none' }}
               >
-                <Item elevation={1}>{genre.name}</Item>
+                <GridItem elevation={1}>{genre.name}</GridItem>
               </ButtonBase>
             </Grid>
           ))

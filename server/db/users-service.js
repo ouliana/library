@@ -31,7 +31,8 @@ async function findUserById(id) {
               }
             },
             title: true,
-            genres: true
+            genres: true,
+            published: true
           }
         },
         favoriteGenres: true
