@@ -33,59 +33,66 @@ function BookDetails() {
   const book = data?.bookById;
 
   return (
-    <Box sx={{ padding: '2rem 0' }}>
-      <Stack spacing={8}>
-        {loading && <BookDetailsSkeleton />}
-        {!!data && (
-          <Stack
-            direction='row'
-            spacing={4}
-            justifyContent='flex-start'
-          >
+    <Stack spacing={8}>
+      {loading && <BookDetailsSkeleton />}
+      {!!data && (
+        <Stack
+          direction='row'
+          spacing={4}
+        >
+          <Box
+            display={{ xs: 'none', sm: 'flex' }}
+            component='img'
+            sx={{
+              height: '200px',
+              width: '150px',
+              backgroundImage: `url(${imageSrc})`,
+              backgroundSize: 'cover'
+            }}
+          />
+          <Stack spacing={1}>
+            <Typography variant='h5'>{book.title}</Typography>
+            <Typography variant='subtitle2'>
+              <Link
+                href={`/authors/${book.authorId}`}
+                variant='inherit'
+                color='inherit'
+                underline='none'
+              >
+                {book.author.firstName} {book.author.lastName}
+              </Link>
+            </Typography>
+            <Typography variant='body2'>{book.published}</Typography>
             <Box
-              component='img'
               sx={{
-                height: '200px',
-                width: '150px',
-                backgroundImage: `url(${imageSrc})`,
-                backgroundSize: 'cover'
+                paddingTop: '2rem',
+                width: {
+                  xs: '100%',
+                  md: 'calc(80vw - 300px)'
+                }
               }}
+            >
+              {/* <Box sx={{ paddingTop: '2rem', width: 'calc(100vw - 300px)' }}> */}
+              <Typography variant='body2'>{book.annotation}</Typography>
+            </Box>
+          </Stack>
+        </Stack>
+      )}
+      {!!data && (
+        <Stack
+          direction='row'
+          spacing={1}
+        >
+          {book.genres.map(genre => (
+            <Chip
+              key={genre.id}
+              label={genre.name}
+              onClick={() => navigate(`/genres/${genre.id}`)}
             />
-            <Stack>
-              <Typography variant='h5'>{book.title}</Typography>
-              <Typography variant='subtitle2'>
-                <Link
-                  href={`/authors/${book.authorId}`}
-                  variant='inherit'
-                  color='inherit'
-                  underline='none'
-                >
-                  {book.author}
-                </Link>
-              </Typography>
-              <Typography variant='body2'>{book.published}</Typography>
-              <Box sx={{ paddingTop: '2rem', width: 'calc(100vw - 300px)' }}>
-                <Typography variant='body2'>{book.annotation}</Typography>
-              </Box>
-            </Stack>
-          </Stack>
-        )}
-        {!!data && (
-          <Stack
-            direction='row'
-            spacing={1}
-          >
-            {book.genres.map(genre => (
-              <Chip
-                key={genre.id}
-                label={genre.name}
-                onClick={() => navigate(`/genres/${genre.id}`)}
-              />
-            ))}
-          </Stack>
-        )}
-      </Stack>
-    </Box>
+          ))}
+        </Stack>
+      )}
+    </Stack>
   );
 }
 

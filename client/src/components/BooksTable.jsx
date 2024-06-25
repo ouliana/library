@@ -38,7 +38,9 @@ function BooksTable({ books }) {
               style={{ cursor: 'pointer' }}
             >
               <TableCell align='left'>{book.title}</TableCell>
-              <TableCell align='left'>{book.author}</TableCell>
+              <TableCell align='left'>
+                {book.author.firstName} {book.author.lastName}
+              </TableCell>
               <TableCell align='center'>{book.published}</TableCell>
             </TableRow>
           ))}

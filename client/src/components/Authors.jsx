@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useQuery, useMutation } from '@apollo/client';
-import { ALL_AUTHORS, SET_BIRTH_YEAR } from '../graphql/queries';
+import { ALL_AUTHORS } from '../graphql/queries';
+import { SET_BIRTH_YEAR } from '../graphql/mutations';
 
 import Select from 'react-select';
 

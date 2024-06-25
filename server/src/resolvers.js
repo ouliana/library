@@ -17,16 +17,13 @@ const resolvers = {
       return count;
     },
     allBooks: async (_root, args) => {
+      console.log('args: ', args);
       if (!Object.keys(args).length) {
         const books = await booksService.findAll();
-        const result = books.map(book => ({
-          ...book,
-          author: `${book.author.firstName} ${book.author.lastName}`
-        }));
-        return result;
+        return books;
       }
 
-      if (args.author && args.genre) {
+      if (args.author && args.genres) {
         const books = await booksService.findByAuthor(args.author);
         return books.filter(b => b.genres.includes(args.genre));
       }
@@ -36,21 +33,18 @@ const resolvers = {
         return books;
       }
 
-      if (args.genre) {
-        const books = await booksService.findAll();
-        return args.genre === 'all'
-          ? books
-          : books.filter(b => b.genres.includes(args.genre));
+      if (args.genres) {
+        const books = await booksService.findByGenres(args.genres);
+        return books;
+        // return args.genre === 'all'
+        //   ? books
+        //   : books.filter(b => b.genres.includes(args.genre));
       }
     },
     bookById: async (_root, args) => {
       try {
         const book = await booksService.findById(args.id);
-        const res = {
-          ...book,
-          author: `${book.author.firstName} ${book.author.lastName}`
-        };
-        return res;
+        return book;
       } catch (error) {
         throw new Error('Не удалось получить книгу по id');
       }
@@ -60,22 +54,11 @@ const resolvers = {
       const books = await booksService.findByAuthorId(args.authorId);
       return books;
     },
-    booksByAuthorName: async (_root, args) => {
-      const books = await booksService.findByAuthorId(args.id);
-      if (!books) return [];
-      return books.map(book => ({
-        ...book
-      }));
-    },
 
     booksByGenre: async (_root, args) => {
       try {
         const books = await booksService.findByGenre(args.genreId);
-        const res = books.map(book => ({
-          ...book,
-          author: `${book.author.firstName} ${book.author.lastName}`
-        }));
-        return res;
+        return books;
       } catch (error) {
         throw new Error('Не удалось получить книгу по id жанра');
       }
@@ -84,11 +67,7 @@ const resolvers = {
     genreWithBooks: async (_root, args) => {
       try {
         const genre = await genresService.findAllBooks(args.id);
-        const books = genre.books.map(book => ({
-          ...book,
-          author: `${book.author.firstName} ${book.author.lastName}`
-        }));
-        return { ...genre, books };
+        return genre;
       } catch (error) {
         throw new Error('Не удалось получить жанр по id');
       }
@@ -109,17 +88,7 @@ const resolvers = {
       return genres;
     },
 
-    me: async (_root, _args, context) => {
-      const tmp = {
-        ...context.currentUser,
-        favoriteBooks: context.currentUser.favoriteBooks.map(book => ({
-          ...book,
-          author: `${book.author.firstName} ${book.author.lastName}`
-        }))
-      };
-      console.log(tmp);
-      return tmp;
-    }
+    me: async (_root, _args, context) => context.currentUser
   },
 
   Mutation: {

@@ -56,10 +56,9 @@ export default function Hader() {
     skip: !token // Skip the query if userId is null
   });
 
+  console.log(data);
+
   if (error) return `Error! ${error.message}`;
-  if (data) {
-    console.log(data);
-  }
   const user = data?.me;
 
   return (
@@ -204,10 +203,4 @@ export default function Hader() {
       </AppBar>
     </Box>
   );
-
-  // function logout() {
-  //   localStorage.clear();
-  //   dispatch({ type: 'CLEAR' });
-  //   client.resetStore();
-  // }
 }

@@ -1,9 +1,9 @@
 const booksService = {
   findAll,
   findById,
-  findByAuthorName,
   findByAuthorId,
   findByTitle,
+  findByGenres,
   save
 };
 
@@ -22,6 +22,38 @@ async function findAll() {
         genres: true
       }
     });
+    return books;
+  } catch (e) {
+    let message = 'Ошибка в базе данных. Невозможно получить список книг';
+    if (e instanceof Error) {
+      message += 'Error: ' + e.message;
+    }
+    throw new Error(message);
+  }
+}
+async function findByGenres(genres) {
+  try {
+    const books = await prisma.book.findMany({
+      where: {
+        genres: {
+          some: {
+            id: {
+              in: genres
+            }
+          }
+        }
+      },
+      include: {
+        author: {
+          select: {
+            firstName: true,
+            lastName: true
+          }
+        },
+        genres: true
+      }
+    });
+    console.log(books);
     return books;
   } catch (e) {
     let message = 'Ошибка в базе данных. Невозможно получить список книг';
@@ -58,25 +90,6 @@ async function findById(id) {
   }
 }
 
-async function findByAuthorName(author) {
-  try {
-    const books = await prisma.book.findMany({
-      where: {
-        author
-      },
-      include: {
-        genres: true
-      }
-    });
-    return books;
-  } catch (e) {
-    let message = 'Ошибка в базе данных. Невозможно получить книгу';
-    if (e instanceof Error) {
-      message += 'Error: ' + e.message;
-    }
-    throw new Error(message);
-  }
-}
 async function findByAuthorId(authorId) {
   try {
     const books = await prisma.book.findMany({

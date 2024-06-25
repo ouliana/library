@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import TokenContext from '../contexts/TokenContext';
 
 import { useMutation } from '@apollo/client';
-import { LOGIN } from '../graphql/queries';
+import { LOGIN } from '../graphql/mutations';
 import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';

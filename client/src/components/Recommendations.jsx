@@ -4,12 +4,13 @@ import { useQuery } from '@apollo/client';
 function Recommendations() {
   const user = useQuery(ME);
 
-  // const books = useQuery(ALL_BOOKS, {
-  //   variables: { genre: user.data?.me?.favoriteGenre },
-  //   skip: user.loading || !user.data?.me?.favoriteGenre
-  // });
+  const books = useQuery(ALL_BOOKS, {
+    variables: {
+      genres: user.data?.me?.favoriteGenres.map(genre => Number(genre.id))
+    },
+    skip: user.loading || user.data?.me?.favoriteGenres.length === 0
+  });
 
-  const books = useQuery(ALL_BOOKS);
   // eslint-disable-next-line no-unused-vars
   const errors = user.error || books.error;
   const loading = user.loading || books.loading;
@@ -32,8 +33,8 @@ function Recommendations() {
             <th>author</th>
             <th>published</th>
           </tr>
-          {books &&
-            books.data.allBooks.map(a => (
+          {!!books &&
+            books?.data?.allBooks.map(a => (
               <tr key={a.title}>
                 <td>{a.title}</td>
                 <td>{a.author}</td>

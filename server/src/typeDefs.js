@@ -11,11 +11,12 @@ type Author {
   bookCount: Int!
 }
 
+
 type Book {
   title: String!
   published: Int!
-  author: String!
   authorId: Int!
+  author: Author
   genres: [Genre!]!
   annotation: String
   id: ID!
@@ -45,10 +46,10 @@ type Token {
   type Query {
     bookCount: Int
     authorCount: Int
-    allBooks(author: String, genre: String): [Book]
+    allBooks(firstName: String, lastName: String, genres: [Int]): [Book]
     bookById(id: Int): Book
     booksByAuthorId(authorId: Int): [Book]
-    booksByAuthorName(name: String): [Book]
+    booksByAuthorName(firstName: String, lastName: String): [Book]
     booksByGenre(genreId: Int): [Book]
     genreWithBooks(id: Int): Genre
     allAuthors: [Author]

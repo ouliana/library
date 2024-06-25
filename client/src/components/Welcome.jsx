@@ -22,9 +22,6 @@ function Welcome() {
   });
 
   if (error) return `Error! ${error.message}`;
-  if (data) {
-    console.log(data);
-  }
   const user = data?.me;
 
   return (

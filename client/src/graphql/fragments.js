@@ -3,7 +3,10 @@ import { gql } from '@apollo/client';
 export const BOOK_DETAILS = gql`
   fragment BookDetails on Book {
     title
-    author
+    author {
+      firstName
+      lastName
+    }
     authorId
     published
     genres {
@@ -18,7 +21,10 @@ export const BOOK_DATA_FOR_TABLE = gql`
   fragment BookDataForTable on Book {
     id
     title
-    author
+    author {
+      firstName
+      lastName
+    }
     authorId
     published
   }

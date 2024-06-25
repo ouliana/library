@@ -38,6 +38,7 @@ async function findUserById(id) {
         favoriteGenres: true
       }
     });
+    console.log(user);
     return user;
   } catch (e) {
     let message = 'Ошибка в базе данных. Невозможно получить пользователя';

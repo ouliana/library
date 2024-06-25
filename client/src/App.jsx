@@ -17,6 +17,7 @@ import NewBook from './components/NewBook';
 import Genres from './components/Genres';
 import LoginForm from './components/LoginForm';
 import Recommendations from './components/Recommendations';
+import { ContentLeft } from './styles';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import { Container } from '@mui/material';
@@ -102,9 +103,9 @@ const App = () => {
                   <Route
                     path='/books/:id'
                     element={
-                      <SecondaryLayout>
+                      <ContentLeft>
                         <BookDetails />
-                      </SecondaryLayout>
+                      </ContentLeft>
                     }
                   />
                   <Route
@@ -140,7 +141,9 @@ const App = () => {
                     path='/recommendations'
                     element={
                       token ? (
-                        <Recommendations />
+                        <SecondaryLayout>
+                          <Recommendations />
+                        </SecondaryLayout>
                       ) : (
                         <Navigate
                           replace

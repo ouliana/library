@@ -39,17 +39,38 @@ export const OverlaySecondary = styled(Box)(() => ({
 }));
 
 // export const Content = styled(Box)(({ theme }) => ({
+// export const Content = styled(Box)(() => ({
+//   position: 'relative',
+//   zIndex: 2,
+//   color: '#212121',
+//   textAlign: 'center',
+//   display: 'flex',
+//   flexDirection: 'column',
+//   justifyContent: 'flex-start',
+//   alignItems: 'center',
+//   minHeight: 'calc(100vh - 120px)'
+// }));
 export const Content = styled(Box)(() => ({
   position: 'relative',
   zIndex: 2,
   color: '#212121',
-  textAlign: 'center',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
-  alignItems: 'center',
-  minHeight: 'calc(100vh - 120px)'
+  minHeight: 'calc(100vh - 120px)',
+  padding: '2rem'
 }));
+
+export const ContentCenter = styled(Content)(() => ({
+  alignItems: 'center',
+  textAlign: 'center'
+}));
+
+export const ContentLeft = styled(Content)(() => ({
+  alignItems: 'start',
+  textAlign: 'left'
+}));
+
 export const ContentSecondary = styled(Box)(() => ({
   position: 'relative',
   zIndex: 2,
