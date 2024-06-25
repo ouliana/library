@@ -23,8 +23,13 @@ import { Link as RouterLink } from 'react-router-dom';
 import { StyledDrawerMobile } from '../styles';
 import { CloseOutlined } from '@mui/icons-material';
 import ThemeToggleButton from './ThemeToggleButton';
+import { useTheme } from '@mui/material/styles';
+
+import CustomIcon from '../assets/github-mark.svg?react';
+import CustomIconInv from '../assets/github-mark-white.svg?react';
 
 function SmallScreenToolbar({ user, logout }) {
+  const theme = useTheme();
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const toggleDrawer = newOpen => () => {
@@ -38,6 +43,16 @@ function SmallScreenToolbar({ user, logout }) {
   return (
     <Toolbar>
       <Box sx={{ flexGrow: 1 }} />
+      <IconButton
+        aria-label='custom icon'
+        style={{ width: 40, height: 40 }}
+      >
+        {theme.palette.mode === 'light' ? (
+          <CustomIcon style={{ width: '100%', height: '100%' }} />
+        ) : (
+          <CustomIconInv style={{ width: '100%', height: '100%' }} />
+        )}
+      </IconButton>
       <ThemeToggleButton />
       {openDrawer ? (
         <IconButton
