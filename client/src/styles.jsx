@@ -2,7 +2,10 @@ import Paper from '@mui/material/Paper';
 import { experimentalStyled } from '@mui/material/styles';
 
 import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
 import { Typography } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import ToggleButton from '@mui/material/ToggleButton';
 import { styled } from '@mui/system';
 
 export const BackgroundContainer = styled(Box)(() => ({
@@ -38,18 +41,37 @@ export const OverlaySecondary = styled(Box)(() => ({
   zIndex: 1
 }));
 
-// export const Content = styled(Box)(({ theme }) => ({
-// export const Content = styled(Box)(() => ({
-//   position: 'relative',
-//   zIndex: 2,
-//   color: '#212121',
-//   textAlign: 'center',
-//   display: 'flex',
-//   flexDirection: 'column',
-//   justifyContent: 'flex-start',
-//   alignItems: 'center',
-//   minHeight: 'calc(100vh - 120px)'
-// }));
+export const StyledIconButton = styled(IconButton)(() => ({
+  // export const StyledIconButton = styled(IconButton)(({ theme }) => ({
+  transition: 'opacity ease-in-out 300ms',
+  '&:hover': {
+    opacity: '0.8'
+  },
+  padding: 0,
+  borderRadius: '50%'
+}));
+
+export const StyledToggleButton = styled(ToggleButton)(() => ({
+  // export const StyledIconButton = styled(IconButton)(({ theme }) => ({
+  textTransform: 'none',
+  fontWeight: '300',
+  fontSize: 'small',
+  paddingLeft: '1.5rem',
+  paddingRight: '1.5rem'
+}));
+
+export const StyledDrawer = styled(Drawer)(() => ({
+  // export const StyledDrawer = styled(Drawer)(({ theme }) => ({
+  '& .MuiPaper-root': {
+    // borderRadius: '16px',
+    borderTopLeftRadius: '8px',
+    borderBottomRightRadius: '8px',
+    width: '288px',
+    // padding: '1rem',
+    alignItems: 'center'
+  }
+}));
+
 export const Content = styled(Box)(() => ({
   position: 'relative',
   zIndex: 2,
