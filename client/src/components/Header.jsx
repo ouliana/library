@@ -1,7 +1,7 @@
 import { useApolloClient, useQuery } from '@apollo/client';
 import TokenContext from '../contexts/TokenContext';
 
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -23,26 +23,13 @@ export default function Hader() {
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  // const [anchorMenu, setAnchorMenu] = useState(null);
-
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const logout = () => {
     localStorage.clear();
     dispatch({ type: 'CLEAR' });
     client.resetStore();
   };
 
-  const open = Boolean(anchorEl);
-
-  const { data, loading, error } = useQuery(ME, {
+  const { data, error } = useQuery(ME, {
     skip: !token
   });
 
@@ -51,7 +38,13 @@ export default function Hader() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position='fixed'>
+      <AppBar
+        position='fixed'
+        sx={{
+          zIndex: theme =>
+            isLargeScreen ? theme.zIndex.drawer - 1 : theme.zIndex.drawer + 1
+        }}
+      >
         {isLargeScreen ? (
           <LargeScreenToolbar
             user={user}

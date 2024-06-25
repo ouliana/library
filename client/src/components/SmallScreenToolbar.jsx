@@ -2,9 +2,7 @@ import { useState } from 'react';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -22,40 +20,52 @@ import RecommendOutlinedIcon from '@mui/icons-material/RecommendOutlined';
 import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
 
 import { Link as RouterLink } from 'react-router-dom';
+import { StyledDrawerMobile } from '../styles';
+import { CloseOutlined } from '@mui/icons-material';
 import ThemeToggleButton from './ThemeToggleButton';
 
 function SmallScreenToolbar({ user, logout }) {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [openDrawer, setOpenDrawer] = useState(false);
 
-  const handleMenuOpen = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
+  const toggleDrawer = newOpen => () => {
+    setOpenDrawer(newOpen);
   };
 
   const handleLogout = () => {
-    handleMenuClose();
+    // handleMenuClose();
     logout();
   };
   return (
     <Toolbar>
-      <IconButton
-        edge='start'
-        color='inherit'
-        aria-label='menu'
-        onClick={handleMenuOpen}
-      >
-        <MenuIcon />
-      </IconButton>
-      <Menu
+      <Box sx={{ flexGrow: 1 }} />
+      <ThemeToggleButton />
+      {openDrawer ? (
+        <IconButton
+          sx={{ ml: 1 }}
+          onClick={toggleDrawer(false)}
+        >
+          <CloseOutlined />
+        </IconButton>
+      ) : (
+        <IconButton
+          sx={{ ml: 1 }}
+          onClick={toggleDrawer(true)}
+        >
+          <MenuIcon />
+        </IconButton>
+      )}
+      {/* <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
         MenuListProps={{
           'aria-labelledby': 'Аватар пользователя'
         }}
+      > */}
+      <StyledDrawerMobile
+        anchor='right'
+        open={openDrawer}
+        onClose={toggleDrawer(false)}
       >
         {user && (
           <>
@@ -69,7 +79,6 @@ function SmallScreenToolbar({ user, logout }) {
                 src={user ? user.avatar : ''}
                 sx={{ width: 48, height: 48 }}
               />
-
               <Stack
                 justifyContent='center'
                 alignItems='center'
@@ -96,7 +105,6 @@ function SmallScreenToolbar({ user, logout }) {
           </ListItemIcon>
           <ListItemText>Главная</ListItemText>
         </MenuItem>
-
         <MenuItem
           component={RouterLink}
           to='/authors'
@@ -106,7 +114,6 @@ function SmallScreenToolbar({ user, logout }) {
           </ListItemIcon>
           <ListItemText>Авторы</ListItemText>
         </MenuItem>
-
         <MenuItem
           component={RouterLink}
           to='/books'
@@ -116,7 +123,6 @@ function SmallScreenToolbar({ user, logout }) {
           </ListItemIcon>
           <ListItemText>Книги</ListItemText>
         </MenuItem>
-
         {user && (
           <>
             <Divider />
@@ -160,7 +166,8 @@ function SmallScreenToolbar({ user, logout }) {
             </MenuItem>
           </>
         )}
-      </Menu>
+        {/* </Menu> */}
+      </StyledDrawerMobile>
     </Toolbar>
   );
 }

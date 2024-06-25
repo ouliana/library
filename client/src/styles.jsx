@@ -71,6 +71,17 @@ export const StyledDrawer = styled(Drawer)(() => ({
     alignItems: 'center'
   }
 }));
+export const StyledDrawerMobile = styled(Drawer)(() => ({
+  // export const StyledDrawer = styled(Drawer)(({ theme }) => ({
+  flexShrink: 0,
+  '& .MuiPaper-root': {
+    width: '100vw',
+    // padding: '1rem',
+    alignItems: 'left',
+    boxSizing: 'border-box',
+    marginTop: '56px'
+  }
+}));
 
 export const Content = styled(Box)(() => ({
   position: 'relative',

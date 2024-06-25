@@ -16,7 +16,7 @@ function SettingsDrawerContent() {
 
   const handleMode = (event, newMode) => {
     setMode(newMode);
-    toggleTheme(mode);
+    toggleTheme(mode === 'dark');
   };
 
   return (
@@ -36,6 +36,7 @@ function SettingsDrawerContent() {
           <LightModeOutlinedIcon />
           <Typography
             variant='caption'
+            display='block'
             sx={{ marginLeft: '0.5rem' }}
           >
             Светлая
@@ -49,6 +50,7 @@ function SettingsDrawerContent() {
           <DarkModeOutlinedIcon />
           <Typography
             variant='caption'
+            display='block'
             sx={{ marginLeft: '0.5rem' }}
           >
             Тёмная

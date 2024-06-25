@@ -12,6 +12,9 @@ export const lightTheme = createTheme({
     secondary: {
       main: orange[500]
     }
+  },
+  zIndex: {
+    drawer: 10
   }
 });
 
@@ -24,5 +27,8 @@ export const darkTheme = createTheme({
     secondary: {
       main: '#f48fb1'
     }
+  },
+  zIndex: {
+    drawer: 10
   }
 });

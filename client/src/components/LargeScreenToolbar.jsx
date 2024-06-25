@@ -133,7 +133,7 @@ function LargeScreenToolbar({ user, logout }) {
           }}
         >
           {user && (
-            <>
+            <Box>
               <Stack
                 justifyContent='center'
                 alignItems='center'
@@ -160,7 +160,7 @@ function LargeScreenToolbar({ user, logout }) {
                 </Stack>
               </Stack>
               <Divider />
-            </>
+            </Box>
           )}
           <MenuItem>
             <ListItemIcon>
@@ -186,9 +186,9 @@ function LargeScreenToolbar({ user, logout }) {
         <IconButton
           sx={{ ml: 1 }}
           onClick={toggleDrawer(true)}
-          color='inherit'
+          // color='inherit'
         >
-          <SettingsOutlinedIcon fontSize='small' />
+          <SettingsOutlinedIcon />
         </IconButton>
         <StyledDrawer
           anchor='right'

@@ -1,29 +1,25 @@
-// import { useContext } from 'react';
-
+import { useState } from 'react';
 import { useThemeToggle } from '../hooks/useThemeToggle';
-import { useTheme } from '@mui/material/styles';
 
 import IconButton from '@mui/material/IconButton';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 
 const ThemeToggleButton = () => {
+  const [isDark, setIsDark] = useState(false);
   const { toggleTheme } = useThemeToggle();
-  // const themeToggle = useContext(ThemeToggleContext)
-  const theme = useTheme();
 
-  // return <Button onClick={toggleTheme}>Toggle Theme</Button>;
+  const handleMode = () => {
+    setIsDark(!isDark);
+    toggleTheme(isDark);
+  };
+
   return (
     <IconButton
       sx={{ ml: 1 }}
-      onClick={toggleTheme}
-      color='inherit'
+      onClick={handleMode}
     >
-      {theme.palette.mode === 'dark' ? (
-        <Brightness7Icon />
-      ) : (
-        <Brightness4Icon />
-      )}
+      {isDark ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
     </IconButton>
   );
 };
