@@ -40,12 +40,22 @@ function SmallScreenToolbar({ user, logout }) {
     // handleMenuClose();
     logout();
   };
+
+  const handleClick = () => {
+    window.open(
+      'https://github.com/ouliana/library.git',
+      '_blank',
+      'noopener,noreferrer'
+    );
+  };
+
   return (
     <Toolbar>
       <Box sx={{ flexGrow: 1 }} />
       <IconButton
         aria-label='custom icon'
         style={{ width: 40, height: 40 }}
+        onClick={handleClick}
       >
         {theme.palette.mode === 'light' ? (
           <CustomIcon style={{ width: '100%', height: '100%' }} />

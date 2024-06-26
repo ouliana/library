@@ -22,8 +22,13 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { Link as RouterLink } from 'react-router-dom';
 import SettingsDrawerContent from './SettingsDrawerContent';
 import { StyledIconButton, StyledDrawer } from '../styles';
+import { useTheme } from '@mui/material/styles';
+
+import CustomIcon from '../assets/github-mark.svg?react';
+import CustomIconInv from '../assets/github-mark-white.svg?react';
 
 function LargeScreenToolbar({ user, logout }) {
+  const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -46,6 +51,14 @@ function LargeScreenToolbar({ user, logout }) {
   };
 
   const open = Boolean(anchorEl);
+
+  const handleGitHubClick = () => {
+    window.open(
+      'https://github.com/ouliana/library.git',
+      '_blank',
+      'noopener,noreferrer'
+    );
+  };
 
   return (
     <Toolbar>
@@ -183,6 +196,17 @@ function LargeScreenToolbar({ user, logout }) {
             <ListItemText>Выход</ListItemText>
           </MenuItem>
         </Menu>
+        <IconButton
+          aria-label='custom icon'
+          style={{ width: 40, height: 40 }}
+          onClick={handleGitHubClick}
+        >
+          {theme.palette.mode === 'light' ? (
+            <CustomIcon style={{ width: '100%', height: '100%' }} />
+          ) : (
+            <CustomIconInv style={{ width: '100%', height: '100%' }} />
+          )}
+        </IconButton>
         <IconButton
           sx={{ ml: 1 }}
           onClick={toggleDrawer(true)}
