@@ -19,7 +19,7 @@ const ThemeToggleButton = () => {
       sx={{ ml: 1 }}
       onClick={handleMode}
     >
-      {isDark ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
+      {isDark ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
     </IconButton>
   );
 };

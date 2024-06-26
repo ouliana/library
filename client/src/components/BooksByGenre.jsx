@@ -3,11 +3,11 @@ import { useQuery } from '@apollo/client';
 
 import { GENRE } from '../graphql/queries';
 
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
 import BooksTable from './BooksTable';
 import BooksTableSkeleton from './BooksTableSkeleton';
+import { StyledBox } from '../styles';
 
 function BooksByGenre() {
   const id = useParams().id;
@@ -21,7 +21,7 @@ function BooksByGenre() {
   const name = data?.genreWithBooks.name;
 
   return (
-    <Box sx={{ textAlign: 'center' }}>
+    <StyledBox>
       <Typography
         variant='h2'
         gutterBottom
@@ -30,7 +30,7 @@ function BooksByGenre() {
       </Typography>
       {loading && <BooksTableSkeleton />}
       {!!data && <BooksTable books={books} />}
-    </Box>
+    </StyledBox>
   );
 }
 

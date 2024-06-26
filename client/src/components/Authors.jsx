@@ -1,11 +1,7 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { ALL_AUTHORS } from '../graphql/queries';
-import { SET_BIRTH_YEAR } from '../graphql/mutations';
-
-import Select from 'react-select';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -15,13 +11,13 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import Skeleton from '@mui/material/Skeleton';
 import { skeletonItems } from '../utils';
+import { StyledBox } from '../styles';
 
-function Authors({ token }) {
+function Authors() {
   const { loading, error, data } = useQuery(ALL_AUTHORS);
   const navigate = useNavigate();
 
@@ -34,7 +30,7 @@ function Authors({ token }) {
   };
 
   return (
-    <Box sx={{ textAlign: 'center', width: '80%' }}>
+    <StyledBox>
       <Typography
         variant='h2'
         gutterBottom
@@ -98,60 +94,8 @@ function Authors({ token }) {
           </TableBody>
         </Table>
       </TableContainer>
-      {token ? (
-        <>
-          <h3>Set birth year</h3>
-          <BirthYearForm authors={authors} />
-        </>
-      ) : null}
-    </Box>
+    </StyledBox>
   );
-}
-
-function BirthYearForm({ authors }) {
-  const [born, setBorn] = useState('');
-
-  const options = authors
-    ? authors.map(a => ({ value: a.name, label: a.name }))
-    : [];
-  const [selectedOption, setSelectedOption] = useState(null);
-
-  const [setBirthYear] = useMutation(SET_BIRTH_YEAR, {
-    refetchQueries: [{ query: ALL_AUTHORS }]
-  });
-
-  return (
-    <div>
-      <form onSubmit={submit}>
-        <div>
-          <Select
-            value={selectedOption}
-            onChange={setSelectedOption}
-            options={options}
-          />
-        </div>
-        <div>
-          born{' '}
-          <input
-            value={born}
-            onChange={({ target }) => setBorn(target.value)}
-          />
-        </div>
-        <button type='submit'>update author</button>
-      </form>
-    </div>
-  );
-
-  function submit(event) {
-    event.preventDefault();
-
-    console.log({ selectedOption });
-
-    setBirthYear({ variables: { name: selectedOption.value, born: +born } });
-
-    setSelectedOption(null);
-    setBorn('');
-  }
 }
 
 export default Authors;

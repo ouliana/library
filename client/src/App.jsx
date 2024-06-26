@@ -7,6 +7,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import MainLayout from './components/MainLayout';
 import SecondaryLayout from './components/SecondaryLayout';
+import DetailsLayout from './components/DetailsLayout';
 import Welcome from './components/Welcome';
 import Authors from './components/Authors';
 import AuthorDetails from './components/AuthorDetails';
@@ -22,6 +23,7 @@ import { ContentLeft } from './styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Container } from '@mui/material';
 import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
 
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ThemeToggleProvider } from './contexts/ThemeToggleContext';
@@ -55,8 +57,7 @@ const App = () => {
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'flex-start',
-                  alignItems: 'center',
-                  marginTop: '64px'
+                  alignItems: 'center'
                 }}
               >
                 <Routes>
@@ -87,9 +88,9 @@ const App = () => {
                   <Route
                     path='/authors/:id'
                     element={
-                      <SecondaryLayout>
+                      <DetailsLayout>
                         <AuthorDetails />
-                      </SecondaryLayout>
+                      </DetailsLayout>
                     }
                   />
                   <Route
@@ -155,6 +156,7 @@ const App = () => {
                 </Routes>
               </Box>
             </Container>
+            <Divider />
             <Footer />
           </ThemeToggleProvider>
         </ThemeProvider>

@@ -2,17 +2,20 @@ import { useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { StyledToggleButton } from '../styles';
+import { StyledToggleButton, StyledToggleButtonGroup } from '../styles';
 
+import { useTheme } from '@mui/material/styles';
 import { useThemeToggle } from '../hooks/useThemeToggle';
 
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 
 function SettingsDrawerContent() {
-  const [mode, setMode] = useState('light');
+  const theme = useTheme();
+  const [mode, setMode] = useState(theme.palette.mode);
   const { toggleTheme } = useThemeToggle();
+
+  console.log();
 
   const handleMode = (event, newMode) => {
     setMode(newMode);
@@ -21,12 +24,12 @@ function SettingsDrawerContent() {
 
   return (
     <Box>
-      <ToggleButtonGroup
+      <StyledToggleButtonGroup
         value={mode}
         exclusive
         onChange={handleMode}
         aria-label='mode'
-        color='primary'
+        // color='secondary'
       >
         <StyledToggleButton
           value='light'
@@ -56,7 +59,7 @@ function SettingsDrawerContent() {
             Тёмная
           </Typography>
         </StyledToggleButton>
-      </ToggleButtonGroup>
+      </StyledToggleButtonGroup>
     </Box>
   );
 }

@@ -2,9 +2,10 @@ import { useQuery } from '@apollo/client';
 import { ALL_BOOKS } from '../graphql/queries';
 // import { useQuery, useSubscription, useApolloClient } from '@apollo/client';
 // import { ALL_BOOKS, BOOK_ADDED } from '../graphql/queries';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
+
+import { StyledBox } from '../styles';
 
 import BooksTable from './BooksTable';
 import BooksTableSkeleton from './BooksTableSkeleton';
@@ -34,7 +35,7 @@ function Books() {
   const books = data?.allBooks;
 
   return (
-    <Box sx={{ textAlign: 'center' }}>
+    <StyledBox>
       <Typography
         variant='h2'
         gutterBottom
@@ -43,7 +44,7 @@ function Books() {
       </Typography>
       {loading && <BooksTableSkeleton />}
       {!!data && <BooksTable books={books} />}
-    </Box>
+    </StyledBox>
   );
 }
 

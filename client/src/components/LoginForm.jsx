@@ -11,12 +11,11 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
-import { ContentSecondary, Panel } from '../styles';
+import { Panel } from '../styles';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 function LoginForm({ setError }) {
-  // eslint-disable-next-line no-unused-vars
   const [token, dispatch] = useContext(TokenContext);
 
   const [username, setUsername] = useState('');
@@ -55,55 +54,52 @@ function LoginForm({ setError }) {
   }, [token, navigate]);
 
   return (
-    // <LoginPage>
-    <ContentSecondary>
-      <Panel elevation={1}>
-        <Typography
-          variant='h5'
-          gutterBottom
-        >
-          Авторизация
-        </Typography>
-        <Box
-          component='form'
-          sx={{
-            '& > :not(style)': { m: 1, width: '38ch' }
+    <Panel elevation={1}>
+      <Typography
+        variant='h5'
+        gutterBottom
+      >
+        Авторизация
+      </Typography>
+      <Box
+        component='form'
+        sx={{
+          '& > :not(style)': { m: 1, width: '38ch' }
+        }}
+        noValidate
+        autoComplete='off'
+        onSubmit={handleSubmit}
+      >
+        <TextField
+          label='Логин'
+          autoComplete='current-username'
+          value={username}
+          onChange={({ target }) => setUsername(target.value)}
+        />
+        <TextField
+          label='Пароль'
+          type={showPassword ? 'text' : 'password'}
+          autoComplete='current-password'
+          value={password}
+          onChange={({ target }) => setPassword(target.value)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position='end'>
+                <IconButton
+                  aria-label='toggle password visibility'
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge='end'
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            )
           }}
-          noValidate
-          autoComplete='off'
-          onSubmit={handleSubmit}
-        >
-          <TextField
-            label='Логин'
-            autoComplete='current-username'
-            value={username}
-            onChange={({ target }) => setUsername(target.value)}
-          />
-          <TextField
-            label='Пароль'
-            type={showPassword ? 'text' : 'password'}
-            autoComplete='current-password'
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <IconButton
-                    aria-label='toggle password visibility'
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge='end'
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-          />
-          <Button type='submit'>Войти</Button>
-        </Box>
-      </Panel>
-    </ContentSecondary>
+        />
+        <Button type='submit'>Войти</Button>
+      </Box>
+    </Panel>
   );
 }
 

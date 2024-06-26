@@ -44,6 +44,7 @@ export default function Hader() {
           zIndex: theme =>
             isLargeScreen ? theme.zIndex.drawer - 1 : theme.zIndex.drawer + 1
         }}
+        // color='primary'
       >
         {isLargeScreen ? (
           <LargeScreenToolbar

@@ -27,6 +27,8 @@ import { useTheme } from '@mui/material/styles';
 import CustomIcon from '../assets/github-mark.svg?react';
 import CustomIconInv from '../assets/github-mark-white.svg?react';
 
+import { StyledToolbarButton, StyledToolbarIconButton } from '../styles';
+
 function LargeScreenToolbar({ user, logout }) {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -62,60 +64,54 @@ function LargeScreenToolbar({ user, logout }) {
 
   return (
     <Toolbar>
-      <IconButton
+      <StyledToolbarIconButton
         size='large'
         edge='start'
-        color='inherit'
         aria-label='home'
         sx={{ mr: 2 }}
         component={RouterLink}
         to='/'
       >
         <HomeOutlined />
-      </IconButton>
+      </StyledToolbarIconButton>
 
       <Box sx={{ flexGrow: 1 }}>
-        <Button
+        <StyledToolbarButton
           component={RouterLink}
-          color='inherit'
           to='/authors'
         >
           Авторы
-        </Button>
-        <Button
+        </StyledToolbarButton>
+        <StyledToolbarButton
           to='/books'
           component={RouterLink}
-          color='inherit'
         >
           Книги
-        </Button>
-        <Button
+        </StyledToolbarButton>
+        <StyledToolbarButton
           to='/genres'
           component={RouterLink}
-          color='inherit'
         >
           Жанры
-        </Button>
+        </StyledToolbarButton>
       </Box>
       <Stack
         direction='row'
         spacing={2}
         sx={{ visibility: user ? 'visible' : 'hidden' }}
       >
-        <Button
+        <StyledToolbarButton
           to='/recommendations'
           component={RouterLink}
-          color='inherit'
         >
           Рекомендации
-        </Button>
-        <Button
+        </StyledToolbarButton>
+        <StyledToolbarButton
           to='/add'
           component={RouterLink}
-          color='inherit'
         >
           Добавить книгу
-        </Button>
+        </StyledToolbarButton>
         <Divider
           orientation='vertical'
           variant='middle'
@@ -207,13 +203,12 @@ function LargeScreenToolbar({ user, logout }) {
             <CustomIconInv style={{ width: '100%', height: '100%' }} />
           )}
         </IconButton>
-        <IconButton
-          sx={{ ml: 1 }}
+        <StyledToolbarIconButton
+          // sx={{ ml: 1 }}
           onClick={toggleDrawer(true)}
-          // color='inherit'
         >
           <SettingsOutlinedIcon />
-        </IconButton>
+        </StyledToolbarIconButton>
         <StyledDrawer
           anchor='right'
           open={openDrawer}
@@ -235,13 +230,13 @@ function LargeScreenToolbar({ user, logout }) {
             >
               Настройка
             </Typography>
-            <IconButton
-              aria-label='delete'
+            <StyledToolbarIconButton
+              aria-label='close'
               size='small'
               onClick={() => setOpenDrawer(false)}
             >
               <CloseOutlinedIcon fontSize='inherit' />
-            </IconButton>
+            </StyledToolbarIconButton>
           </Box>
           <Divider flexItem />
           <Box
@@ -266,7 +261,7 @@ function LargeScreenToolbar({ user, logout }) {
         <Button
           to='/login'
           component={RouterLink}
-          color='inherit'
+          color='secondary'
         >
           Войти
         </Button>

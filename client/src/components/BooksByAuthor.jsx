@@ -2,15 +2,15 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 import { useQuery } from '@apollo/client';
-import Box from '@mui/material/Box';
 
+import Stack from '@mui/material/Stack';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import Typography from '@mui/material/Typography';
 import BookListSkeletons from './BookListSkeletons';
 import { BOOKS_BY_AUTHOR_ID } from '../graphql/queries';
+
+import { StyledTypographyPrimary, StyledListItemText } from '../styles';
 
 function BooksByAuthor() {
   const navigate = useNavigate();
@@ -24,13 +24,13 @@ function BooksByAuthor() {
   const books = data?.booksByAuthorId;
 
   return (
-    <Box>
-      <Typography
+    <Stack>
+      <StyledTypographyPrimary
         variant='h6'
         gutterBottom
       >
         Произведения в библиотеке
-      </Typography>
+      </StyledTypographyPrimary>
       {loading && <BookListSkeletons />}
       {!!data && (
         <List>
@@ -40,13 +40,13 @@ function BooksByAuthor() {
               key={book.id}
             >
               <ListItemButton onClick={() => navigate(`/books/${book.id}`)}>
-                <ListItemText primary={book.title} />
+                <StyledListItemText secondary={book.title} />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
       )}
-    </Box>
+    </Stack>
   );
 }
 

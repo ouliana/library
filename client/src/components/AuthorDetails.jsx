@@ -4,7 +4,12 @@ import { useParams } from 'react-router-dom';
 
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
-import { Typography } from '@mui/material';
+
+import {
+  StyledBox,
+  StyledTypographyPrimary,
+  StyledTypographySecondary
+} from '../styles';
 
 import BooksByAuthor from './BooksByAuthor';
 import AuthorDetailsSkeleton from './AuthorDetailsSkeleton';
@@ -23,39 +28,42 @@ function AuthorDetails() {
   if (error) return `Error! ${error.message}`;
 
   return (
-    <Stack spacing={8}>
-      {loading && <AuthorDetailsSkeleton />}
-      {!!data && (
-        <Stack
-          direction='row'
-          spacing={4}
-          justifyContent='flex-start'
-          // alignItems='stretch'
-        >
-          <Box
-            component='img'
-            sx={{
-              height: '200px',
-              width: '150px',
-              backgroundImage: `url(${imageSource})`,
-              backgroundSize: 'cover'
-            }}
-          />
-          <Stack>
-            <Typography variant='h5'>
-              {`${author.firstName} ${author.lastName}`}
-            </Typography>
-            <Typography variant='body2'>
-              {author.born ? author.born : ''}
-            </Typography>
-            <Box sx={{ paddingTop: '2rem', width: 'calc(100vw - 300px)' }}>
-              <Typography variant='body2'>{author.annotation}</Typography>
-            </Box>
+    <StyledBox>
+      <Stack spacing={8}>
+        {loading && <AuthorDetailsSkeleton />}
+        {!!data && (
+          <Stack
+            direction='row'
+            spacing={4}
+          >
+            <Box
+              component='img'
+              sx={{
+                height: '200px',
+                width: '150px',
+                backgroundImage: `url(${imageSource})`,
+                backgroundSize: 'cover',
+                flexShrink: 0
+              }}
+            />
+            <Stack>
+              <StyledTypographyPrimary variant='h5'>
+                {`${author.firstName} ${author.lastName}`}
+              </StyledTypographyPrimary>
+              <StyledTypographySecondary variant='body2'>
+                {author.born ? author.born : ''}
+              </StyledTypographySecondary>
+              <Box sx={{ paddingTop: '2rem', flexGrow: '1' }}>
+                <StyledTypographySecondary variant='body2'>
+                  {author.annotation}
+                </StyledTypographySecondary>
+              </Box>
+            </Stack>
           </Stack>
-        </Stack>
-      )}
-      <BooksByAuthor />
-    </Stack>
+        )}
+        <BooksByAuthor />
+      </Stack>
+    </StyledBox>
   );
 }
 

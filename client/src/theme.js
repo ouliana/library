@@ -1,20 +1,35 @@
 import { createTheme } from '@mui/material/styles';
-import { lime, orange } from '@mui/material/colors';
+import { blue, grey } from '@mui/material/colors';
 
 export const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: lime[500],
-      light: '#d7e360',
-      dark: '#8f9a27'
+      main: '#82b1ff',
+      light: '#9bc0ff',
+      dark: '#5b7bb2',
+      contrastText: 'rgba(2 6 32)'
     },
     secondary: {
-      main: orange[500]
+      main: '#ff9100',
+      light: '#ffa733',
+      dark: '#b26500'
+    },
+    overlay: {
+      main: '#ffffff'
+    },
+    text: {
+      primary: grey[900],
+      secondary: grey[800]
+    },
+    background: {
+      default: '#fafafa', // Default background color
+      paper: '#ffffff' // Background color for Paper components
     }
   },
   zIndex: {
-    drawer: 10
+    drawer: 10,
+    overlay: 1
   }
 });
 
@@ -22,10 +37,26 @@ export const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#90caf9'
+      main: '#82b1ff',
+      light: blue[400],
+      dark: 'rgba(2 6 32)',
+      contrastText: '#82b1ff'
     },
     secondary: {
-      main: '#f48fb1'
+      main: grey[500],
+      light: grey[400],
+      dark: grey[600]
+    },
+    overlay: {
+      main: 'rgba(2 6 32)'
+    },
+    text: {
+      primary: grey[50],
+      secondary: grey[400]
+    },
+    background: {
+      default: 'rgba(2 6 32)', // Default background color
+      paper: '#212121' // Background color for Paper components
     }
   },
   zIndex: {

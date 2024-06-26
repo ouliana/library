@@ -5,33 +5,19 @@ import TokenContext from '../contexts/TokenContext';
 
 import WelcomeText from './WelcomeText';
 import UserFavorites from './UserFavorites';
-import {
-  BackgroundContainer,
-  Overlay,
-  OverlaySecondary,
-  Content
-} from '../styles';
 
 import { ME } from '../graphql/queries';
 
 function Welcome() {
-  // eslint-disable-next-line no-unused-vars
-  const [token, dispatch] = useContext(TokenContext);
+  const [token] = useContext(TokenContext);
   const { data, error } = useQuery(ME, {
-    skip: !token // Skip the query if userId is null
+    skip: !token
   });
 
   if (error) return `Error! ${error.message}`;
   const user = data?.me;
 
-  return (
-    <BackgroundContainer>
-      {user ? <OverlaySecondary /> : <Overlay />}
-      <Content>
-        {user ? <UserFavorites user={user} /> : <WelcomeText />}
-      </Content>
-    </BackgroundContainer>
-  );
+  return <>{user ? <UserFavorites user={user} /> : <WelcomeText />}</>;
 }
 
 export default Welcome;
