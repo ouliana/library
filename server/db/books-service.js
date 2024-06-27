@@ -53,7 +53,6 @@ async function findByGenres(genres) {
         genres: true
       }
     });
-    console.log(books);
     return books;
   } catch (e) {
     let message = 'Ошибка в базе данных. Невозможно получить список книг';
