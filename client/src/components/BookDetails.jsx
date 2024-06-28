@@ -1,13 +1,12 @@
 import { useQuery } from '@apollo/client';
 import { BOOK_BY_ID } from '../graphql/queries';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
-
 import Link from '@mui/material/Link';
+
 import { useTheme } from '@mui/material/styles';
 
 import {
@@ -63,7 +62,8 @@ function BookDetails() {
               </StyledTypographyPrimary>
               <StyledTypographySecondary variant='subtitle2'>
                 <Link
-                  href={`/authors/${book.authorId}`}
+                  component={RouterLink}
+                  to={`/authors/${book.authorId}`}
                   variant='inherit'
                   color='inherit'
                   underline='none'

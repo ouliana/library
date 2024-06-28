@@ -21,11 +21,10 @@ function AuthorDetails() {
   });
 
   //   'https://storage.yandexcloud.net/portfolio-kotik/blank_person_placeholder.svg';
+  if (error) return `Error! ${error.message}`;
 
   const author = data?.authorById;
   const imageSource = data?.authorById.profile;
-
-  if (error) return `Error! ${error.message}`;
 
   return (
     <StyledBox>

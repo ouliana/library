@@ -4,35 +4,33 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { StyledToggleButton, StyledToggleButtonGroup } from '../styles';
 
-import { useTheme } from '@mui/material/styles';
-import { useThemeToggle } from '../hooks/useThemeToggle';
+import { useThemeContext } from '../contexts/ThemeContext';
 
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 
 function SettingsDrawerContent() {
-  const theme = useTheme();
-  const [mode, setMode] = useState(theme.palette.mode);
-  const { toggleTheme } = useThemeToggle();
+  const { isDarkMode, toggleTheme } = useThemeContext();
 
-  console.log();
+  const [isDark, setIsDark] = useState(isDarkMode);
 
-  const handleMode = (event, newMode) => {
-    setMode(newMode);
-    toggleTheme(mode === 'dark');
+  const handleMode = (_event, newMode) => {
+    if (newMode !== null && newMode !== isDarkMode) {
+      setIsDark(newMode);
+      toggleTheme();
+    }
   };
 
   return (
     <Box>
       <StyledToggleButtonGroup
-        value={mode}
+        value={isDark}
         exclusive
         onChange={handleMode}
         aria-label='mode'
-        // color='secondary'
       >
         <StyledToggleButton
-          value='light'
+          value={false}
           aria-label='light mode'
           fullWidth
         >
@@ -46,7 +44,7 @@ function SettingsDrawerContent() {
           </Typography>
         </StyledToggleButton>
         <StyledToggleButton
-          value='dark'
+          value={true}
           aria-label='dark mode'
           fullWidth
         >

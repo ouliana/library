@@ -25,8 +25,7 @@ import { Container } from '@mui/material';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 
-import { ThemeProvider } from './contexts/ThemeContext';
-import { ThemeToggleProvider } from './contexts/ThemeToggleContext';
+import { ThemeContextProvider } from './contexts/ThemeContext';
 
 const App = () => {
   const [token, dispatch] = useContext(TokenContext);
@@ -42,126 +41,124 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <TokenContext.Provider value={[token, dispatch]}>
-      <Router>
-        <ThemeProvider>
-          <ThemeToggleProvider>
-            <CssBaseline />
-            <Header token={token} />
-            <Container
-              maxWidth='false'
-              disableGutters
+    <ThemeContextProvider>
+      <TokenContext.Provider value={[token, dispatch]}>
+        <Router>
+          <CssBaseline />
+          <Header token={token} />
+          <Container
+            maxWidth='false'
+            disableGutters
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+                alignItems: 'center'
+              }}
             >
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'flex-start',
-                  alignItems: 'center'
-                }}
-              >
-                <Routes>
-                  <Route
-                    path='/'
-                    element={
-                      <MainLayout>
-                        <Welcome />
-                      </MainLayout>
-                    }
-                  />
-                  <Route
-                    path='/login'
-                    element={
-                      <MainLayout>
-                        <LoginForm setError={setError} />
-                      </MainLayout>
-                    }
-                  />
-                  <Route
-                    path='/authors'
-                    element={
+              <Routes>
+                <Route
+                  path='/'
+                  element={
+                    <MainLayout>
+                      <Welcome />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path='/login'
+                  element={
+                    <MainLayout>
+                      <LoginForm setError={setError} />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path='/authors'
+                  element={
+                    <SecondaryLayout>
+                      <Authors />
+                    </SecondaryLayout>
+                  }
+                />
+                <Route
+                  path='/authors/:id'
+                  element={
+                    <DetailsLayout>
+                      <AuthorDetails />
+                    </DetailsLayout>
+                  }
+                />
+                <Route
+                  path='/books'
+                  element={
+                    <SecondaryLayout>
+                      <Books />
+                    </SecondaryLayout>
+                  }
+                />
+                <Route
+                  path='/books/:id'
+                  element={
+                    <ContentLeft>
+                      <BookDetails />
+                    </ContentLeft>
+                  }
+                />
+                <Route
+                  path='/genres'
+                  element={
+                    <SecondaryLayout>
+                      <Genres />
+                    </SecondaryLayout>
+                  }
+                />
+                <Route
+                  path='/genres/:id'
+                  element={
+                    <SecondaryLayout>
+                      <BooksByGenre />
+                    </SecondaryLayout>
+                  }
+                />
+                <Route
+                  path='/add'
+                  element={
+                    token ? (
+                      <NewBook />
+                    ) : (
+                      <Navigate
+                        replace
+                        to='/books'
+                      />
+                    )
+                  }
+                />
+                <Route
+                  path='/recommendations'
+                  element={
+                    token ? (
                       <SecondaryLayout>
-                        <Authors token={token} />
+                        <Recommendations />
                       </SecondaryLayout>
-                    }
-                  />
-                  <Route
-                    path='/authors/:id'
-                    element={
-                      <DetailsLayout>
-                        <AuthorDetails />
-                      </DetailsLayout>
-                    }
-                  />
-                  <Route
-                    path='/books'
-                    element={
-                      <SecondaryLayout>
-                        <Books />
-                      </SecondaryLayout>
-                    }
-                  />
-                  <Route
-                    path='/books/:id'
-                    element={
-                      <ContentLeft>
-                        <BookDetails />
-                      </ContentLeft>
-                    }
-                  />
-                  <Route
-                    path='/genres'
-                    element={
-                      <SecondaryLayout>
-                        <Genres />
-                      </SecondaryLayout>
-                    }
-                  />
-                  <Route
-                    path='/genres/:id'
-                    element={
-                      <SecondaryLayout>
-                        <BooksByGenre />
-                      </SecondaryLayout>
-                    }
-                  />
-                  <Route
-                    path='/add'
-                    element={
-                      token ? (
-                        <NewBook />
-                      ) : (
-                        <Navigate
-                          replace
-                          to='/books'
-                        />
-                      )
-                    }
-                  />
-                  <Route
-                    path='/recommendations'
-                    element={
-                      token ? (
-                        <SecondaryLayout>
-                          <Recommendations />
-                        </SecondaryLayout>
-                      ) : (
-                        <Navigate
-                          replace
-                          to='/books'
-                        />
-                      )
-                    }
-                  />
-                </Routes>
-              </Box>
-            </Container>
-            <Divider />
-            <Footer />
-          </ThemeToggleProvider>
-        </ThemeProvider>
-      </Router>
-    </TokenContext.Provider>
+                    ) : (
+                      <Navigate
+                        replace
+                        to='/books'
+                      />
+                    )
+                  }
+                />
+              </Routes>
+            </Box>
+          </Container>
+          <Divider />
+          <Footer />
+        </Router>
+      </TokenContext.Provider>
+    </ThemeContextProvider>
   );
 };
 

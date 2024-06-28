@@ -1,23 +1,33 @@
-import { createContext, useState, useMemo, useContext } from 'react';
+import { createContext, useState, useMemo, useContext, useEffect } from 'react';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { lightTheme, darkTheme } from '../theme';
+
 const ThemeContext = createContext();
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useTheme = () => useContext(ThemeContext);
+export const useThemeContext = () => useContext(ThemeContext);
 
-export const ThemeProvider = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+export const ThemeContextProvider = ({ children }) => {
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    return savedTheme ? JSON.parse(savedTheme) : false;
+  });
 
   const toggleTheme = () => {
     setIsDarkMode(prevMode => !prevMode);
+    console.log('isDarkMode2: ', isDarkMode);
   };
 
   const theme = useMemo(
     () => (isDarkMode ? darkTheme : lightTheme),
     [isDarkMode]
   );
+
+  useEffect(() => {
+    console.log('isDarkMode in useEffect: ', isDarkMode);
+    localStorage.setItem('theme', JSON.stringify(isDarkMode));
+  }, [isDarkMode]);
 
   return (
     <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
