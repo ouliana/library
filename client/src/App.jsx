@@ -1,7 +1,10 @@
+import { useApolloClient } from '@apollo/client';
+
 import { useState, useEffect, useContext } from 'react';
 import TokenContext from './contexts/TokenContext';
 import { Navigate } from 'react-router-dom';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+// import useMeQuery from './hooks/useMeQuery';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -26,12 +29,21 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 
 import { ThemeContextProvider } from './contexts/ThemeContext';
+import { UserProvider } from './contexts/UserContext';
 
 const App = () => {
+  const client = useApolloClient();
   const [token, dispatch] = useContext(TokenContext);
+  // eslint-disable-next-line no-unused-vars
 
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
+
+  const logout = () => {
+    localStorage.clear();
+    dispatch({ type: 'CLEAR' });
+    client.resetStore();
+  };
 
   useEffect(() => {
     const storedToken = localStorage.getItem('library-user-token');
@@ -43,120 +55,122 @@ const App = () => {
   return (
     <ThemeContextProvider>
       <TokenContext.Provider value={[token, dispatch]}>
-        <Router>
-          <CssBaseline />
-          <Header token={token} />
-          <Container
-            maxWidth='false'
-            disableGutters
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'flex-start',
-                alignItems: 'center'
-              }}
+        <UserProvider>
+          <Router>
+            <CssBaseline />
+            <Header logout={logout} />
+            <Container
+              maxWidth='false'
+              disableGutters
             >
-              <Routes>
-                <Route
-                  path='/'
-                  element={
-                    <MainLayout>
-                      <Welcome />
-                    </MainLayout>
-                  }
-                />
-                <Route
-                  path='/login'
-                  element={
-                    <MainLayout>
-                      <LoginForm setError={setError} />
-                    </MainLayout>
-                  }
-                />
-                <Route
-                  path='/authors'
-                  element={
-                    <SecondaryLayout>
-                      <Authors />
-                    </SecondaryLayout>
-                  }
-                />
-                <Route
-                  path='/authors/:id'
-                  element={
-                    <DetailsLayout>
-                      <AuthorDetails />
-                    </DetailsLayout>
-                  }
-                />
-                <Route
-                  path='/books'
-                  element={
-                    <SecondaryLayout>
-                      <Books />
-                    </SecondaryLayout>
-                  }
-                />
-                <Route
-                  path='/books/:id'
-                  element={
-                    <ContentLeft>
-                      <BookDetails />
-                    </ContentLeft>
-                  }
-                />
-                <Route
-                  path='/genres'
-                  element={
-                    <SecondaryLayout>
-                      <Genres />
-                    </SecondaryLayout>
-                  }
-                />
-                <Route
-                  path='/genres/:id'
-                  element={
-                    <SecondaryLayout>
-                      <BooksByGenre />
-                    </SecondaryLayout>
-                  }
-                />
-                <Route
-                  path='/add'
-                  element={
-                    token ? (
-                      <NewBook />
-                    ) : (
-                      <Navigate
-                        replace
-                        to='/books'
-                      />
-                    )
-                  }
-                />
-                <Route
-                  path='/recommendations'
-                  element={
-                    token ? (
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center'
+                }}
+              >
+                <Routes>
+                  <Route
+                    path='/'
+                    element={
+                      <MainLayout>
+                        <Welcome />
+                      </MainLayout>
+                    }
+                  />
+                  <Route
+                    path='/login'
+                    element={
+                      <MainLayout>
+                        <LoginForm setError={setError} />
+                      </MainLayout>
+                    }
+                  />
+                  <Route
+                    path='/authors'
+                    element={
                       <SecondaryLayout>
-                        <Recommendations />
+                        <Authors />
                       </SecondaryLayout>
-                    ) : (
-                      <Navigate
-                        replace
-                        to='/books'
-                      />
-                    )
-                  }
-                />
-              </Routes>
-            </Box>
-          </Container>
-          <Divider />
-          <Footer />
-        </Router>
+                    }
+                  />
+                  <Route
+                    path='/authors/:id'
+                    element={
+                      <DetailsLayout>
+                        <AuthorDetails />
+                      </DetailsLayout>
+                    }
+                  />
+                  <Route
+                    path='/books'
+                    element={
+                      <SecondaryLayout>
+                        <Books />
+                      </SecondaryLayout>
+                    }
+                  />
+                  <Route
+                    path='/books/:id'
+                    element={
+                      <ContentLeft>
+                        <BookDetails />
+                      </ContentLeft>
+                    }
+                  />
+                  <Route
+                    path='/genres'
+                    element={
+                      <SecondaryLayout>
+                        <Genres />
+                      </SecondaryLayout>
+                    }
+                  />
+                  <Route
+                    path='/genres/:id'
+                    element={
+                      <SecondaryLayout>
+                        <BooksByGenre />
+                      </SecondaryLayout>
+                    }
+                  />
+                  <Route
+                    path='/add'
+                    element={
+                      token ? (
+                        <NewBook />
+                      ) : (
+                        <Navigate
+                          replace
+                          to='/books'
+                        />
+                      )
+                    }
+                  />
+                  <Route
+                    path='/recommendations'
+                    element={
+                      token ? (
+                        <SecondaryLayout>
+                          <Recommendations />
+                        </SecondaryLayout>
+                      ) : (
+                        <Navigate
+                          replace
+                          to='/books'
+                        />
+                      )
+                    }
+                  />
+                </Routes>
+              </Box>
+            </Container>
+            <Divider />
+            <Footer />
+          </Router>
+        </UserProvider>
       </TokenContext.Provider>
     </ThemeContextProvider>
   );

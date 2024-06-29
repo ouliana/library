@@ -87,7 +87,7 @@ const resolvers = {
       return genres;
     },
 
-    me: async (_root, _args, context) => context.currentUser
+    currentUser: async (_root, _args, context) => context.currentUser
   },
 
   Mutation: {

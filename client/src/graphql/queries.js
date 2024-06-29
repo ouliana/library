@@ -80,9 +80,9 @@ export const ALL_GENRES = gql`
   }
 `;
 
-export const ME = gql`
+export const CURRENT_USER = gql`
   query CurrentUser {
-    me {
+    currentUser {
       username
       name
       avatar

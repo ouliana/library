@@ -1,23 +1,27 @@
 import { useContext } from 'react';
 
-import { useQuery } from '@apollo/client';
-import TokenContext from '../contexts/TokenContext';
-
 import WelcomeText from './WelcomeText';
 import UserFavorites from './UserFavorites';
+import TokenContext from '../contexts/TokenContext';
 
-import { ME } from '../graphql/queries';
+import { useUser } from '../hooks/useUser';
 
 function Welcome() {
   const [token] = useContext(TokenContext);
-  const { data, error } = useQuery(ME, {
-    skip: !token
-  });
+
+  const { state } = useUser();
+
+  if (!token) {
+    return <WelcomeText />;
+  }
+
+  const { user, loading, error } = state;
 
   if (error) return `Error! ${error.message}`;
-  const user = data?.me;
 
-  return <>{user ? <UserFavorites user={user} /> : <WelcomeText />}</>;
+  if (loading) return <div>Loading...</div>;
+
+  return <>{!!user && <UserFavorites user={user} />}</>;
 }
 
 export default Welcome;

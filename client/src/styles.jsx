@@ -211,9 +211,9 @@ export const Panel = styled(Paper)(({ theme }) => ({
   textAlign: 'center',
   color: theme.palette.text.secondary,
   width: '400px',
-  padding: '2rem',
-  backgroundColor: 'rgba(255, 255, 255, 0.4)',
-  backdropFilter: 'blur(10px)'
+  padding: '2rem'
+  // backgroundColor: 'rgba(255, 255, 255, 0.4)',
+  // backdropFilter: 'blur(10px)'
 }));
 
 export const GridItem = experimentalStyled(Paper)(({ theme }) => ({

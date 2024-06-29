@@ -30,6 +30,11 @@ export const lightTheme = createTheme({
   zIndex: {
     drawer: 10,
     overlay: 1
+  },
+  typography: {
+    h4: {
+      color: '#212121'
+    }
   }
 });
 
@@ -40,7 +45,7 @@ export const darkTheme = createTheme({
       main: '#82b1ff',
       light: blue[400],
       dark: 'rgba(2 6 32)',
-      contrastText: '#82b1ff'
+      contrastText: '#fafafa'
     },
     secondary: {
       main: grey[500],
@@ -61,5 +66,10 @@ export const darkTheme = createTheme({
   },
   zIndex: {
     drawer: 10
+  },
+  typography: {
+    h4: {
+      color: '#f5f5f5'
+    }
   }
 });

@@ -15,8 +15,11 @@ import { Panel } from '../styles';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
+// import { useUser } from '../hooks/useUser';
+
 function LoginForm({ setError }) {
   const [token, dispatch] = useContext(TokenContext);
+  // const { dispatchUser } = useUser();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

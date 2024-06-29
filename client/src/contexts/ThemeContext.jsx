@@ -16,7 +16,6 @@ export const ThemeContextProvider = ({ children }) => {
 
   const toggleTheme = () => {
     setIsDarkMode(prevMode => !prevMode);
-    console.log('isDarkMode2: ', isDarkMode);
   };
 
   const theme = useMemo(
@@ -25,7 +24,6 @@ export const ThemeContextProvider = ({ children }) => {
   );
 
   useEffect(() => {
-    console.log('isDarkMode in useEffect: ', isDarkMode);
     localStorage.setItem('theme', JSON.stringify(isDarkMode));
   }, [isDarkMode]);
 

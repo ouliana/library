@@ -55,7 +55,7 @@ type Token {
     allAuthors: [Author]
     authorById(id: Int): Author
     allGenres: [Genre]
-    me: User
+    currentUser: User
   }
 
   type Mutation {

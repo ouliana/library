@@ -1,7 +1,3 @@
-import { useContext } from 'react';
-
-import { useQuery } from '@apollo/client';
-import TokenContext from '../contexts/TokenContext';
 import {
   BackgroundContainer,
   Overlay,
@@ -12,20 +8,16 @@ import {
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-
-import { ME } from '../graphql/queries';
+import { useUser } from '../hooks/useUser';
 
 function MainLayout({ children }) {
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
 
-  const [token] = useContext(TokenContext);
-  const { data, error } = useQuery(ME, {
-    skip: !token
-  });
+  const { state } = useUser();
+  const { user, loading, error } = state;
 
   if (error) return `Error! ${error.message}`;
-  const user = data?.me;
 
   return (
     <BackgroundContainer>

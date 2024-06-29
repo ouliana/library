@@ -1,8 +1,13 @@
-import { ME, ALL_BOOKS } from '../graphql/queries';
+import { useUser } from '../hooks/useUser';
+import { ALL_BOOKS } from '../graphql/queries';
 import { useQuery } from '@apollo/client';
 
+import { StyledBox } from '../styles';
+
 function Recommendations() {
-  const user = useQuery(ME);
+  const { state, dispatchUser } = useUser();
+  const { user, loading, error } = state;
+  console.log('user: ', user);
 
   const books = useQuery(ALL_BOOKS, {
     variables: {
@@ -13,14 +18,13 @@ function Recommendations() {
 
   // eslint-disable-next-line no-unused-vars
   const errors = user.error || books.error;
-  const loading = user.loading || books.loading;
 
   if (loading) {
     return <p>loading...</p>;
   }
 
   return (
-    <>
+    <StyledBox>
       <h2>Recommendations</h2>
       <div>
         Books in your favorite genre{' '}
@@ -43,7 +47,7 @@ function Recommendations() {
             ))}
         </tbody>
       </table>
-    </>
+    </StyledBox>
   );
 }
 
