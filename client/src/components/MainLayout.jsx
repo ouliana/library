@@ -1,3 +1,5 @@
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 import {
   BackgroundContainer,
   Overlay,
@@ -18,6 +20,12 @@ function MainLayout({ children }) {
   const { user, loading, error } = state;
 
   if (error) return `Error! ${error.message}`;
+  if (loading)
+    return (
+      <Box sx={{ display: 'flex' }}>
+        <CircularProgress />
+      </Box>
+    );
 
   return (
     <BackgroundContainer>

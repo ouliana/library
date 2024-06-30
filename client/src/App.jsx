@@ -4,7 +4,6 @@ import { useState, useEffect, useContext } from 'react';
 import TokenContext from './contexts/TokenContext';
 import { Navigate } from 'react-router-dom';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-// import useMeQuery from './hooks/useMeQuery';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -34,7 +33,6 @@ import { UserProvider } from './contexts/UserContext';
 const App = () => {
   const client = useApolloClient();
   const [token, dispatch] = useContext(TokenContext);
-  // eslint-disable-next-line no-unused-vars
 
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);

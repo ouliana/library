@@ -1,52 +1,43 @@
 import { useUser } from '../hooks/useUser';
-import { ALL_BOOKS } from '../graphql/queries';
-import { useQuery } from '@apollo/client';
+import useAllBooksByGenresQuery from '../hooks/useAllBooksByGenresQuery';
 
+import Typography from '@mui/material/Typography';
+import BooksTableSkeleton from './BooksTableSkeleton';
+
+import BooksTable from './BooksTable';
 import { StyledBox } from '../styles';
 
 function Recommendations() {
-  const { state, dispatchUser } = useUser();
-  const { user, loading, error } = state;
-  console.log('user: ', user);
+  // const { user, loading: userLoading, error: userError } = useUser();
+  const { state } = useUser();
+  const { user, loading: userLoading, error: userError } = state;
+  const favoriteGenres = user?.favoriteGenres || [];
+  const {
+    books,
+    loading: booksLoading,
+    error: booksError
+  } = useAllBooksByGenresQuery(favoriteGenres);
 
-  const books = useQuery(ALL_BOOKS, {
-    variables: {
-      genres: user.data?.me?.favoriteGenres.map(genre => Number(genre.id))
-    },
-    skip: user.loading || user.data?.me?.favoriteGenres.length === 0
-  });
-
-  // eslint-disable-next-line no-unused-vars
-  const errors = user.error || books.error;
-
-  if (loading) {
-    return <p>loading...</p>;
-  }
+  if (userError) return <Typography>Error loading user data.</Typography>;
+  if (booksError) return <Typography>Error loading books.</Typography>;
 
   return (
     <StyledBox>
-      <h2>Recommendations</h2>
-      <div>
-        Books in your favorite genre{' '}
-        <strong>{user.data?.me?.favoriteGenre}</strong>
-      </div>
-      <table>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>author</th>
-            <th>published</th>
-          </tr>
-          {!!books &&
-            books?.data?.allBooks.map(a => (
-              <tr key={a.title}>
-                <td>{a.title}</td>
-                <td>{a.author}</td>
-                <td>{a.published}</td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+      <Typography
+        variant='h2'
+        gutterBottom
+      >
+        Рекомендации
+      </Typography>
+      {userLoading || (booksLoading && <BooksTableSkeleton />)}
+      {booksLoading && <BooksTableSkeleton />}
+      {!!books && !!user && (
+        <BooksTable
+          books={books.filter(
+            book => !user.favoriteBooks.find(fb => fb.id === book.id)
+          )}
+        />
+      )}
     </StyledBox>
   );
 }

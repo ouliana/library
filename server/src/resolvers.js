@@ -17,6 +17,7 @@ const resolvers = {
       return count;
     },
     allBooks: async (_root, args) => {
+      console.log('args: ', args);
       if (!Object.keys(args).length) {
         const books = await booksService.findAll();
         return books;

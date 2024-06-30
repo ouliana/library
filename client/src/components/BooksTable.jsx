@@ -7,6 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 
 function BooksTable({ books }) {
   const navigate = useNavigate();
@@ -26,6 +27,9 @@ function BooksTable({ books }) {
             <TableCell align='left'>Название</TableCell>
             <TableCell align='center'>Автор</TableCell>
             <TableCell align='center'>Год</TableCell>
+            {books.length && 'genres' in books[0] && (
+              <TableCell align='center'>Жанр</TableCell>
+            )}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -42,6 +46,18 @@ function BooksTable({ books }) {
                 {book.author.firstName} {book.author.lastName}
               </TableCell>
               <TableCell align='center'>{book.published}</TableCell>
+              <TableCell align='center'>
+                {books.length &&
+                  'genres' in books[0] &&
+                  book.genres?.map(genre => (
+                    <Typography
+                      key={genre.id}
+                      variant='body2'
+                    >
+                      {genre.name}
+                    </Typography>
+                  ))}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

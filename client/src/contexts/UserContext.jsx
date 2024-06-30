@@ -18,7 +18,6 @@ export function UserProvider({ children }) {
   });
 
   const userReducer = (state, action) => {
-    console.log('state: ', state);
     switch (action.type) {
       case 'FETCH_SUCCESS':
         return {
@@ -65,8 +64,6 @@ export function UserProvider({ children }) {
     }
   }, [loading, error, data]);
 
-  console.log('token: ', token);
-  console.log('state: ', state);
   return (
     <UserContext.Provider value={{ state, dispatchUser }}>
       {children}

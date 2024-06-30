@@ -13,7 +13,6 @@ import { styled } from '@mui/system';
 import { hexToRGBA } from './utils';
 
 export const BackgroundContainer = styled(Box)(() => ({
-  // const Background = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
   overflow: 'visible',
@@ -23,7 +22,6 @@ export const BackgroundContainer = styled(Box)(() => ({
   backgroundPosition: 'center'
 }));
 
-// export const Overlay = styled(Box)(({ theme }) => ({
 export const Overlay = styled(Box)(({ theme }) => ({
   position: 'absolute',
   top: 0,
@@ -83,7 +81,6 @@ export const StyledToggleButtonGroup = styled(ToggleButtonGroup)(
 );
 
 export const StyledToggleButton = styled(ToggleButton)(() => ({
-  // export const StyledIconButton = styled(IconButton)(({ theme }) => ({
   textTransform: 'none',
   fontWeight: '300',
   fontSize: 'small',
@@ -105,7 +102,6 @@ export const StyledToolbarIconButton = styled(IconButton)(({ theme }) => ({
 }));
 
 export const StyledIconButton = styled(IconButton)(() => ({
-  // export const StyledIconButton = styled(IconButton)(({ theme }) => ({
   transition: 'opacity ease-in-out 300ms',
   '&:hover': {
     opacity: '0.8'
@@ -115,7 +111,6 @@ export const StyledIconButton = styled(IconButton)(() => ({
 }));
 
 export const StyledDrawer = styled(Drawer)(() => ({
-  // export const StyledDrawer = styled(Drawer)(({ theme }) => ({
   '& .MuiPaper-root': {
     borderTopLeftRadius: '8px',
     borderBottomRightRadius: '8px',
@@ -124,7 +119,6 @@ export const StyledDrawer = styled(Drawer)(() => ({
   }
 }));
 export const StyledDrawerMobile = styled(Drawer)(() => ({
-  // export const StyledDrawer = styled(Drawer)(({ theme }) => ({
   flexShrink: 0,
   '& .MuiPaper-root': {
     width: '100vw',
@@ -192,10 +186,9 @@ export const LoginPage = styled(Box)(() => ({
   paddingTop: '128px'
 }));
 
-// export const GradientText = styled(Typography)(({ theme }) => ({
 export const GradientText = styled(Typography)(() => ({
-  background: 'linear-gradient(0deg, #cddc39 30%, #ff6f00 90%)', // Define your gradient here
-  // background: 'linear-gradient(45deg, #cddc39 30%, #ff6f00 90%)', // Define your gradient here
+  background:
+    'linear-gradient(0deg,  rgba(152,222,255,1) 10%, rgba(167,249,208,1) 50%, rgba(129,133,251,1) 100%)', //
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
   backgroundClip: 'text',
@@ -212,8 +205,6 @@ export const Panel = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
   width: '400px',
   padding: '2rem'
-  // backgroundColor: 'rgba(255, 255, 255, 0.4)',
-  // backdropFilter: 'blur(10px)'
 }));
 
 export const GridItem = experimentalStyled(Paper)(({ theme }) => ({

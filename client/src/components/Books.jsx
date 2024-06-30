@@ -10,6 +10,8 @@ import { StyledBox } from '../styles';
 import BooksTable from './BooksTable';
 import BooksTableSkeleton from './BooksTableSkeleton';
 
+import useAllBooksQuery from '../hooks/useAllBooksQuery';
+
 function Books() {
   // const client = useApolloClient();
 
@@ -28,11 +30,14 @@ function Books() {
   // }
   // });
 
-  const { loading, error, data } = useQuery(ALL_BOOKS);
+  // const { loading, error, data } = useQuery(ALL_BOOKS);
 
-  if (error) return `Error! ${error.message}`;
+  // if (error) return `Error! ${error.message}`;
+  const { books, loading, error } = useAllBooksQuery();
 
-  const books = data?.allBooks;
+  if (error) return <Typography>Error loading books.</Typography>;
+
+  // const books = data?.allBooks;
 
   return (
     <StyledBox>
@@ -43,7 +48,7 @@ function Books() {
         {loading ? <Skeleton /> : 'Список произведений'}
       </Typography>
       {loading && <BooksTableSkeleton />}
-      {!!data && <BooksTable books={books} />}
+      {!!books && <BooksTable books={books} />}
     </StyledBox>
   );
 }
