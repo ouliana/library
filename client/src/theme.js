@@ -56,7 +56,7 @@ export const darkTheme = createTheme({
       main: 'rgba(2 6 32)'
     },
     text: {
-      primary: grey[50],
+      primary: grey[100],
       secondary: grey[400]
     },
     background: {

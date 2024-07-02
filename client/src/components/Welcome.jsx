@@ -1,27 +1,32 @@
-import { useContext } from 'react';
-
+import { useEffect } from 'react';
 import WelcomeText from './WelcomeText';
 import UserFavorites from './UserFavorites';
-import TokenContext from '../contexts/TokenContext';
+import BooksTableSkeleton from './BooksTableSkeleton';
 
 import { useUser } from '../hooks/useUser';
+import { useTokenValue } from '../hooks/useToken';
+import { useErrorDispatch } from '../hooks/useError';
 
 function Welcome() {
-  const [token] = useContext(TokenContext);
+  const errorDispatch = useErrorDispatch();
+
+  const token = useTokenValue();
 
   const { state } = useUser();
-
-  if (!token) {
-    return <WelcomeText />;
-  }
-
   const { user, loading, error } = state;
 
-  if (error) return `Error! ${error.message}`;
+  useEffect(() => {
+    if (error) {
+      errorDispatch({ type: 'SET', payload: error });
+    }
+  }, [error, errorDispatch]);
 
-  if (loading) return <div>Loading...</div>;
-
-  return <>{!!user && <UserFavorites user={user} />}</>;
+  return (
+    <>
+      {token && loading && <BooksTableSkeleton />}
+      {user ? <UserFavorites user={user} /> : <WelcomeText />}
+    </>
+  );
 }
 
 export default Welcome;

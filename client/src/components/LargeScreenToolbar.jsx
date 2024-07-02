@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useUser } from '../hooks/useUser';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
@@ -28,19 +28,18 @@ import CustomIcon from '../assets/github-mark.svg?react';
 import CustomIconInv from '../assets/github-mark-white.svg?react';
 
 import { StyledToolbarButton, StyledToolbarIconButton } from '../styles';
+import { useErrorDispatch } from '../hooks/useError';
 
 function LargeScreenToolbar({ logout }) {
-  // eslint-disable-next-line no-unused-vars
-  const { state, dispatchUser } = useUser();
+  const { state, dispatch } = useUser();
   const { user, loading, error } = state;
-
-  // if (loading) return <CircularProgress />;
-  // if (error) return <Typography>Error loading user data.</Typography>;
 
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const [openDrawer, setOpenDrawer] = useState(false);
+
+  const errorDispatch = useErrorDispatch();
 
   const toggleDrawer = newOpen => () => {
     setOpenDrawer(newOpen);
@@ -57,7 +56,7 @@ function LargeScreenToolbar({ logout }) {
   const handleLogout = () => {
     handleClose();
     logout();
-    dispatchUser({ type: 'LOGOUT' });
+    dispatch({ type: 'LOGOUT' });
   };
 
   const open = Boolean(anchorEl);
@@ -70,7 +69,11 @@ function LargeScreenToolbar({ logout }) {
     );
   };
 
-  if (error) return <Typography>Error loading user data.</Typography>;
+  useEffect(() => {
+    if (error) {
+      errorDispatch({ type: 'SET', payload: error });
+    }
+  }, [error, errorDispatch]);
 
   return (
     <Toolbar>

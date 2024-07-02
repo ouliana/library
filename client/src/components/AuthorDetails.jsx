@@ -1,10 +1,11 @@
-import { useQuery } from '@apollo/client';
-import { AUTHOR_BY_ID } from '../graphql/queries';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAuthorByIdQuery } from '../hooks/queryHooks';
 
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 
+import { useErrorDispatch } from '../hooks/useError';
 import {
   StyledBox,
   StyledTypographyPrimary,
@@ -16,21 +17,23 @@ import AuthorDetailsSkeleton from './AuthorDetailsSkeleton';
 
 function AuthorDetails() {
   const id = useParams().id;
-  const { loading, error, data } = useQuery(AUTHOR_BY_ID, {
-    variables: { id: Number(id) }
-  });
+  const { author, loading, error } = useAuthorByIdQuery(id);
 
   //   'https://storage.yandexcloud.net/portfolio-kotik/blank_person_placeholder.svg';
-  if (error) return `Error! ${error.message}`;
+  const errorDispatch = useErrorDispatch();
+  useEffect(() => {
+    if (error) {
+      errorDispatch({ type: 'SET', payload: error });
+    }
+  }, [error, errorDispatch]);
 
-  const author = data?.authorById;
-  const imageSource = data?.authorById.profile;
+  const imageSource = author?.profile;
 
   return (
     <StyledBox>
       <Stack spacing={8}>
         {loading && <AuthorDetailsSkeleton />}
-        {!!data && (
+        {!!author && (
           <Stack
             direction='row'
             spacing={4}

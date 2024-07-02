@@ -13,21 +13,11 @@ function tokenReducer(state, action) {
 
 const TokenContext = createContext();
 
-// export function useTokenValue() {
-//   const tokenAndDispatch = useContext(TokenContext);
-//   return tokenAndDispatch[0];
-// }
-
-// export function useTokenDispatch() {
-//   const tokenAndDispatch = useContext(TokenContext);
-//   return tokenAndDispatch[1];
-// }
-
 export function TokenContextProvider(props) {
-  const [token, tokenDispatch] = useReducer(tokenReducer, null);
+  const [token, dispatch] = useReducer(tokenReducer, null);
 
   return (
-    <TokenContext.Provider value={[token, tokenDispatch]}>
+    <TokenContext.Provider value={[token, dispatch]}>
       {props.children}
     </TokenContext.Provider>
   );

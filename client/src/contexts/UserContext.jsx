@@ -1,7 +1,7 @@
-import { createContext, useContext, useReducer, useEffect } from 'react';
+import { createContext, useReducer, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { CURRENT_USER } from '../graphql/queries';
-import TokenContext from './TokenContext';
+import { useTokenValue } from '../hooks/useToken';
 
 const initialState = {
   user: null,
@@ -12,7 +12,7 @@ const initialState = {
 export const UserContext = createContext();
 
 export function UserProvider({ children }) {
-  const [token] = useContext(TokenContext);
+  const token = useTokenValue();
   const { data, loading, error } = useQuery(CURRENT_USER, {
     skip: !token
   });
@@ -52,23 +52,21 @@ export function UserProvider({ children }) {
     }
   };
 
-  const [state, dispatchUser] = useReducer(userReducer, initialState);
+  const [state, dispatch] = useReducer(userReducer, initialState);
 
   useEffect(() => {
     if (loading) {
-      dispatchUser({ type: 'FETCH_LOADING' });
+      dispatch({ type: 'FETCH_LOADING' });
     } else if (error) {
-      dispatchUser({ type: 'FETCH_ERROR', payload: error });
+      dispatch({ type: 'FETCH_ERROR', payload: error });
     } else if (data) {
-      dispatchUser({ type: 'FETCH_SUCCESS', payload: data.currentUser });
+      dispatch({ type: 'FETCH_SUCCESS', payload: data.currentUser });
     }
   }, [loading, error, data]);
 
   return (
-    <UserContext.Provider value={{ state, dispatchUser }}>
+    <UserContext.Provider value={{ state, dispatch }}>
       {children}
     </UserContext.Provider>
   );
 }
-
-// export default UserContext;

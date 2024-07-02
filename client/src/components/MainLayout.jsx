@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import {
@@ -7,6 +8,8 @@ import {
   Content,
   ContentMobile
 } from '../styles';
+
+import { useErrorDispatch } from '../hooks/useError';
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
@@ -19,16 +22,20 @@ function MainLayout({ children }) {
   const { state } = useUser();
   const { user, loading, error } = state;
 
-  if (error) return `Error! ${error.message}`;
-  if (loading)
-    return (
-      <Box sx={{ display: 'flex' }}>
-        <CircularProgress />
-      </Box>
-    );
+  const errorDispatch = useErrorDispatch();
+  useEffect(() => {
+    if (error) {
+      errorDispatch({ type: 'SET', payload: error });
+    }
+  }, [error, errorDispatch]);
 
   return (
     <BackgroundContainer>
+      {loading && (
+        <Box sx={{ display: 'flex' }}>
+          <CircularProgress />
+        </Box>
+      )}
       {user ? <OverlaySecondary /> : <Overlay />}
       {isLargeScreen ? (
         <Content>{children}</Content>

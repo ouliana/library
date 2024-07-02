@@ -1,7 +1,5 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import { useQuery } from '@apollo/client';
-import { ALL_AUTHORS } from '../graphql/queries';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,33 +8,39 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
 import Typography from '@mui/material/Typography';
-
 import Skeleton from '@mui/material/Skeleton';
+
 import { skeletonItems } from '../utils';
-import { StyledBox } from '../styles';
+import { StyledBox, StyledTypographyPrimary } from '../styles';
+import { useErrorDispatch } from '../hooks/useError';
+import { useAllAuthorsQuery } from '../hooks/queryHooks';
 
 function Authors() {
-  const { loading, error, data } = useQuery(ALL_AUTHORS);
   const navigate = useNavigate();
 
-  const authors = data?.allAuthors;
+  const { authors, loading, error } = useAllAuthorsQuery();
 
-  if (error) return `Error! ${error.message}`;
+  const errorDispatch = useErrorDispatch();
 
-  const handleRowClick = author => {
-    navigate(`/authors/${author.id}`);
+  const handleRowClick = id => {
+    navigate(`/authors/${id}`);
   };
+
+  useEffect(() => {
+    if (error) {
+      errorDispatch({ type: 'SET', payload: error });
+    }
+  }, [error, errorDispatch]);
 
   return (
     <StyledBox>
-      <Typography
+      <StyledTypographyPrimary
         variant='h2'
         gutterBottom
       >
         {loading ? <Skeleton /> : 'Авторы'}
-      </Typography>
+      </StyledTypographyPrimary>
       <TableContainer component={Paper}>
         <Table
           sx={{ minWidth: 650 }}
@@ -79,7 +83,7 @@ function Authors() {
                   key={author.id}
                   hover
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  onClick={() => handleRowClick(author)}
+                  onClick={() => handleRowClick(author.id)}
                   style={{ cursor: 'pointer' }}
                 >
                   <TableCell align='left'>

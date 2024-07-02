@@ -175,15 +175,20 @@ export const StyledBox = styled(Box)(({ theme }) => ({
   }
 }));
 
-export const LoginPage = styled(Box)(() => ({
-  position: 'relative',
-  zIndex: 2,
-  textAlign: 'center',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  paddingTop: '128px'
+export const ErrorBox = styled(Box)(({ theme }) => ({
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    width: '85%'
+  },
+  [theme.breakpoints.up('md')]: {
+    width: '70%'
+  },
+  [theme.breakpoints.up('lg')]: {
+    width: '65%'
+  },
+  [theme.breakpoints.up('xl')]: {
+    width: '60%'
+  }
 }));
 
 export const GradientText = styled(Typography)(() => ({
@@ -199,12 +204,19 @@ export const GradientTypography = ({ children, ...props }) => {
   return <GradientText {...props}>{children}</GradientText>;
 };
 
-export const Panel = styled(Paper)(({ theme }) => ({
+const Panel = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   textAlign: 'center',
   color: theme.palette.text.secondary,
-  width: '400px',
   padding: '2rem'
+}));
+
+export const LoginPanel = styled(Panel)(() => ({
+  width: '400px'
+}));
+
+export const FormPanel = styled(Panel)(() => ({
+  width: '100%'
 }));
 
 export const GridItem = experimentalStyled(Paper)(({ theme }) => ({

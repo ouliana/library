@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { StyledToggleButton, StyledToggleButtonGroup } from '../styles';
 
-import { useThemeContext } from '../contexts/ThemeContext';
+import { useThemeContext } from '../hooks/useThemeContext';
 
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';

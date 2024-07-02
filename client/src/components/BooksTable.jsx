@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 
 import Table from '@mui/material/Table';
@@ -11,10 +13,17 @@ import Typography from '@mui/material/Typography';
 
 function BooksTable({ books }) {
   const navigate = useNavigate();
+  const [showGenres, setShowGenres] = useState(false);
 
   const handleRowClick = book => {
     navigate(`/books/${book.id}`);
   };
+
+  useEffect(() => {
+    if (books && books.length && 'genres' in books[0]) {
+      setShowGenres(true);
+    }
+  }, [books]);
 
   return (
     <TableContainer component={Paper}>
@@ -27,9 +36,7 @@ function BooksTable({ books }) {
             <TableCell align='left'>Название</TableCell>
             <TableCell align='center'>Автор</TableCell>
             <TableCell align='center'>Год</TableCell>
-            {books.length && 'genres' in books[0] && (
-              <TableCell align='center'>Жанр</TableCell>
-            )}
+            {showGenres && <TableCell align='center'>Жанр</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -46,10 +53,9 @@ function BooksTable({ books }) {
                 {book.author.firstName} {book.author.lastName}
               </TableCell>
               <TableCell align='center'>{book.published}</TableCell>
-              <TableCell align='center'>
-                {books.length &&
-                  'genres' in books[0] &&
-                  book.genres?.map(genre => (
+              {showGenres && (
+                <TableCell align='center'>
+                  {book.genres?.map(genre => (
                     <Typography
                       key={genre.id}
                       variant='body2'
@@ -57,7 +63,8 @@ function BooksTable({ books }) {
                       {genre.name}
                     </Typography>
                   ))}
-              </TableCell>
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>

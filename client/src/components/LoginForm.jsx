@@ -11,11 +11,14 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
-import { Panel } from '../styles';
+import { LoginPanel } from '../styles';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-function LoginForm({ setError }) {
+import { useErrorDispatch } from '../hooks/useError';
+
+function LoginForm() {
+  const errorDispatch = useErrorDispatch();
   const [token, dispatch] = useContext(TokenContext);
 
   const [username, setUsername] = useState('');
@@ -25,7 +28,7 @@ function LoginForm({ setError }) {
 
   const [login, result] = useMutation(LOGIN, {
     extentions: {
-      onerror: error => setError(error.graphQLErrors[0].message)
+      onerror: error => errorDispatch({ type: 'SET', payload: error })
     }
   });
   const navigate = useNavigate();
@@ -54,7 +57,7 @@ function LoginForm({ setError }) {
   }, [token, navigate]);
 
   return (
-    <Panel elevation={1}>
+    <LoginPanel elevation={1}>
       <Typography
         variant='h5'
         gutterBottom
@@ -99,7 +102,7 @@ function LoginForm({ setError }) {
         />
         <Button type='submit'>Войти</Button>
       </Box>
-    </Panel>
+    </LoginPanel>
   );
 }
 

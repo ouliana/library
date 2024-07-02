@@ -1,18 +1,24 @@
+import { useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { ALL_GENRES } from '../graphql/queries';
 
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import ButtonBase from '@mui/material/ButtonBase';
-
 import Skeleton from '@mui/material/Skeleton';
-import { GridItem } from '../styles';
 
-import { StyledBox } from '../styles';
+import { GridItem, StyledBox } from '../styles';
+
+import { useErrorDispatch } from '../hooks/useError';
 
 function Genres() {
   const { error, data } = useQuery(ALL_GENRES);
-  if (error) return `Error! ${error.message}`;
+  const errorDispatch = useErrorDispatch();
+  useEffect(() => {
+    if (error) {
+      errorDispatch({ type: 'SET', payload: error });
+    }
+  }, [error, errorDispatch]);
 
   return (
     <StyledBox>

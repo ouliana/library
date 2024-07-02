@@ -1,5 +1,4 @@
-import { useQuery } from '@apollo/client';
-import { BOOK_BY_ID } from '../graphql/queries';
+import { useEffect } from 'react';
 import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -16,14 +15,14 @@ import {
 } from '../styles';
 
 import BookDetailsSkeleton from './BookDetailsSkeleton';
+import { useErrorDispatch } from '../hooks/useError';
+import { useBookByIdQuery } from '../hooks/queryHooks';
 
 function BookDetails() {
   const theme = useTheme();
 
   const id = useParams().id;
-  const { loading, error, data } = useQuery(BOOK_BY_ID, {
-    variables: { id: Number(id) }
-  });
+  const { book, loading, error } = useBookByIdQuery(id);
 
   const navigate = useNavigate();
 
@@ -32,15 +31,18 @@ function BookDetails() {
       ? 'https://storage.yandexcloud.net/portfolio-kotik/book.jpg'
       : 'https://storage.yandexcloud.net/portfolio-kotik/book_inv.jpg';
 
-  if (error) return `Error! ${error.message}`;
-
-  const book = data?.bookById;
+  const errorDispatch = useErrorDispatch();
+  useEffect(() => {
+    if (error) {
+      errorDispatch({ type: 'SET', payload: error });
+    }
+  }, [error, errorDispatch]);
 
   return (
     <StyledBox>
       <Stack spacing={8}>
         {loading && <BookDetailsSkeleton />}
-        {!!data && (
+        {!!book && (
           <Stack
             direction='row'
             spacing={4}
@@ -90,7 +92,7 @@ function BookDetails() {
             </Stack>
           </Stack>
         )}
-        {!!data && (
+        {!!book && (
           <Stack
             direction='row'
             spacing={1}

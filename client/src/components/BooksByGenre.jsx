@@ -1,7 +1,7 @@
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 
-import { GENRE } from '../graphql/queries';
+import { useBooksByGenre } from '../hooks/queryHooks';
 
 import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
@@ -9,16 +9,18 @@ import BooksTable from './BooksTable';
 import BooksTableSkeleton from './BooksTableSkeleton';
 import { StyledBox } from '../styles';
 
+import { useErrorDispatch } from '../hooks/useError';
+
 function BooksByGenre() {
   const id = useParams().id;
-  const { loading, error, data } = useQuery(GENRE, {
-    variables: { id: Number(id) }
-  });
+  const { name, books, loading, error } = useBooksByGenre(id);
 
-  if (error) return `Error! ${error.message}`;
-
-  const books = data?.genreWithBooks.books;
-  const name = data?.genreWithBooks.name;
+  const errorDispatch = useErrorDispatch();
+  useEffect(() => {
+    if (error) {
+      errorDispatch({ type: 'SET', payload: error });
+    }
+  }, [error, errorDispatch]);
 
   return (
     <StyledBox>
@@ -29,7 +31,7 @@ function BooksByGenre() {
         {loading ? <Skeleton /> : name}
       </Typography>
       {loading && <BooksTableSkeleton />}
-      {!!data && <BooksTable books={books} />}
+      {!!books && <BooksTable books={books} />}
     </StyledBox>
   );
 }

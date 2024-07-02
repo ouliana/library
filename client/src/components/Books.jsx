@@ -1,16 +1,13 @@
-import { useQuery } from '@apollo/client';
-import { ALL_BOOKS } from '../graphql/queries';
-// import { useQuery, useSubscription, useApolloClient } from '@apollo/client';
-// import { ALL_BOOKS, BOOK_ADDED } from '../graphql/queries';
-import Typography from '@mui/material/Typography';
+import { useEffect } from 'react';
 import Skeleton from '@mui/material/Skeleton';
 
-import { StyledBox } from '../styles';
+import { StyledBox, StyledTypographyPrimary } from '../styles';
 
 import BooksTable from './BooksTable';
 import BooksTableSkeleton from './BooksTableSkeleton';
 
-import useAllBooksQuery from '../hooks/useAllBooksQuery';
+import { useAllBooksQuery } from '../hooks/queryHooks';
+import { useErrorDispatch } from '../hooks/useError';
 
 function Books() {
   // const client = useApolloClient();
@@ -35,18 +32,21 @@ function Books() {
   // if (error) return `Error! ${error.message}`;
   const { books, loading, error } = useAllBooksQuery();
 
-  if (error) return <Typography>Error loading books.</Typography>;
-
-  // const books = data?.allBooks;
+  const errorDispatch = useErrorDispatch();
+  useEffect(() => {
+    if (error) {
+      errorDispatch({ type: 'SET', payload: error });
+    }
+  }, [error, errorDispatch]);
 
   return (
     <StyledBox>
-      <Typography
+      <StyledTypographyPrimary
         variant='h2'
         gutterBottom
       >
         {loading ? <Skeleton /> : 'Список произведений'}
-      </Typography>
+      </StyledTypographyPrimary>
       {loading && <BooksTableSkeleton />}
       {!!books && <BooksTable books={books} />}
     </StyledBox>

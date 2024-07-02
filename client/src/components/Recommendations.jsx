@@ -1,14 +1,15 @@
+import { useEffect } from 'react';
 import { useUser } from '../hooks/useUser';
-import useAllBooksByGenresQuery from '../hooks/useAllBooksByGenresQuery';
+import { useAllBooksByGenresQuery } from '../hooks/queryHooks';
 
-import Typography from '@mui/material/Typography';
 import BooksTableSkeleton from './BooksTableSkeleton';
 
 import BooksTable from './BooksTable';
-import { StyledBox } from '../styles';
+import { StyledBox, StyledTypographyPrimary } from '../styles';
+
+import { useErrorDispatch } from '../hooks/useError';
 
 function Recommendations() {
-  // const { user, loading: userLoading, error: userError } = useUser();
   const { state } = useUser();
   const { user, loading: userLoading, error: userError } = state;
   const favoriteGenres = user?.favoriteGenres || [];
@@ -18,17 +19,25 @@ function Recommendations() {
     error: booksError
   } = useAllBooksByGenresQuery(favoriteGenres);
 
-  if (userError) return <Typography>Error loading user data.</Typography>;
-  if (booksError) return <Typography>Error loading books.</Typography>;
+  const errorDispatch = useErrorDispatch();
+
+  useEffect(() => {
+    if (userError) {
+      errorDispatch({ type: 'SET', payload: userError });
+    }
+    if (booksError) {
+      errorDispatch({ type: 'SET', payload: booksError });
+    }
+  }, [userError, booksError, errorDispatch]);
 
   return (
     <StyledBox>
-      <Typography
+      <StyledTypographyPrimary
         variant='h2'
         gutterBottom
       >
         Рекомендации
-      </Typography>
+      </StyledTypographyPrimary>
       {userLoading || (booksLoading && <BooksTableSkeleton />)}
       {booksLoading && <BooksTableSkeleton />}
       {!!books && !!user && (

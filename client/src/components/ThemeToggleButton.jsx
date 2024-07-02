@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useThemeContext } from '../contexts/ThemeContext';
+import { useThemeContext } from '../hooks/useThemeContext';
 
 import IconButton from '@mui/material/IconButton';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
