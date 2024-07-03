@@ -127,9 +127,36 @@ async function findByTitle(title) {
   }
 }
 
-async function save(book) {
-  // const db = await dbBooks;
-  // const response = await db.insert(book);
-  // const savedBook = await db.view('book', 'by_id', { key: response.id });
-  // return savedBook.rows[0].value;
+async function save(args) {
+  const { title, published, authorId, annotation, genres } = args;
+
+  try {
+    const createdBook = await prisma.book.create({
+      data: {
+        title,
+        published,
+        authorId,
+        annotation,
+        genres: {
+          connect: genres.map(genre => ({ id: genre }))
+        }
+      },
+      include: {
+        author: {
+          select: {
+            firstName: true,
+            lastName: true
+          }
+        },
+        genres: true
+      }
+    });
+    return createdBook;
+  } catch (error) {
+    let message = 'Ошибка в базе данных. Не удалось создать книгу';
+    if (e instanceof Error) {
+      message += 'Error: ' + e.message;
+    }
+    throw new Error(message);
+  }
 }

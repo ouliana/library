@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useBooksByGenre } from '../hooks/queryHooks';
+import { useBooksByGenre } from '../hooks/queries';
 
 import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';

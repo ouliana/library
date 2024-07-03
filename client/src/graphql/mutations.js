@@ -1,30 +1,48 @@
 import { gql } from '@apollo/client';
-import { BOOK_DETAILS } from './fragments';
+import { AUTHOR_DETAILS, BOOK_DETAILS } from './fragments';
 
-export const CREATE_BOOK = gql`
-  ${BOOK_DETAILS}
-  mutation createBook(
-    $title: String!
-    $author: String!
-    $published: Int!
-    $genres: [String!]!
+export const CREATE_AUTHOR = gql`
+  ${AUTHOR_DETAILS}
+  mutation createAuthor(
+    $firstName: String!
+    $lastName: String!
+    $born: Int
+    $profile: String
+    $creditText: String
+    $creditLink: String
+    $annotation: String!
   ) {
-    addBook(
-      title: $title
-      author: $author
-      published: $published
-      genres: $genres
+    addAuthor(
+      firstName: $firstName
+      lastName: $lastName
+      born: $born
+      profile: $profile
+      creditText: $creditText
+      creditLink: $creditLink
+      annotation: $annotation
     ) {
-      ...BookDetails
+      ...AuthorDetails
     }
   }
 `;
 
-export const SET_BIRTH_YEAR = gql`
-  mutation setBirthYear($name: String!, $born: Int!) {
-    editAuthor(name: $name, setBornTo: $born) {
-      name
-      born
+export const CREATE_BOOK = gql`
+  ${BOOK_DETAILS}
+  mutation createBook(
+    $authorId: Int!
+    $title: String!
+    $published: Int
+    $annotation: String!
+    $genres: [Int!]!
+  ) {
+    addBook(
+      authorId: $authorId
+      title: $title
+      published: $published
+      annotation: $annotation
+      genres: $genres
+    ) {
+      ...BookDetails
     }
   }
 `;

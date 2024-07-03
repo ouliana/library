@@ -59,11 +59,22 @@ type Token {
   }
 
   type Mutation {
+    addAuthor(
+      firstName: String!
+      lastName: String!
+      born: Int
+      profile: String
+      creditText: String
+      creditLink: String
+      annotation: String!
+    ): Author
+
     addBook(
+      authorId: Int!
       title: String!
-      author: String!
-      published: Int!
-      genres: [String!]!
+      annotation: String!
+      published: Int
+      genres: [Int!]!
     ): Book
 
     editAuthor(name: String!, setBornTo: Int!): Author
@@ -80,6 +91,7 @@ type Token {
   }
 
   type Subscription {
+    authorAdded: Author!
     bookAdded: Book!
   }
 `;

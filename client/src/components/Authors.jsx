@@ -14,7 +14,7 @@ import Skeleton from '@mui/material/Skeleton';
 import { skeletonItems } from '../utils';
 import { StyledBox, StyledTypographyPrimary } from '../styles';
 import { useErrorDispatch } from '../hooks/useError';
-import { useAllAuthorsQuery } from '../hooks/queryHooks';
+import { useAllAuthorsQuery } from '../hooks/queries';
 
 function Authors() {
   const navigate = useNavigate();

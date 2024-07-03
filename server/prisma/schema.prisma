@@ -48,11 +48,11 @@ id   Int   @id @default(autoincrement())
 firstName String? @db.VarChar(255) @map("first_name")
 lastName String @db.VarChar(255) @map("last_name")
 born Int?
-profile String? @db.VarChar(255)
+profile String @db.VarChar(255) @default("https://storage.yandexcloud.net/portfolio-kotik/blank_person_placeholder.svg")
 creditText String? @db.VarChar(255) @map("credit_text")
 creditLink String? @db.VarChar(255) @map("credit_link")
-books Book[]
 annotation String? 
+books Book[]
 
 
  @@map("authors")

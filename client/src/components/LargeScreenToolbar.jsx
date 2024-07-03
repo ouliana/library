@@ -120,7 +120,7 @@ function LargeScreenToolbar({ logout }) {
           Рекомендации
         </StyledToolbarButton>
         <StyledToolbarButton
-          to='/add'
+          to='/new-book'
           component={RouterLink}
         >
           Добавить книгу

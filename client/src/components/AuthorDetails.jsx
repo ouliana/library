@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useAuthorByIdQuery } from '../hooks/queryHooks';
+import { useAuthorByIdQuery } from '../hooks/queries';
 
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -19,7 +19,6 @@ function AuthorDetails() {
   const id = useParams().id;
   const { author, loading, error } = useAuthorByIdQuery(id);
 
-  //   'https://storage.yandexcloud.net/portfolio-kotik/blank_person_placeholder.svg';
   const errorDispatch = useErrorDispatch();
   useEffect(() => {
     if (error) {

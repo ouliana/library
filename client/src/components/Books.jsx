@@ -6,7 +6,7 @@ import { StyledBox, StyledTypographyPrimary } from '../styles';
 import BooksTable from './BooksTable';
 import BooksTableSkeleton from './BooksTableSkeleton';
 
-import { useAllBooksQuery } from '../hooks/queryHooks';
+import { useAllBooksQuery } from '../hooks/queries';
 import { useErrorDispatch } from '../hooks/useError';
 
 function Books() {

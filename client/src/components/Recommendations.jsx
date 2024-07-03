@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useUser } from '../hooks/useUser';
-import { useAllBooksByGenresQuery } from '../hooks/queryHooks';
+import { useAllBooksByGenresQuery } from '../hooks/queries';
 
 import BooksTableSkeleton from './BooksTableSkeleton';
 

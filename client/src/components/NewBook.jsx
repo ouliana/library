@@ -1,15 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
-import { ALL_AUTHORS, ALL_BOOKS } from '../graphql/queries';
-import { CREATE_BOOK } from '../graphql/mutations';
-// import { GraphQLError } from 'graphql';
-import { useAllGenresQuery } from '../hooks/queryHooks';
+import { useAllAuthorsQuery, useAllGenresQuery } from '../hooks/queries';
+import { useCreateBookMutation } from '../hooks/mutations';
 import { useTheme } from '@mui/material/styles';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -18,26 +14,35 @@ import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Chip from '@mui/material/Chip';
 import LinearProgress from '@mui/material/LinearProgress';
+import Skeleton from '@mui/material/Skeleton';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+// import LibraryAddOutlinedIcon from '@mui/icons-material/LibraryAddOutlined';
+import LoadingButton from '@mui/lab/LoadingButton';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import SaveIcon from '@mui/icons-material/Save';
 
 import { StyledBox, FormPanel } from '../styles';
 
 import { useErrorDispatch } from '../hooks/useError';
+import { useSuccessDispatch } from '../hooks/useSuccess';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
+const MAX_HEIGHT = ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP;
 const MenuProps = {
   PaperProps: {
     style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      maxHeight: MAX_HEIGHT,
       width: 250
     }
   }
 };
 
-function getStyles(id, genres, theme) {
+function getStyles(id, items, theme) {
   return {
     fontWeight:
-      genres.indexOf(id) === -1
+      items.indexOf(id) === -1
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium
   };
@@ -45,77 +50,149 @@ function getStyles(id, genres, theme) {
 
 function NewBook() {
   const navigate = useNavigate();
+  const [authorId, setAuthorId] = useState('');
   const [title, setTitle] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
   const [published, setPublished] = useState('');
   const [annotation, setAnnotation] = useState('');
   const [genres, setGenres] = useState([]);
 
-  const { genres: genresItems, loading, error } = useAllGenresQuery();
-  const theme = useTheme();
-  const [genre, setGenre] = useState([]);
+  const {
+    executeMutation,
+    data,
+    loading: mutationLoading,
+    error: mutationError
+  } = useCreateBookMutation();
 
-  const handleChange = event => {
+  const [successPayload, setSuccessPayload] = useState('');
+
+  const {
+    authors,
+    loading: authorsLoading,
+    error: authorsError
+  } = useAllAuthorsQuery();
+
+  const {
+    genres: genresItems,
+    loading: genresLoading,
+    error: genresError
+  } = useAllGenresQuery();
+  const theme = useTheme();
+
+  const getFullName = ({ firstName, lastName }) => {
+    return [lastName, firstName].join(', ');
+  };
+
+  const handleGenresChange = event => {
     const {
       target: { value }
     } = event;
-    setGenre(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value
-    );
+    setGenres(value);
+  };
+  const handleAuthorChange = event => {
+    const {
+      target: { value }
+    } = event;
+    setAuthorId(value);
   };
 
-  const [createBook] = useMutation(CREATE_BOOK, {
-    refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }]
-  });
+  async function submit(event) {
+    event.preventDefault();
+
+    await executeMutation({
+      authorId: Number(authorId),
+      title,
+      published: Number(published),
+      annotation,
+      genres: genres.map(genre => Number(genre.id))
+    });
+
+    setSuccessPayload(`Книга ${title} успешно добавлена в библиотеку`);
+
+    setAuthorId('');
+    setTitle('');
+    setPublished('');
+    setAnnotation('');
+    setGenres([]);
+    navigate('/books');
+  }
 
   const errorDispatch = useErrorDispatch();
+  const successDispatch = useSuccessDispatch();
+
   useEffect(() => {
-    if (error) {
-      errorDispatch({ type: 'SET', payload: error });
+    if (genresError) {
+      errorDispatch({ type: 'SET', payload: genresError });
     }
-  }, [error, errorDispatch]);
+    if (authorsError) {
+      errorDispatch({ type: 'SET', payload: authorsError });
+    }
+    if (mutationError) {
+      errorDispatch({ type: 'SET', payload: mutationError });
+    }
+    if (data) {
+      successDispatch({
+        type: 'SET',
+        payload: successPayload
+      });
+    }
+  }, [
+    data,
+    authorsError,
+    genresError,
+    mutationError,
+    errorDispatch,
+    successDispatch,
+    successPayload
+  ]);
 
   return (
     <StyledBox>
       <FormPanel elevation={1}>
         <form onSubmit={submit}>
           <Stack spacing={2}>
-            <Typography
-              variant='h6'
-              align='left'
-            >
-              Автор
-            </Typography>
             <Stack
               direction='row'
               spacing={2}
+              alignItems='center'
             >
-              <TextField
-                fullWidth
-                label='Фамилия'
-                value={firstName}
-                onChange={event => {
-                  setFirstName(event.target.value);
-                }}
-              />
-              <TextField
-                fullWidth
-                label='Имя'
-                value={lastName}
-                onChange={event => {
-                  setLastName(event.target.value);
-                }}
-              />
+              {authorsLoading && (
+                <Skeleton
+                  variant='rounded'
+                  width='100%'
+                  height={48}
+                />
+              )}
+              {!!authors && (
+                <FormControl fullWidth>
+                  <InputLabel id='auhtorId-label'>Автор</InputLabel>
+                  <Select
+                    labelId='auhtorId-label'
+                    value={authorId}
+                    label='Автор'
+                    onChange={handleAuthorChange}
+                    sx={{ textAlign: 'left' }}
+                  >
+                    {authors.map((author, index, authors) => (
+                      <MenuItem
+                        key={author.id}
+                        value={author.id}
+                        style={getStyles(index, authors, theme)}
+                      >
+                        {getFullName(author)}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+              <IconButton
+                aria-label='Добавить автора'
+                color='primary'
+                sx={{ flexShrink: 0, width: '40px', height: '40px' }}
+                onClick={() => navigate('/new-author')}
+              >
+                <AddOutlinedIcon />
+              </IconButton>
             </Stack>
-            <Box sx={{ height: '1rem' }} />
-            <Typography
-              variant='h6'
-              align='left'
-            >
-              Данные о книге
-            </Typography>
             <TextField
               fullWidth
               label='Название'
@@ -126,7 +203,7 @@ function NewBook() {
             />
             <TextField
               fullWidth
-              label='Опубликована'
+              label='Дата первой публикации'
               value={published}
               onChange={event => {
                 setPublished(event.target.value);
@@ -143,16 +220,16 @@ function NewBook() {
               }}
             />
             {/* Жанры */}
-            {loading && <LinearProgress />}
+            {genresLoading && <LinearProgress />}
             {!!genres && (
               <FormControl fullWidth>
-                <InputLabel id='demo-multiple-chip-label'>Жанр</InputLabel>
+                <InputLabel id='multiple-chip-label'>Жанр</InputLabel>
                 <Select
-                  labelId='demo-multiple-chip-label'
-                  id='demo-multiple-chip'
+                  labelId='multiple-chip-label'
+                  id='multiple-chip'
                   multiple
-                  value={genre}
-                  onChange={handleChange}
+                  value={genres}
+                  onChange={handleGenresChange}
                   input={
                     <OutlinedInput
                       id='select-multiple-chip'
@@ -183,27 +260,31 @@ function NewBook() {
                 </Select>
               </FormControl>
             )}
-            <button type='submit'>create book</button>
           </Stack>
         </form>
+        <Box sx={{ height: '2rem' }} />
+        <Stack
+          direction='row'
+          spacing={2}
+          justifyContent='space-between'
+        >
+          <Button>Назад</Button>
+          <LoadingButton
+            size='small'
+            color='primary'
+            onClick={submit}
+            loading={mutationLoading}
+            loadingPosition='start'
+            startIcon={<SaveIcon />}
+            variant='contained'
+            sx={{ flexGrow: 0 }}
+          >
+            <span>Сохранить</span>
+          </LoadingButton>
+        </Stack>
       </FormPanel>
     </StyledBox>
   );
-
-  async function submit(event) {
-    event.preventDefault();
-
-    const intPublished = +published;
-
-    createBook({
-      variables: { title, firstName, lastName, published: intPublished, genres }
-    });
-
-    setTitle('');
-    setPublished('');
-    setGenres([]);
-    navigate('/books');
-  }
 }
 
 export default NewBook;

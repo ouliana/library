@@ -16,7 +16,7 @@ import {
 
 import BookDetailsSkeleton from './BookDetailsSkeleton';
 import { useErrorDispatch } from '../hooks/useError';
-import { useBookByIdQuery } from '../hooks/queryHooks';
+import { useBookByIdQuery } from '../hooks/queries';
 
 function BookDetails() {
   const theme = useTheme();

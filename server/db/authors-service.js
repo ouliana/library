@@ -20,9 +20,12 @@ async function findAll() {
         _count: {
           select: { books: true }
         }
+      },
+      orderBy: {
+        lastName: 'asc'
       }
     });
-    const authorWithBookCOunt = authorsWithCount.map(author => {
+    const authorWithBookCount = authorsWithCount.map(author => {
       const result = {
         ...author,
         bookCount: author._count.books
@@ -30,7 +33,7 @@ async function findAll() {
       delete result._count;
       return result;
     });
-    return authorWithBookCOunt;
+    return authorWithBookCount;
   } catch (e) {
     let message = 'Ошибка в базе данных. Невозможно получить список авторов';
     if (e instanceof Error) {
@@ -73,21 +76,35 @@ async function findByName(name) {
   }
 }
 
-async function save(author) {
-  // const db = await dbAuthors;
-  // const response = await db.insert(author);
-  // const savedAuthor = await db.view('author', 'by_id', { key: response.id });
-  // return savedAuthor.rows[0].value;
+async function save(args) {
+  const {
+    firstName,
+    lastName,
+    born,
+    profile,
+    creditText,
+    creditLink,
+    annotation
+  } = args;
+
+  try {
+    const createdAuthor = await prisma.author.create({
+      data: {
+        firstName,
+        lastName,
+        born,
+        profile,
+        creditText,
+        creditLink,
+        annotation
+      }
+    });
+    return createdAuthor;
+  } catch (error) {
+    let message = 'Ошибка в базе данных. Не удалось создать автора';
+    if (e instanceof Error) {
+      message += 'Error: ' + e.message;
+    }
+    throw new Error(message);
+  }
 }
-
-// async function populate(author) {
-//   const dbBooks = require('./dbBooks');
-
-//   // const count = response.rows.map(r => r.value);
-
-//   const response = await (
-//     await dbBooks
-//   ).view('book', 'book_count_by_author', { key: author.name });
-
-//   return { ...author, bookCount: response.rows.length };
-// }

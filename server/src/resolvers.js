@@ -7,6 +7,7 @@ const usersService = require('../db/users-service');
 const { GraphQLError } = require('graphql');
 const jwt = require('jsonwebtoken');
 const { compare } = require('bcrypt');
+const { sanitizeInput, authorSchema, bookSchema } = require('./joi-schemas');
 
 const pubsub = new PubSub();
 
@@ -17,7 +18,6 @@ const resolvers = {
       return count;
     },
     allBooks: async (_root, args) => {
-      console.log('args: ', args);
       if (!Object.keys(args).length) {
         const books = await booksService.findAll();
         return books;
@@ -92,7 +92,7 @@ const resolvers = {
   },
 
   Mutation: {
-    addBook: async (root, args, context) => {
+    addAuthor: async (_root, args, context) => {
       const currentUser = context.currentUser;
       if (!currentUser) {
         throw new GraphQLError('not authenticated', {
@@ -102,9 +102,57 @@ const resolvers = {
         });
       }
 
-      if (args.title.length < 3 || args.author.length < 3) {
-        const invalid = [args.title, args.author].filter(arg => arg.length < 3);
+      const sanitizedArgs = {
+        firstName: sanitizeInput(args.firstName),
+        lastName: sanitizeInput(args.lastName),
+        born: sanitizeInput(args.born),
+        profile: sanitizeInput(args.profile),
+        creditText: sanitizeInput(args.creditText),
+        creditLink: sanitizeInput(args.creditLink),
+        annotation: sanitizeInput(args.annotation)
+      };
 
+      const { error } = authorSchema.validate(sanitizedArgs);
+      if (error) {
+        throw new GraphQLError(
+          `Validation error: ${error.details.map(e => e.message).join(', ')}`,
+          {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: invalid
+            }
+          }
+        );
+      }
+      const author = await authorsService.save(sanitizedArgs);
+
+      pubsub.publish('AUTHOR_ADDED', { authorAdded: author });
+      return author;
+    },
+
+    addBook: async (_root, args, context) => {
+      const currentUser = context.currentUser;
+      if (!currentUser) {
+        throw new GraphQLError('not authenticated', {
+          extensions: {
+            code: 'BAD_USER_INPUT'
+          }
+        });
+      }
+
+      const sanitizedArgs = {
+        title: sanitizeInput(args.title),
+        published: Number(sanitizeInput(args.published)),
+        authorId: args.authorId,
+        annotation: sanitizeInput(args.annotation),
+        genres: args.genres
+      };
+
+      console.log('sanitizedArgs: ', sanitizedArgs);
+
+      const { error } = bookSchema.validate(sanitizedArgs);
+
+      if (error) {
         throw new GraphQLError('The book title or author name are too short', {
           extensions: {
             code: 'BAD_USER_INPUT',
@@ -113,13 +161,7 @@ const resolvers = {
         });
       }
 
-      const book = await booksService.save({ ...args });
-
-      const authors = await authorsService.findAll();
-
-      if (!authors.find(a => a.name === args.author)) {
-        await authorsService.save({ name: args.author });
-      }
+      const book = await booksService.save(sanitizedArgs);
 
       pubsub.publish('BOOK_ADDED', { bookAdded: book });
       return book;
@@ -187,6 +229,9 @@ const resolvers = {
   },
 
   Subscription: {
+    authorAdded: {
+      subscribe: () => pubsub.asyncIterator('AUTHOR_ADDED')
+    },
     bookAdded: {
       subscribe: () => pubsub.asyncIterator('BOOK_ADDED')
     }

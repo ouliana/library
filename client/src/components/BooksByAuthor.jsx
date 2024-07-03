@@ -9,7 +9,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import BookListSkeletons from './BookListSkeletons';
 
 import { StyledTypographyPrimary, StyledListItemText } from '../styles';
-import { useBooksByAuthorIdQuery } from '../hooks/queryHooks';
+import { useBooksByAuthorIdQuery } from '../hooks/queries';
 import { useErrorDispatch } from '../hooks/useError';
 
 function BooksByAuthor() {

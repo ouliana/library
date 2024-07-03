@@ -16,10 +16,10 @@ export const useAllAuthorsQuery = () => {
   const [authors, setAuthors] = useState([]);
 
   useEffect(() => {
-    if (data && !loading && !error) {
+    if (data) {
       setAuthors(data.allAuthors);
     }
-  }, [data, loading, error]);
+  }, [data]);
 
   return { authors, loading, error };
 };
@@ -39,21 +39,16 @@ export const useBooksByAuthorIdQuery = id => {
   return { books, loading, error };
 };
 
-export const useAllBooksQuery = genres => {
-  const { data, loading, error } = useQuery(ALL_BOOKS, {
-    variables: {
-      genres: genres?.map(genre => Number(genre.id))
-    },
-    skip: !genres || genres.length === 0
-  });
+export const useAllBooksQuery = () => {
+  const { data, loading, error } = useQuery(ALL_BOOKS);
 
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
-    if (data && !loading && !error) {
+    if (data) {
       setBooks(data.allBooks);
     }
-  }, [data, loading, error]);
+  }, [data]);
 
   return { books, loading, error };
 };
