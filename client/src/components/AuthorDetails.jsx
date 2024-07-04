@@ -1,9 +1,12 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link as RouterLink } from 'react-router-dom';
+
 import { useAuthorByIdQuery } from '../hooks/queries';
 
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 import { useErrorDispatch } from '../hooks/useError';
 import {
@@ -30,6 +33,16 @@ function AuthorDetails() {
 
   return (
     <StyledBox>
+      <Box sx={{ position: 'absolute', top: 0, right: 0 }}>
+        <IconButton
+          aria-label='Редактировать'
+          component={RouterLink}
+          to={`edit`}
+          sx={{ flexShrink: 0, width: '40px', height: '40px' }}
+        >
+          <EditOutlinedIcon />
+        </IconButton>
+      </Box>
       <Stack spacing={8}>
         {loading && <AuthorDetailsSkeleton />}
         {!!author && (

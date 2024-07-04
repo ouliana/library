@@ -21,6 +21,7 @@ import BookDetails from './components/BookDetails';
 import BooksByGenre from './components/BooksByGenre';
 import NewBook from './components/NewBook';
 import NewAuthor from './components/NewAuthor';
+import EditAuthor from './components/EditAuthor';
 import Genres from './components/Genres';
 import LoginForm from './components/LoginForm';
 import Recommendations from './components/Recommendations';
@@ -109,6 +110,14 @@ const App = () => {
                           <DetailsLayout>
                             <AuthorDetails />
                           </DetailsLayout>
+                        }
+                      />
+                      <Route
+                        path='/authors/:id/edit'
+                        element={
+                          <SecondaryLayout>
+                            <EditAuthor />
+                          </SecondaryLayout>
                         }
                       />
                       <Route

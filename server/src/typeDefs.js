@@ -13,22 +13,23 @@ type Author {
 
 
 type Book {
+  id: ID!
   title: String!
   published: Int!
   authorId: Int!
   author: Author
   genres: [Genre!]!
   annotation: String
-  id: ID!
 }
 
 type Genre {
+  id: ID!
 name: String!
-id: ID!
 books: [Book]
 }
 
 type User {
+  id: ID!
   username: String!
   password: String!
   name: String
@@ -36,7 +37,6 @@ type User {
   avatar: String
   favoriteBooks: [Book]
   favoriteGenres: [Genre]
-  id: ID!
 }
 
 type Token {
@@ -46,20 +46,20 @@ type Token {
   type Query {
     bookCount: Int
     authorCount: Int
-    allBooks(firstName: String, lastName: String, genres: [Int]): [Book]
-    bookById(id: Int): Book
-    booksByAuthorId(authorId: Int): [Book]
+    allBooks(firstName: String, lastName: String, genres: [ID]): [Book]
+    bookById(id: ID): Book
+    booksByAuthorId(authorId: ID): [Book]
     booksByAuthorName(firstName: String, lastName: String): [Book]
-    booksByGenre(genreId: Int): [Book]
-    genreWithBooks(id: Int): Genre
+    booksByGenre(genreId: ID): [Book]
+    genreWithBooks(id: ID): Genre
     allAuthors: [Author]
-    authorById(id: Int): Author
+    authorById(id: ID): Author
     allGenres: [Genre]
     currentUser: User
   }
 
   type Mutation {
-    addAuthor(
+    createAuthor(
       firstName: String!
       lastName: String!
       born: Int
@@ -69,15 +69,24 @@ type Token {
       annotation: String!
     ): Author
 
-    addBook(
-      authorId: Int!
+    updateAuthor(
+      id: ID!
+      firstName: String!
+      lastName: String!
+      born: Int
+      profile: String
+      creditText: String
+      creditLink: String
+      annotation: String!
+    ): Author
+
+    createBook(
+      authorId: ID!
       title: String!
       annotation: String!
       published: Int
-      genres: [Int!]!
+      genres: [ID!]!
     ): Book
-
-    editAuthor(name: String!, setBornTo: Int!): Author
 
     createUser(
       username: String!
@@ -91,8 +100,9 @@ type Token {
   }
 
   type Subscription {
-    authorAdded: Author!
-    bookAdded: Book!
+    authorCreated: Author!
+    authorUpdated: Author!
+    bookCreated: Book!
   }
 `;
 

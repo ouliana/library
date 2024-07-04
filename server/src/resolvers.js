@@ -89,7 +89,7 @@ const resolvers = {
   },
 
   Mutation: {
-    addAuthor: async (_root, args, context) => {
+    createAuthor: async (_root, args, context) => {
       const currentUser = context.currentUser;
       if (!currentUser) {
         throw new GraphQLError('not authenticated', {
@@ -123,11 +123,52 @@ const resolvers = {
       }
       const author = await authorsService.save(sanitizedArgs);
 
-      pubsub.publish('AUTHOR_ADDED', { authorAdded: author });
+      pubsub.publish('AUTHOR_CREATED', { authorCreated: author });
       return author;
     },
 
-    addBook: async (_root, args, context) => {
+    updateAuthor: async (_root, args, context) => {
+      const currentUser = context.currentUser;
+      if (!currentUser) {
+        throw new GraphQLError('not authenticated', {
+          extensions: {
+            code: 'BAD_USER_INPUT'
+          }
+        });
+      }
+
+      const sanitizedArgs = {
+        firstName: sanitizeInput(args.firstName),
+        lastName: sanitizeInput(args.lastName),
+        born: Number(sanitizeInput(args.born)),
+        profile: sanitizeInput(args.profile),
+        creditText: sanitizeInput(args.creditText),
+        creditLink: sanitizeInput(args.creditLink),
+        annotation: sanitizeInput(args.annotation)
+      };
+
+      const { error } = authorSchema.validate(sanitizedArgs);
+      if (error) {
+        throw new GraphQLError(
+          `Validation error: ${error.details.map(e => e.message).join(', ')}`,
+          {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: invalid
+            }
+          }
+        );
+      }
+      const author = await authorsService.update({
+        ...sanitizedArgs,
+        id: Number(args.id)
+      });
+
+      pubsub.publish('AUTHOR_UPDATED', { authorUpdated: author });
+      return author;
+    },
+
+    createBook: async (_root, args, context) => {
       const currentUser = context.currentUser;
       if (!currentUser) {
         throw new GraphQLError('not authenticated', {
@@ -145,8 +186,6 @@ const resolvers = {
         genres: args.genres
       };
 
-      console.log('sanitizedArgs: ', sanitizedArgs);
-
       const { error } = bookSchema.validate(sanitizedArgs);
 
       if (error) {
@@ -160,25 +199,8 @@ const resolvers = {
 
       const book = await booksService.save(sanitizedArgs);
 
-      pubsub.publish('BOOK_ADDED', { bookAdded: book });
+      pubsub.publish('BOOK_CREATED', { bookCreated: book });
       return book;
-    },
-
-    editAuthor: async (root, args) => {
-      if (!currentUser) {
-        throw new GraphQLError('not authenticated', {
-          extensions: {
-            code: 'BAD_USER_INPUT'
-          }
-        });
-      }
-
-      const doc = await authorsService.findDocByName(args.name);
-
-      const updatedDoc = { ...doc, born: args.setBornTo };
-
-      const updatedAuthor = await authorsService.save(updatedDoc);
-      return updatedAuthor;
     },
 
     createUser: async (root, args) => {
@@ -226,11 +248,14 @@ const resolvers = {
   },
 
   Subscription: {
-    authorAdded: {
-      subscribe: () => pubsub.asyncIterator('AUTHOR_ADDED')
+    authorCreated: {
+      subscribe: () => pubsub.asyncIterator('AUTHOR_CREATED')
     },
-    bookAdded: {
-      subscribe: () => pubsub.asyncIterator('BOOK_ADDED')
+    authorUpdated: {
+      subscribe: () => pubsub.asyncIterator('AUTHOR_UPDATED')
+    },
+    bookCreated: {
+      subscribe: () => pubsub.asyncIterator('BOOK_CREATED')
     }
   }
 };

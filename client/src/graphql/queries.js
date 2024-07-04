@@ -15,7 +15,7 @@ export const ALL_AUTHORS = gql`
 
 export const AUTHOR_BY_ID = gql`
   ${AUTHOR_DETAILS}
-  query AuthorById($id: Int) {
+  query AuthorById($id: ID) {
     authorById(id: $id) {
       ...AuthorDetails
     }
@@ -24,7 +24,7 @@ export const AUTHOR_BY_ID = gql`
 
 export const ALL_BOOKS = gql`
   ${BOOK_DETAILS}
-  query GetBooks($firstName: String, $lastName: String, $genres: [Int]) {
+  query GetBooks($firstName: String, $lastName: String, $genres: [ID]) {
     allBooks(firstName: $firstName, lastName: $lastName, genres: $genres) {
       ...BookDetails
     }
@@ -33,14 +33,14 @@ export const ALL_BOOKS = gql`
 
 export const BOOK_BY_ID = gql`
   ${BOOK_DETAILS}
-  query GetBookById($id: Int) {
+  query GetBookById($id: ID) {
     bookById(id: $id) {
       ...BookDetails
     }
   }
 `;
 export const BOOKS_BY_AUTHOR_ID = gql`
-  query GetBooksByAuthorId($authorId: Int) {
+  query GetBooksByAuthorId($authorId: ID) {
     booksByAuthorId(authorId: $authorId) {
       id
       title
@@ -49,7 +49,7 @@ export const BOOKS_BY_AUTHOR_ID = gql`
 `;
 
 export const BOOKS_BY_GENRE = gql`
-  query GetBooksByGenre($genreId: Int) {
+  query GetBooksByGenre($genreId: ID) {
     booksByGenre(genreId: $genreId) {
       id
       title
@@ -61,7 +61,7 @@ export const BOOKS_BY_GENRE = gql`
 
 export const GENRE = gql`
   ${BOOK_DATA_FOR_TABLE}
-  query GetGenreWithBooks($id: Int) {
+  query GetGenreWithBooks($id: ID) {
     genreWithBooks(id: $id) {
       name
       books {

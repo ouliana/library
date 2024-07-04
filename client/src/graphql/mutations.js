@@ -3,7 +3,7 @@ import { AUTHOR_DETAILS, BOOK_DETAILS } from './fragments';
 
 export const CREATE_AUTHOR = gql`
   ${AUTHOR_DETAILS}
-  mutation createAuthor(
+  mutation CreateAuthor(
     $firstName: String!
     $lastName: String!
     $born: Int
@@ -12,7 +12,34 @@ export const CREATE_AUTHOR = gql`
     $creditLink: String
     $annotation: String!
   ) {
-    addAuthor(
+    createAuthor(
+      firstName: $firstName
+      lastName: $lastName
+      born: $born
+      profile: $profile
+      creditText: $creditText
+      creditLink: $creditLink
+      annotation: $annotation
+    ) {
+      ...AuthorDetails
+    }
+  }
+`;
+
+export const UPDATE_AUTHOR = gql`
+  ${AUTHOR_DETAILS}
+  mutation UpdateAuthor(
+    $id: ID!
+    $firstName: String!
+    $lastName: String!
+    $born: Int
+    $profile: String
+    $creditText: String
+    $creditLink: String
+    $annotation: String!
+  ) {
+    updateAuthor(
+      id: $id
       firstName: $firstName
       lastName: $lastName
       born: $born
@@ -28,14 +55,14 @@ export const CREATE_AUTHOR = gql`
 
 export const CREATE_BOOK = gql`
   ${BOOK_DETAILS}
-  mutation createBook(
-    $authorId: Int!
+  mutation CreateBook(
+    $authorId: ID!
     $title: String!
     $published: Int
     $annotation: String!
-    $genres: [Int!]!
+    $genres: [ID!]!
   ) {
-    addBook(
+    createBook(
       authorId: $authorId
       title: $title
       published: $published
@@ -51,15 +78,6 @@ export const LOGIN = gql`
   mutation login($username: String!, $password: String!) {
     login(username: $username, password: $password) {
       value
-    }
-  }
-`;
-
-export const BOOK_ADDED = gql`
-  ${BOOK_DETAILS}
-  subscription {
-    bookAdded {
-      ...BookDetails
     }
   }
 `;

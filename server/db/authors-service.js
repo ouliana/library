@@ -4,7 +4,8 @@ const authorsService = {
   findAll,
   findByName,
   findById,
-  save
+  save,
+  update
 };
 
 module.exports = authorsService;
@@ -77,7 +78,6 @@ async function findByName(name) {
 }
 
 async function save(args) {
-  console.log(args);
   const {
     firstName,
     lastName,
@@ -101,6 +101,43 @@ async function save(args) {
       }
     });
     return createdAuthor;
+  } catch (error) {
+    let message = 'Ошибка в базе данных. Не удалось создать автора';
+    if (e instanceof Error) {
+      message += 'Error: ' + e.message;
+    }
+    throw new Error(message);
+  }
+}
+
+async function update(args) {
+  const {
+    id,
+    firstName,
+    lastName,
+    born,
+    profile,
+    creditText,
+    creditLink,
+    annotation
+  } = args;
+
+  try {
+    const updatedAuthor = await prisma.author.update({
+      where: {
+        id
+      },
+      data: {
+        firstName,
+        lastName,
+        born,
+        profile,
+        creditText,
+        creditLink,
+        annotation
+      }
+    });
+    return updatedAuthor;
   } catch (error) {
     let message = 'Ошибка в базе данных. Не удалось создать автора';
     if (e instanceof Error) {

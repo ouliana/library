@@ -160,6 +160,7 @@ export const ContentLeft = styled(Content)(() => ({
 }));
 
 export const StyledBox = styled(Box)(({ theme }) => ({
+  position: 'relative',
   width: '100%',
   [theme.breakpoints.up('sm')]: {
     width: '85%'
