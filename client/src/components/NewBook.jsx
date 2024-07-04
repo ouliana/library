@@ -16,8 +16,6 @@ import Chip from '@mui/material/Chip';
 import LinearProgress from '@mui/material/LinearProgress';
 import Skeleton from '@mui/material/Skeleton';
 import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
-// import LibraryAddOutlinedIcon from '@mui/icons-material/LibraryAddOutlined';
 import LoadingButton from '@mui/lab/LoadingButton';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import SaveIcon from '@mui/icons-material/Save';
@@ -268,7 +266,7 @@ function NewBook() {
           spacing={2}
           justifyContent='space-between'
         >
-          <Button>Назад</Button>
+          {/* <Button>Назад</Button> */}
           <LoadingButton
             size='small'
             color='primary'

@@ -36,9 +36,6 @@ const resolvers = {
       if (args.genres) {
         const books = await booksService.findByGenres(args.genres);
         return books;
-        // return args.genre === 'all'
-        //   ? books
-        //   : books.filter(b => b.genres.includes(args.genre));
       }
     },
     bookById: async (_root, args) => {
@@ -105,7 +102,7 @@ const resolvers = {
       const sanitizedArgs = {
         firstName: sanitizeInput(args.firstName),
         lastName: sanitizeInput(args.lastName),
-        born: sanitizeInput(args.born),
+        born: Number(sanitizeInput(args.born)),
         profile: sanitizeInput(args.profile),
         creditText: sanitizeInput(args.creditText),
         creditLink: sanitizeInput(args.creditLink),

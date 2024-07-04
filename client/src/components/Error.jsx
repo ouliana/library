@@ -18,7 +18,7 @@ function Error() {
     }
   }
   return (
-    <Box sx={{ zIndex: 1000, marginTop: '0.5rem' }}>
+    <Box sx={{ zIndex: 1000, marginTop: '0.5rem', position: 'fixed' }}>
       <Alert
         severity='error'
         onClose={() => {

@@ -77,6 +77,7 @@ async function findByName(name) {
 }
 
 async function save(args) {
+  console.log(args);
   const {
     firstName,
     lastName,

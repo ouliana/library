@@ -9,7 +9,7 @@ export const useCreateAuthorMutation = () => {
 
   const executeMutation = async input => {
     try {
-      const response = await mutate({ variables: { input } });
+      const response = await mutate({ variables: input });
       return response;
     } catch (err) {
       console.error('Mutation error:', err);

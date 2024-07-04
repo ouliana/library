@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -32,7 +32,7 @@ function NewAuthor() {
     await executeMutation({
       firstName,
       lastName,
-      born: +born,
+      born: Number(born),
       profile,
       creditText,
       creditLink,
@@ -138,7 +138,12 @@ function NewAuthor() {
           spacing={2}
           justifyContent='space-between'
         >
-          <Button>Назад</Button>
+          <Button
+            component={RouterLink}
+            to='/new-book'
+          >
+            Назад
+          </Button>
           <LoadingButton
             size='small'
             color='primary'
