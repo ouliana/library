@@ -104,7 +104,7 @@ async function findByAuthorId(authorId) {
   } catch (e) {
     let message = 'Ошибка в базе данных. Невозможно получить книгу';
     if (e instanceof Error) {
-      message += 'Error: ' + e.message;
+      message += ' Error: ' + e.message;
     }
     throw new Error(message);
   }

@@ -60,14 +60,22 @@ async function findById(id) {
     throw new Error(message);
   }
 }
-async function findByName(name) {
+
+async function findByName({ firstName, lastName }) {
   try {
     const author = await prisma.author.findFirst({
       where: {
-        name
+        AND: {
+          firstName: {
+            equals: firstName
+          },
+          lastName: {
+            equals: lastName
+          }
+        }
       }
     });
-    return author;
+    return author ? author.id : null;
   } catch (e) {
     let message = 'Ошибка в базе данных. Невозможно получить автора';
     if (e instanceof Error) {

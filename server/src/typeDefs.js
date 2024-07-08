@@ -16,7 +16,7 @@ type Book {
   id: ID!
   title: String!
   published: Int!
-  authorId: Int!
+  authorId: ID!
   author: Author
   genres: [Genre!]!
   annotation: String
@@ -24,8 +24,8 @@ type Book {
 
 type Genre {
   id: ID!
-name: String!
-books: [Book]
+  name: String!
+  books: [Book]
 }
 
 type User {
@@ -46,13 +46,14 @@ type Token {
   type Query {
     bookCount: Int
     authorCount: Int
+    authorExists(firstName: String, lastName: String): ID
+    allAuthors: [Author]
     allBooks(firstName: String, lastName: String, genres: [ID]): [Book]
     bookById(id: ID): Book
     booksByAuthorId(authorId: ID): [Book]
     booksByAuthorName(firstName: String, lastName: String): [Book]
     booksByGenre(genreId: ID): [Book]
     genreWithBooks(id: ID): Genre
-    allAuthors: [Author]
     authorById(id: ID): Author
     allGenres: [Genre]
     currentUser: User

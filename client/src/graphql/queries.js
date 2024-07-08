@@ -22,6 +22,14 @@ export const AUTHOR_BY_ID = gql`
   }
 `;
 
+export const AUTHOR_EXISTS = gql`
+  query AuthorExists($firstName: String, $lastName: String) {
+    authorExists(firstName: $firstName, lastName: $lastName) {
+      id
+    }
+  }
+`;
+
 export const ALL_BOOKS = gql`
   ${BOOK_DETAILS}
   query GetBooks($firstName: String, $lastName: String, $genres: [ID]) {

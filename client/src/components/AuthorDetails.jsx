@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useParams, Link as RouterLink } from 'react-router-dom';
+import { useTokenValue } from '../hooks/useToken';
 
 import { useAuthorByIdQuery } from '../hooks/queries';
 
@@ -19,6 +20,8 @@ import BooksByAuthor from './BooksByAuthor';
 import AuthorDetailsSkeleton from './AuthorDetailsSkeleton';
 
 function AuthorDetails() {
+  const token = useTokenValue();
+
   const id = useParams().id;
   const { author, loading, error } = useAuthorByIdQuery(id);
 
@@ -34,14 +37,16 @@ function AuthorDetails() {
   return (
     <StyledBox>
       <Box sx={{ position: 'absolute', top: 0, right: 0 }}>
-        <IconButton
-          aria-label='Редактировать'
-          component={RouterLink}
-          to={`edit`}
-          sx={{ flexShrink: 0, width: '40px', height: '40px' }}
-        >
-          <EditOutlinedIcon />
-        </IconButton>
+        {token && (
+          <IconButton
+            aria-label='Редактировать'
+            component={RouterLink}
+            to={`edit`}
+            sx={{ flexShrink: 0, width: '40px', height: '40px' }}
+          >
+            <EditOutlinedIcon />
+          </IconButton>
+        )}
       </Box>
       <Stack spacing={8}>
         {loading && <AuthorDetailsSkeleton />}

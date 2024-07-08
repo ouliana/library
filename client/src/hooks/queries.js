@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client';
 import {
   ALL_AUTHORS,
   ALL_BOOKS,
+  AUTHOR_EXISTS,
   BOOKS_BY_AUTHOR_ID,
   ALL_GENRES,
   AUTHOR_BY_ID,
@@ -100,6 +101,23 @@ export const useAuthorByIdQuery = id => {
   }, [data, loading, error]);
 
   return { author, loading, error };
+};
+
+export const useAuthorExistsQuery = (firstName, lastName) => {
+  const { loading, error, data } = useQuery(AUTHOR_EXISTS, {
+    variables: { firstName, lastName },
+    skip: !lastName //TODO: change to firstName
+  });
+
+  const [authorId, setAuthorId] = useState(null);
+
+  useEffect(() => {
+    if (data) {
+      setAuthorId(data.id);
+    }
+  }, [data, loading, error]);
+
+  return { authorId, loading, error };
 };
 
 export const useBookByIdQuery = id => {
