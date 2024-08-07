@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-// import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -13,25 +12,15 @@ import { StyledBox, FormPanel } from '../styles';
 import { useErrorDispatch } from '../hooks/useError';
 import { useSuccessDispatch } from '../hooks/useSuccess';
 import { useCreateAuthorMutation } from '../hooks/mutations';
+import { useAuthorExists } from '../hooks/queries';
 
 import { useFormik } from 'formik';
 import { authorSchema } from '../yup-schema';
 
 function NewAuthor() {
-  // const navigate = useNavigate();
-  // const [firstName, setFirstName] = useState('');
-  // const [lastName, setLastName] = useState('');
-  // const [born, setBorn] = useState('');
-  // const [profile, setProfile] = useState('');
-  // const [creditText, setCreditText] = useState('');
-  // const [creditLink, setCreditLink] = useState('');
-  // const [annotation, setAnnotation] = useState('');
-
-  // // Check existence
-  // const [firstNameDirty, setFirstNameDirty] = useState(false);
-  // const [lastNameDirty, setLastNameDirty] = useState(false);
-  // const [isAuthorExists, setIsAuthorExists] = useState(null);
-
+  const navigate = useNavigate();
+  const errorDispatch = useErrorDispatch();
+  const successDispatch = useSuccessDispatch();
   const formik = useFormik({
     initialValues: {
       firstName: '',
@@ -44,7 +33,6 @@ function NewAuthor() {
     },
     validationSchema: authorSchema,
     onSubmit: async values => {
-      console.log('Form data', values);
       const {
         firstName,
         lastName,
@@ -67,44 +55,48 @@ function NewAuthor() {
       setSuccessPayload(
         `Автор ${firstName} ${lastName} успешно добавлен в библиотеку`
       );
+      navigate('/new-book');
     }
   });
+  const [toCheckExistence, setToCheckExistence] = useState(false);
+
+  const {
+    author: existingAthor,
+    loading: checkExistenceLoading,
+    error: checkExistenceError
+  } = useAuthorExists(
+    formik.values.firstName,
+    formik.values.lastName,
+    toCheckExistence
+  );
 
   const [successPayload, setSuccessPayload] = useState('');
 
   const { executeMutation, data, loading, error } = useCreateAuthorMutation();
 
-  // async function submit(event) {
-  //   event.preventDefault();
-  //   await executeMutation({
-  //     firstName,
-  //     lastName,
-  //     born: Number(born),
-  //     profile,
-  //     creditText,
-  //     creditLink,
-  //     annotation
-  //   });
+  useEffect(() => {
+    if (existingAthor !== null && existingAthor !== undefined) {
+      errorDispatch({
+        type: 'SET',
+        payload: {
+          message: `Автор ${formik.values.firstName} ${formik.values.lastName} уже существует в бибилиотеке`
+        }
+      });
+    }
+  }, [
+    checkExistenceLoading,
+    existingAthor,
+    formik.values.firstName,
+    formik.values.lastName,
+    errorDispatch
+  ]);
 
-  //   setSuccessPayload(
-  //     `Автор ${firstName} ${lastName} успешно добавлен в библиотеку`
-  //   );
-
-  //   setFirstName('');
-  //   setLastName('');
-  //   setBorn('');
-  //   setProfile('');
-  //   setCreditText('');
-  //   setCreditLink('');
-  //   setAnnotation('');
-  //   navigate('/new-book');
-  // }
-
-  const errorDispatch = useErrorDispatch();
-  const successDispatch = useSuccessDispatch();
   useEffect(() => {
     if (error) {
       errorDispatch({ type: 'SET', payload: error });
+    }
+    if (checkExistenceError) {
+      errorDispatch({ type: 'SET', payload: checkExistenceError });
     }
     if (data) {
       successDispatch({
@@ -112,24 +104,14 @@ function NewAuthor() {
         payload: successPayload
       });
     }
-  }, [data, error, errorDispatch, successDispatch, successPayload]);
-
-  // useEffect(() => {
-  //   const checkAuthorExists = async () => {
-  //     try {
-  //       const response = await axios.get('/api/check-author', {
-  //         params: { firstName, lastName }
-  //       });
-  //       setIsAuthorExists(response.data.exists);
-  //     } catch (error) {
-  //       console.error('Error checking author:', error);
-  //     }
-  //   };
-
-  //   if (firstNameDirty && lastNameDirty) {
-  //     checkAuthorExists();
-  //   }
-  // }, [firstName, lastName, firstNameDirty, lastNameDirty]);
+  }, [
+    data,
+    error,
+    errorDispatch,
+    successDispatch,
+    successPayload,
+    checkExistenceError
+  ]);
 
   return (
     <StyledBox>
@@ -149,6 +131,7 @@ function NewAuthor() {
               name='firstName'
               value={formik.values.firstName}
               onChange={formik.handleChange}
+              onBlur={() => setToCheckExistence(true)}
               error={
                 formik.touched.firstName && Boolean(formik.errors.firstName)
               }
@@ -162,6 +145,7 @@ function NewAuthor() {
               name='lastName'
               value={formik.values.lastName}
               onChange={formik.handleChange}
+              onBlur={() => setToCheckExistence(true)}
               error={formik.touched.lastName && Boolean(formik.errors.lastName)}
               helperText={formik.touched.lastName && formik.errors.lastName}
             />

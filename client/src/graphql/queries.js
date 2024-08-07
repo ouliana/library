@@ -30,6 +30,19 @@ export const AUTHOR_EXISTS = gql`
   }
 `;
 
+export const BOOK_EXISTS = gql`
+  query BookExists($title: String, $authorId: ID) {
+    bookExists(title: $title, authorId: $authorId) {
+      id
+      title
+      author {
+        firstName
+        lastName
+      }
+    }
+  }
+`;
+
 export const ALL_BOOKS = gql`
   ${BOOK_DETAILS}
   query GetBooks($firstName: String, $lastName: String, $genres: [ID]) {

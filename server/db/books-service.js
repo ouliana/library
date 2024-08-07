@@ -3,6 +3,7 @@ const booksService = {
   findById,
   findByAuthorId,
   findByTitle,
+  findByTitleAndAuthorId,
   findByGenres,
   save
 };
@@ -118,6 +119,37 @@ async function findByTitle(title) {
       }
     });
     return books;
+  } catch (e) {
+    let message = 'Ошибка в базе данных. Невозможно получить книгу';
+    if (e instanceof Error) {
+      message += 'Error: ' + e.message;
+    }
+    throw new Error(message);
+  }
+}
+
+async function findByTitleAndAuthorId({ title, authorId }) {
+  try {
+    console.log(title);
+    console.log(authorId);
+    const book = await prisma.book.findFirst({
+      where: {
+        title,
+        authorId: Number(authorId)
+      },
+      select: {
+        id: true,
+        title: true,
+        author: {
+          select: {
+            firstName: true,
+            lastName: true
+          }
+        }
+      }
+    });
+    console.log(book);
+    return book;
   } catch (e) {
     let message = 'Ошибка в базе данных. Невозможно получить книгу';
     if (e instanceof Error) {

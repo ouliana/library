@@ -46,13 +46,14 @@ type Token {
   type Query {
     bookCount: Int
     authorCount: Int
-    authorExists(firstName: String, lastName: String): ID
+    authorExists(firstName: String, lastName: String): Author
     allAuthors: [Author]
     allBooks(firstName: String, lastName: String, genres: [ID]): [Book]
     bookById(id: ID): Book
     booksByAuthorId(authorId: ID): [Book]
     booksByAuthorName(firstName: String, lastName: String): [Book]
     booksByGenre(genreId: ID): [Book]
+    bookExists(title: String, authorId: ID): Book
     genreWithBooks(id: ID): Genre
     authorById(id: ID): Author
     allGenres: [Genre]

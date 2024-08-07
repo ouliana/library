@@ -8,6 +8,7 @@ import {
   ALL_GENRES,
   AUTHOR_BY_ID,
   BOOK_BY_ID,
+  BOOK_EXISTS,
   GENRE
 } from '../graphql/queries';
 
@@ -103,21 +104,21 @@ export const useAuthorByIdQuery = id => {
   return { author, loading, error };
 };
 
-export const useAuthorExistsQuery = (firstName, lastName) => {
+export const useAuthorExists = (firstName, lastName, toCheck) => {
   const { loading, error, data } = useQuery(AUTHOR_EXISTS, {
     variables: { firstName, lastName },
-    skip: !lastName //TODO: change to firstName
+    skip: !toCheck
   });
 
-  const [authorId, setAuthorId] = useState(null);
+  const [author, setAuthor] = useState(null);
 
   useEffect(() => {
     if (data) {
-      setAuthorId(data.id);
+      setAuthor(data.authorExists);
     }
   }, [data, loading, error]);
 
-  return { authorId, loading, error };
+  return { author, loading, error };
 };
 
 export const useBookByIdQuery = id => {
@@ -152,4 +153,21 @@ export const useBooksByGenre = id => {
   }, [data, loading, error]);
 
   return { name, books, loading, error };
+};
+
+export const useBookExists = (authorId, title, toCheck) => {
+  const { loading, error, data } = useQuery(BOOK_EXISTS, {
+    variables: { authorId, title },
+    skip: !toCheck
+  });
+
+  const [book, setBook] = useState(null);
+
+  useEffect(() => {
+    if (data) {
+      setBook(data.bookExists);
+    }
+  }, [data, loading, error]);
+
+  return { book, loading, error };
 };

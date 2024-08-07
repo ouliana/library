@@ -25,6 +25,11 @@ import { StyledBox, FormPanel } from '../styles';
 import { useErrorDispatch } from '../hooks/useError';
 import { useSuccessDispatch } from '../hooks/useSuccess';
 
+import { useBookExists } from '../hooks/queries';
+
+import { useFormik } from 'formik';
+import { bookSchema } from '../yup-schema';
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MAX_HEIGHT = ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP;
@@ -48,11 +53,10 @@ function getStyles(id, items, theme) {
 
 function NewBook() {
   const navigate = useNavigate();
-  const [authorId, setAuthorId] = useState('');
-  const [title, setTitle] = useState('');
-  const [published, setPublished] = useState('');
-  const [annotation, setAnnotation] = useState('');
-  const [genres, setGenres] = useState([]);
+  const errorDispatch = useErrorDispatch();
+  const successDispatch = useSuccessDispatch();
+
+  const [successPayload, setSuccessPayload] = useState('');
 
   const {
     executeMutation,
@@ -61,7 +65,80 @@ function NewBook() {
     error: mutationError
   } = useCreateBookMutation();
 
-  const [successPayload, setSuccessPayload] = useState('');
+  const formik = useFormik({
+    initialValues: {
+      authorId: '',
+      title: '',
+      published: '',
+      annotation: '',
+      genres: []
+    },
+    validationSchema: bookSchema,
+    onSubmit: async values => {
+      console.log(values);
+      const { authorId, title, published, annotation, genres } = values;
+      // await executeMutation({
+      //   authorId,
+      //   title,
+      //   publish: Number(published),
+      //   annotation,
+      //   genres
+      // });
+
+      setSuccessPayload(
+        `Книга ${title} автора ${existingBook.author.firstName} ${existingBook.author.lastName} успешно добавлен в библиотеку`
+      );
+      navigate('/books');
+    }
+  });
+
+  const [toCheckExistence, setToCheckExistence] = useState(false);
+
+  const {
+    book: existingBook,
+    loading: checkExistenceLoading,
+    error: checkExistenceError
+  } = useBookExists(
+    formik.values.authorId,
+    formik.values.title,
+    toCheckExistence
+  );
+
+  useEffect(() => {
+    if (!checkExistenceLoading) {
+      if (existingBook !== null && existingBook !== undefined) {
+        errorDispatch({
+          type: 'SET',
+          payload: {
+            message: `Книга ${existingBook.title} автора ${existingBook.author.firstName} ${existingBook.author.lastName} уже существует в бибилиотеке`
+          }
+        });
+      }
+      setToCheckExistence(false);
+    }
+  }, [checkExistenceLoading, existingBook, errorDispatch]);
+
+  useEffect(() => {
+    if (mutationError) {
+      errorDispatch({ type: 'SET', payload: mutationError });
+    }
+    if (checkExistenceError) {
+      errorDispatch({ type: 'SET', payload: checkExistenceError });
+    }
+    if (data) {
+      successDispatch({
+        type: 'SET',
+        payload: successPayload
+      });
+    }
+  }, [
+    data,
+    mutationError,
+    errorDispatch,
+    successDispatch,
+    successPayload,
+    checkExistenceError
+  ]);
 
   const {
     authors,
@@ -79,43 +156,6 @@ function NewBook() {
   const getFullName = ({ firstName, lastName }) => {
     return [lastName, firstName].join(', ');
   };
-
-  const handleGenresChange = event => {
-    const {
-      target: { value }
-    } = event;
-    setGenres(value);
-  };
-  const handleAuthorChange = event => {
-    const {
-      target: { value }
-    } = event;
-    setAuthorId(value);
-  };
-
-  async function submit(event) {
-    event.preventDefault();
-
-    await executeMutation({
-      authorId: Number(authorId),
-      title,
-      published: Number(published),
-      annotation,
-      genres: genres.map(genre => Number(genre.id))
-    });
-
-    setSuccessPayload(`Книга ${title} успешно добавлена в библиотеку`);
-
-    setAuthorId('');
-    setTitle('');
-    setPublished('');
-    setAnnotation('');
-    setGenres([]);
-    navigate('/books');
-  }
-
-  const errorDispatch = useErrorDispatch();
-  const successDispatch = useSuccessDispatch();
 
   useEffect(() => {
     if (genresError) {
@@ -146,7 +186,14 @@ function NewBook() {
   return (
     <StyledBox>
       <FormPanel elevation={1}>
-        <form onSubmit={submit}>
+        <Box
+          component='form'
+          onSubmit={formik.handleSubmit}
+          id='bookForm'
+          sx={{ '& .MuiTextField-root': { width: '100%' } }}
+          noValidate
+          autoComplete='off'
+        >
           <Stack spacing={2}>
             <Stack
               direction='row'
@@ -165,9 +212,10 @@ function NewBook() {
                   <InputLabel id='auhtorId-label'>Автор</InputLabel>
                   <Select
                     labelId='auhtorId-label'
-                    value={authorId}
+                    value={formik.values.authorId}
                     label='Автор'
-                    onChange={handleAuthorChange}
+                    name='authorId'
+                    onChange={formik.handleChange}
                     sx={{ textAlign: 'left' }}
                   >
                     {authors.map((author, index, authors) => (
@@ -194,43 +242,51 @@ function NewBook() {
             <TextField
               fullWidth
               label='Название'
-              value={title}
-              onChange={event => {
-                setTitle(event.target.value);
-              }}
+              name='title'
+              value={formik.values.title}
+              onChange={formik.handleChange}
+              onBlur={() => setToCheckExistence(true)}
+              error={formik.touched.title && Boolean(formik.errors.title)}
+              helperText={formik.touched.title && formik.errors.title}
             />
             <TextField
               fullWidth
               label='Дата первой публикации'
-              value={published}
-              onChange={event => {
-                setPublished(event.target.value);
-              }}
+              name='published'
+              value={formik.values.published}
+              onChange={formik.handleChange}
+              error={
+                formik.touched.published && Boolean(formik.errors.published)
+              }
+              helperText={formik.touched.published && formik.errors.published}
             />
             <TextField
               fullWidth
               multiline
               rows={4}
               label='Аннотация'
-              value={annotation}
-              onChange={event => {
-                setAnnotation(event.target.value);
-              }}
+              name='annotation'
+              value={formik.values.annotation}
+              onChange={formik.handleChange}
+              error={
+                formik.touched.annotation && Boolean(formik.errors.annotation)
+              }
+              helperText={formik.touched.annotation && formik.errors.annotation}
             />
             {/* Жанры */}
             {genresLoading && <LinearProgress />}
-            {!!genres && (
+            {!!genresItems && (
               <FormControl fullWidth>
-                <InputLabel id='multiple-chip-label'>Жанр</InputLabel>
+                <InputLabel id='genres-label'>Жанр</InputLabel>
                 <Select
-                  labelId='multiple-chip-label'
-                  id='multiple-chip'
+                  labelId='genres-label'
+                  name='genres'
                   multiple
-                  value={genres}
-                  onChange={handleGenresChange}
+                  value={formik.values.genres}
+                  onChange={formik.handleChange}
                   input={
                     <OutlinedInput
-                      id='select-multiple-chip'
+                      id='genre-chip'
                       label='Жанр'
                     />
                   }
@@ -259,23 +315,23 @@ function NewBook() {
               </FormControl>
             )}
           </Stack>
-        </form>
+        </Box>
         <Box sx={{ height: '2rem' }} />
         <Stack
           direction='row'
           spacing={2}
           justifyContent='space-between'
         >
-          {/* <Button>Назад</Button> */}
           <LoadingButton
             size='small'
             color='primary'
-            onClick={submit}
             loading={mutationLoading}
             loadingPosition='start'
             startIcon={<SaveIcon />}
             variant='contained'
             sx={{ flexGrow: 0 }}
+            type='submit'
+            form='bookForm'
           >
             <span>Сохранить</span>
           </LoadingButton>

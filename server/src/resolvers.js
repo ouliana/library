@@ -28,9 +28,10 @@ const resolvers = {
       return author;
     },
     authorExists: async (_root, args) => {
-      const authorId = await authorsService.findByName(args);
-      return authorId;
+      const author = await authorsService.findByName(args);
+      return author;
     },
+
     // Books
     allBooks: async (_root, args) => {
       if (!Object.keys(args).length) {
@@ -64,6 +65,11 @@ const resolvers = {
       } catch (error) {
         throw new Error('Не удалось получить книгу по id жанра');
       }
+    },
+
+    bookExists: async (_root, args) => {
+      const book = await booksService.findByTitleAndAuthorId(args);
+      return book;
     },
 
     genreWithBooks: async (_root, args) => {

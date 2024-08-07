@@ -7,7 +7,7 @@ function Error() {
   const [error, dispatch] = useContext(ErrorContext);
   if (!error) return null;
 
-  let message = ';';
+  let message = '';
   switch (error.message) {
     case 'Response not successful: Received status code 500': {
       message = 'Не удалось связаться с сервером';
